@@ -259,27 +259,33 @@ void SceneCollision::Update(double dt)
 
 void SceneCollision::RenderGO(GameObject *go)
 {
-	switch(go->type)
-	{
-	case GameObject::GO_BALL:
-		//Exercise 4: render a sphere using scale and pos
-		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, 0);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_BALL], false);
-		modelStack.PopMatrix();
-		break;
-		//Exercise 11: think of a way to give balls different colors
-	case GameObject::GO_WALL:
-		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, 0);
-		modelStack.Rotate(Math::RadianToDegree(atan2(go->dir.y, go->dir.x)) -90, 0, 0, 1);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_CUBE], false);
-		modelStack.PopMatrix();
-		break;
-	}
-	
+	//switch(go->type)
+	//{
+	//case GameObject::GO_BALL:
+	//	//Exercise 4: render a sphere using scale and pos
+	//	modelStack.PushMatrix();
+	//	modelStack.Translate(go->pos.x, go->pos.y, 0);
+	//	modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//	RenderMesh(meshList[GEO_BALL], false);
+	//	modelStack.PopMatrix();
+	//	break;
+	//	//Exercise 11: think of a way to give balls different colors
+	//case GameObject::GO_WALL:
+	//	modelStack.PushMatrix();
+	//	modelStack.Translate(go->pos.x, go->pos.y, 0);
+	//	modelStack.Rotate(Math::RadianToDegree(atan2(go->dir.y, go->dir.x)) -90, 0, 0, 1);
+	//	modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//	RenderMesh(meshList[GEO_CUBE], false);
+	//	modelStack.PopMatrix();
+	//	break;
+	//}
+	//
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Scale(270, 200, 0);
+	RenderMesh(meshList[GEO_GROUND], false);
+	modelStack.PopMatrix();
 }
 
 void SceneCollision::Render()
