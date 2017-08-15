@@ -4,4 +4,5 @@ SP3/Base/Release
 SP3/Common/Release
 SP3/.vs/
 SP3/Debug/
-SP3/Release
+SP3/Base/Base.vcxproj
+SP3/Base/Base.vcxproj.filters
