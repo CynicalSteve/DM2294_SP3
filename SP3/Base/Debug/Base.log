@@ -1,61 +1,42 @@
-﻿Build started 24/07/2017 11:41:30.
-     1>Project "C:\Users\rickc\Documents\Framework Physics\Base\Base.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\rickc\Documents\Framework Physics\/Common/Source" /I"C:\Users\rickc\Documents\Framework Physics\/glew/include" /I"C:\Users\rickc\Documents\Framework Physics\/glfw/include" /ZI /nologo /W3 /WX- /Od /Oy- /D _VARIADIC_MAX=10 /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Source\Application.cpp Source\GameObject.cpp Source\SceneAsteroid.cpp Source\SceneBase.cpp Source\SceneCollision.cpp Source\SceneKinematics.cpp
-         SceneCollision.cpp
-     1>c:\users\rickc\documents\framework physics\base\source\scenecollision.cpp(31): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\rickc\documents\framework physics\base\source\scenecollision.cpp(36): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\rickc\documents\framework physics\base\source\scenecollision.cpp(81): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\rickc\documents\framework physics\base\source\scenecollision.cpp(82): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\rickc\documents\framework physics\base\source\scenecollision.cpp(109): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\rickc\documents\framework physics\base\source\scenecollision.cpp(125): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\rickc\documents\framework physics\base\source\scenecollision.cpp(153): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\rickc\documents\framework physics\base\source\scenecollision.cpp(159): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\rickc\documents\framework physics\base\source\scenecollision.cpp(174): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-         Generating Code...
-     1>c:\users\rickc\documents\framework physics\base\source\scenecollision.cpp(414): warning C4715: 'SceneCollision::CheckCollision' : not all control paths return a value
-         Compiling...
-         SceneKinematics.cpp
-     1>c:\users\rickc\documents\framework physics\base\source\scenekinematics.cpp(140): warning C4305: '+=' : truncation from 'double' to 'float'
-     1>c:\users\rickc\documents\framework physics\base\source\scenekinematics.cpp(145): warning C4305: '-=' : truncation from 'double' to 'float'
-     1>c:\users\rickc\documents\framework physics\base\source\scenekinematics.cpp(298): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\rickc\documents\framework physics\base\source\scenekinematics.cpp(299): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-         SceneAsteroid.cpp
-     1>c:\users\rickc\documents\framework physics\base\source\sceneasteroid.cpp(113): warning C4305: '+=' : truncation from 'double' to 'float'
-     1>c:\users\rickc\documents\framework physics\base\source\sceneasteroid.cpp(117): warning C4305: '-=' : truncation from 'double' to 'float'
-     1>c:\users\rickc\documents\framework physics\base\source\sceneasteroid.cpp(141): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>c:\users\rickc\documents\framework physics\base\source\sceneasteroid.cpp(179): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\rickc\documents\framework physics\base\source\sceneasteroid.cpp(180): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\rickc\documents\framework physics\base\source\sceneasteroid.cpp(186): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\rickc\documents\framework physics\base\source\sceneasteroid.cpp(187): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\rickc\documents\framework physics\base\source\sceneasteroid.cpp(190): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\rickc\documents\framework physics\base\source\sceneasteroid.cpp(227): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\rickc\documents\framework physics\base\source\sceneasteroid.cpp(238): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-         GameObject.cpp
-         Generating Code...
-         Skipping... (no relevant changes detected)
-         SceneBase.cpp
-         Application.cpp
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\rickc\Documents\Framework Physics\Debug\Base.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Users\rickc\Documents\Framework Physics\Debug" /LIBPATH:"C:\Users\rickc\Documents\Framework Physics\/glfw/lib-msvc100" /LIBPATH:"C:\Users\rickc\Documents\Framework Physics\/glew/lib" Common.lib winmm.lib opengl32.lib glu32.lib glew32.lib glfw3.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\rickc\Documents\Framework Physics\Debug\Base.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\rickc\Documents\Framework Physics\Debug\Base.lib" /MACHINE:X86 Debug\Application.obj
-         Debug\Camera.obj
-         Debug\GameObject.obj
-         Debug\LoadOBJ.obj
-         Debug\LoadTGA.obj
-         Debug\main.obj
-         Debug\Mesh.obj
-         Debug\MeshBuilder.obj
-         Debug\SceneAsteroid.obj
-         Debug\SceneBase.obj
-         Debug\SceneCollision.obj
-         Debug\SceneKinematics.obj
-         Debug\shader.obj
-         Debug\Utility.obj
-     1>Application.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
-     1>LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-         Base.vcxproj -> C:\Users\rickc\Documents\Framework Physics\Debug\Base.exe
-     1>Done Building Project "C:\Users\rickc\Documents\Framework Physics\Base\Base.vcxproj" (Build target(s)).
-
-Build succeeded.
-
-Time Elapsed 00:00:06.31
+﻿  Utility.cpp
+  shader.cpp
+  SceneKinematics.cpp
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\scenekinematics.cpp(140): warning C4305: '+=' : truncation from 'double' to 'float'
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\scenekinematics.cpp(145): warning C4305: '-=' : truncation from 'double' to 'float'
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\scenekinematics.cpp(298): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\scenekinematics.cpp(299): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+  SceneCollision.cpp
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\scenecollision.cpp(31): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\scenecollision.cpp(36): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\scenecollision.cpp(81): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\scenecollision.cpp(82): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\scenecollision.cpp(109): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\scenecollision.cpp(125): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\scenecollision.cpp(153): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\scenecollision.cpp(159): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\scenecollision.cpp(174): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+  SceneBase.cpp
+  SceneAsteroid.cpp
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\sceneasteroid.cpp(113): warning C4305: '+=' : truncation from 'double' to 'float'
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\sceneasteroid.cpp(117): warning C4305: '-=' : truncation from 'double' to 'float'
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\sceneasteroid.cpp(141): warning C4305: 'argument' : truncation from 'double' to 'float'
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\sceneasteroid.cpp(179): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\sceneasteroid.cpp(180): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\sceneasteroid.cpp(186): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\sceneasteroid.cpp(187): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\sceneasteroid.cpp(190): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\sceneasteroid.cpp(227): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\sceneasteroid.cpp(238): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+  MeshBuilder.cpp
+  Mesh.cpp
+  main.cpp
+  LoadTGA.cpp
+  LoadOBJ.cpp
+  GameObject.cpp
+  Camera.cpp
+  Application.cpp
+  Generating Code...
+c:\users\syong\desktop\dm2294_sp3\sp3\base\source\scenecollision.cpp(414): warning C4715: 'SceneCollision::CheckCollision' : not all control paths return a value
+Application.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  Base.vcxproj -> C:\Users\syong\Desktop\DM2294_SP3\SP3\Debug\Base.exe
