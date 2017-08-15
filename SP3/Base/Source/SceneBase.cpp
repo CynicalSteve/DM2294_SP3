@@ -100,6 +100,12 @@ void SceneBase::Init()
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
 
+	meshList[GEO_GROUND] = MeshBuilder::GenerateQuad("Ground", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_GROUND]->textureID = LoadTGA("Image//ground.tga");
+
+	meshList[GEO_MAZEWALL] = MeshBuilder::GenerateQuad("MazeWall", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_MAZEWALL]->textureID = LoadTGA("Image//mazeWall.tga");
+
 	bLightEnabled = false;
 }
 

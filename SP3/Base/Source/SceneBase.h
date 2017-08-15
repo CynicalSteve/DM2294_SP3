@@ -53,6 +53,8 @@ public:
 		GEO_TEXT,
 		GEO_BALL,
 		GEO_CUBE,
+		GEO_GROUND,
+		GEO_MAZEWALL,
 		ship,
 		NUM_GEOMETRY,
 	};

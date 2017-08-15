@@ -47,8 +47,8 @@ void SP3::Init()
 		KeyBounce[i] = false;
 	}
 
-	meshList[ship] = MeshBuilder::GenerateQuad("ship", Color(), 5);
-	meshList[ship]->textureID = LoadTGA("Image//cheekibreeki.tga");
+	/*meshList[ship] = MeshBuilder::GenerateQuad("ship", Color(), 5);
+	meshList[ship]->textureID = LoadTGA("Image//cheekibreeki.tga");*/
 }
 
 GameObject* SP3::FetchGO()
@@ -293,107 +293,120 @@ void SP3::Update(double dt)
 
 void SP3::RenderGO(GameObject *go)
 {
-	switch (go->type)
-	{
-	case GameObject::GO_SHIP:
-		//Exercise 4a: render a sphere with radius 1
-		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Rotate(Math::RadianToDegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[ship], true);
-		modelStack.PopMatrix();
+	//switch (go->type)
+	//{
+	//case GameObject::GO_SHIP:
+	//	//Exercise 4a: render a sphere with radius 1
+	//	modelStack.PushMatrix();
+	//	modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+	//	modelStack.Rotate(Math::RadianToDegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+	//	modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//	RenderMesh(meshList[ship], true);
+	//	modelStack.PopMatrix();
 
-		if (go->pos.x + go->scale.x > m_worldWidth)
-		{
-			modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x - m_worldWidth, go->pos.y, go->pos.z);
-			modelStack.Rotate(Math::RadianToDegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
-			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-			RenderMesh(meshList[ship], true);
-			modelStack.PopMatrix();
-		}
-		else if (go->pos.x - go->scale.x < 0)
-		{
-			modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x + m_worldWidth, go->pos.y, go->pos.z);
-			modelStack.Rotate(Math::RadianToDegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
-			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-			RenderMesh(meshList[ship], true);
-			modelStack.PopMatrix();
-		}
-		if (go->pos.y + go->scale.y > m_worldHeight)
-		{
-			modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x, go->pos.y - m_worldHeight, go->pos.z);
-			modelStack.Rotate(Math::RadianToDegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
-			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-			RenderMesh(meshList[ship], true);
-			modelStack.PopMatrix();
-		}
-		else if (go->pos.y - go->scale.x < 0)
-		{
-			modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x, go->pos.y + m_worldHeight, go->pos.z);
-			modelStack.Rotate(Math::RadianToDegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
-			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-			RenderMesh(meshList[ship], true);
-			modelStack.PopMatrix();
-		}
+	//	if (go->pos.x + go->scale.x > m_worldWidth)
+	//	{
+	//		modelStack.PushMatrix();
+	//		modelStack.Translate(go->pos.x - m_worldWidth, go->pos.y, go->pos.z);
+	//		modelStack.Rotate(Math::RadianToDegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+	//		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//		RenderMesh(meshList[ship], true);
+	//		modelStack.PopMatrix();
+	//	}
+	//	else if (go->pos.x - go->scale.x < 0)
+	//	{
+	//		modelStack.PushMatrix();
+	//		modelStack.Translate(go->pos.x + m_worldWidth, go->pos.y, go->pos.z);
+	//		modelStack.Rotate(Math::RadianToDegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+	//		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//		RenderMesh(meshList[ship], true);
+	//		modelStack.PopMatrix();
+	//	}
+	//	if (go->pos.y + go->scale.y > m_worldHeight)
+	//	{
+	//		modelStack.PushMatrix();
+	//		modelStack.Translate(go->pos.x, go->pos.y - m_worldHeight, go->pos.z);
+	//		modelStack.Rotate(Math::RadianToDegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+	//		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//		RenderMesh(meshList[ship], true);
+	//		modelStack.PopMatrix();
+	//	}
+	//	else if (go->pos.y - go->scale.x < 0)
+	//	{
+	//		modelStack.PushMatrix();
+	//		modelStack.Translate(go->pos.x, go->pos.y + m_worldHeight, go->pos.z);
+	//		modelStack.Rotate(Math::RadianToDegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+	//		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//		RenderMesh(meshList[ship], true);
+	//		modelStack.PopMatrix();
+	//	}
 
-		//Exercise 17a: render a ship texture or 3D ship model
-		//Exercise 17b:	re-orientate the ship with velocity
-		break;
-	case GameObject::GO_ASTEROID:
-		//Exercise 4b: render a cube with length 2
-		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_CUBE], true);
-		modelStack.PopMatrix();
+	//	//Exercise 17a: render a ship texture or 3D ship model
+	//	//Exercise 17b:	re-orientate the ship with velocity
+	//	break;
+	//case GameObject::GO_ASTEROID:
+	//	//Exercise 4b: render a cube with length 2
+	//	modelStack.PushMatrix();
+	//	modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+	//	modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//	RenderMesh(meshList[GEO_CUBE], true);
+	//	modelStack.PopMatrix();
 
-		if (go->pos.x + go->scale.x > m_worldWidth)
-		{
-			modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x - m_worldWidth, go->pos.y, go->pos.z);
-			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-			RenderMesh(meshList[GEO_CUBE], true);
-			modelStack.PopMatrix();
-		}
-		else if (go->pos.x - go->scale.x < 0)
-		{
-			modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x + m_worldWidth, go->pos.y, go->pos.z);
-			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-			RenderMesh(meshList[GEO_CUBE], true);
-			modelStack.PopMatrix();
-		}
-		if (go->pos.y + go->scale.y > m_worldHeight)
-		{
-			modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x, go->pos.y - m_worldHeight, go->pos.z);
-			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-			RenderMesh(meshList[GEO_CUBE], true);
-			modelStack.PopMatrix();
-		}
-		else if (go->pos.y - go->scale.x < 0)
-		{
-			modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x, go->pos.y + m_worldHeight, go->pos.z);
-			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-			RenderMesh(meshList[GEO_CUBE], true);
-			modelStack.PopMatrix();
-		}
+	//	if (go->pos.x + go->scale.x > m_worldWidth)
+	//	{
+	//		modelStack.PushMatrix();
+	//		modelStack.Translate(go->pos.x - m_worldWidth, go->pos.y, go->pos.z);
+	//		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//		RenderMesh(meshList[GEO_CUBE], true);
+	//		modelStack.PopMatrix();
+	//	}
+	//	else if (go->pos.x - go->scale.x < 0)
+	//	{
+	//		modelStack.PushMatrix();
+	//		modelStack.Translate(go->pos.x + m_worldWidth, go->pos.y, go->pos.z);
+	//		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//		RenderMesh(meshList[GEO_CUBE], true);
+	//		modelStack.PopMatrix();
+	//	}
+	//	if (go->pos.y + go->scale.y > m_worldHeight)
+	//	{
+	//		modelStack.PushMatrix();
+	//		modelStack.Translate(go->pos.x, go->pos.y - m_worldHeight, go->pos.z);
+	//		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//		RenderMesh(meshList[GEO_CUBE], true);
+	//		modelStack.PopMatrix();
+	//	}
+	//	else if (go->pos.y - go->scale.x < 0)
+	//	{
+	//		modelStack.PushMatrix();
+	//		modelStack.Translate(go->pos.x, go->pos.y + m_worldHeight, go->pos.z);
+	//		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//		RenderMesh(meshList[GEO_CUBE], true);
+	//		modelStack.PopMatrix();
+	//	}
 
-		break;
-	case GameObject::GO_BULLET:
-		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_BALL], true);
-		modelStack.PopMatrix();
-		break;
-	}
+	//	break;
+	//case GameObject::GO_BULLET:
+	//	modelStack.PushMatrix();
+	//	modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+	//	modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//	RenderMesh(meshList[GEO_BALL], true);
+	//	modelStack.PopMatrix();
+	//	break;
+	//}
+modelStack.PushMatrix();
+modelStack.Translate(0, 0, 0);
+modelStack.Scale(10, 10, 10);
+RenderMesh(meshList[GEO_MAZEWALL], false);
+modelStack.PopMatrix();
+
+    modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Scale(270, 200, 1);
+	RenderMesh(meshList[GEO_GROUND], false);
+	modelStack.PopMatrix();
+
+	
 }
 
 void SP3::Render()
