@@ -1,5 +1,0 @@
-﻿glfw3.lib(context.obj) : error LNK2001: unresolved external symbol __imp__sscanf
-glfw3.lib(init.obj) : error LNK2001: unresolved external symbol __imp__vsnprintf
-MSVCRT.lib(vsnprintf.obj) : error LNK2001: unresolved external symbol __imp__vsnprintf
-MSVCRT.lib(vsnprintf.obj) : error LNK2001: unresolved external symbol __imp___vsnprintf
-C:\Users\Rick Chong\Documents\Framework Physics\Release\Base.exe : fatal error LNK1120: 3 unresolved externals
