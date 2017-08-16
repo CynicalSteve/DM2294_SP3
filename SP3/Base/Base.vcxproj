@@ -22,9 +22,7 @@
     <ClCompile Include="Source\Mesh.cpp" />
     <ClCompile Include="Source\MeshBuilder.cpp" />
     <ClCompile Include="Source\Player.cpp" />
-    <ClCompile Include="Source\SceneAsteroid.cpp" />
     <ClCompile Include="Source\SceneBase.cpp" />
-    <ClCompile Include="Source\SceneKinematics.cpp" />
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\SP3.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
@@ -43,9 +41,7 @@
     <ClInclude Include="Source\MeshBuilder.h" />
     <ClInclude Include="Source\Player.h" />
     <ClInclude Include="Source\Scene.h" />
-    <ClInclude Include="Source\SceneAsteroid.h" />
     <ClInclude Include="Source\SceneBase.h" />
-    <ClInclude Include="Source\SceneKinematics.h" />
     <ClInclude Include="Source\shader.hpp" />
     <ClInclude Include="Source\SP3.h" />
     <ClInclude Include="Source\Utility.h" />

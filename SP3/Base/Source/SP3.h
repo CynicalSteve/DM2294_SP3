@@ -26,21 +26,15 @@ public:
 
 	void RenderGO(GameObject *go);
 
-	GameObject* FetchGO(double dt);
+	GameObject* FetchGO();
 protected:
 
 	//Physics
 	std::vector<GameObject *> m_goList;
-	float m_speed;
 	float m_worldWidth;
 	float m_worldHeight;
-	GameObject *m_ship;
-	Vector3 m_force;
-	Vector3 m_torque;
-	int m_objectCount;
-	int m_lives;
-	int m_score;
-	Player* playerinfo;
+	Player* playerInfo;
+	int theMap[11][11];
 	GameObject *myInventory[10];
 	double doubletime;
 

@@ -27,7 +27,15 @@ struct GameObject
 		GO_TOTAL, //must be last
 	};
 	GAMEOBJECT_TYPE type;
-	Vector3 pos;
+	struct coord
+	{
+		short x = 0, y = 0;
+		void set(short x, short y)
+		{
+			this->x = x;
+			this->y = y;
+		}
+	} pos;
 	Vector3 vel;
 	Vector3 scale;
 	Vector3 dir; //direction/orientation
