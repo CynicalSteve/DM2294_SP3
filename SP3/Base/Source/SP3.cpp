@@ -164,6 +164,11 @@ void SP3::Update(double dt)
 	{
 		bLButtonState = true;
 		std::cout << "LBUTTON DOWN" << std::endl;
+		GameObject *bombGO = FetchGO();
+		bombGO->active = true;
+		bombGO->type = GameObject::GO_NORMALBOMB;
+		bombGO->pos = playerinfo->pos;
+		bombGO->scale.Set(10, 10, 10);
 	}
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
@@ -304,17 +309,18 @@ void SP3::Update(double dt)
 
 void SP3::RenderGO(GameObject *go)
 {
-	//switch (go->type)
-	//{
-	//case GameObject::GO_SHIP:
-	//	//Exercise 4a: render a sphere with radius 1
-	//	modelStack.PushMatrix();
-	//	modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-	//	modelStack.Rotate(Math::RadianToDegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
-	//	modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-	//	RenderMesh(meshList[ship], true);
-	//	modelStack.PopMatrix();
-
+	switch (go->type)
+	{
+	case GameObject::GO_NORMALBOMB:
+		//exercise 4a: render a sphere with radius 1
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_NORMALBOMB], true);
+		modelStack.PopMatrix();
+		break;
+	}
 	//	if (go->pos.x + go->scale.x > m_worldWidth)
 	//	{
 	//		modelStack.PushMatrix();
@@ -405,23 +411,6 @@ void SP3::RenderGO(GameObject *go)
 	//	modelStack.PopMatrix();
 	//	break;
 	//}
-modelStack.PushMatrix();
-modelStack.Translate(0, 0, 0);
-modelStack.Scale(10, 10, 10);
-RenderMesh(meshList[GEO_MAZEWALL], false);
-modelStack.PopMatrix();
-
-    modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 0);
-	modelStack.Scale(270, 200, 1);
-	RenderMesh(meshList[GEO_GROUND], false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 0);
-	modelStack.Scale(270, 200, 1);
-	RenderMesh(meshList[GEO_GROUND], false);
-	modelStack.PopMatrix();
 }
 
 void SP3::Render()
@@ -448,8 +437,17 @@ void SP3::Render()
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
 
-	
-	
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Scale(270, 200, 1);
+	RenderMesh(meshList[GEO_GROUND], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[GEO_MAZEWALL], false);
+	modelStack.PopMatrix();
 
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
