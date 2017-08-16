@@ -57,6 +57,7 @@ public:
 		GEO_MAZEWALL,
 		GEO_PLAYER,
 		GEO_NORMALBOMB,
+		GEO_BOOM,
 		ship,
 		NUM_GEOMETRY,
 	};

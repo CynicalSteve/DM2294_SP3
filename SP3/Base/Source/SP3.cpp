@@ -51,7 +51,7 @@ void SP3::Init()
 	playerinfo->type = GameObject::GO_PLAYER;
 }
 
-GameObject* SP3::FetchGO()
+GameObject* SP3::FetchGO(double dt)
 {
 	//Exercise 3a: Fetch a game object from m_goList and return it
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
@@ -73,6 +73,7 @@ GameObject* SP3::FetchGO()
 void SP3::Update(double dt)
 {
 	SceneBase::Update(dt);
+	doubletime = dt;
 
 	if (Application::IsKeyPressed('9'))
 	{
@@ -128,7 +129,7 @@ void SP3::Update(double dt)
 	//Exercise 11: use a key to spawn some asteroids
 	if (Application::IsKeyPressed('V'))
 	{
-		GameObject *go = FetchGO();
+		GameObject *go = FetchGO(dt);
 		go->type = GameObject::GO_ASTEROID;
 		go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), 0);
 		go->vel.Set(Math::RandFloatMinMax(-5, 5), Math::RandFloatMinMax(-5, 5), 0);
@@ -141,7 +142,7 @@ void SP3::Update(double dt)
 	{
 		if (!KeyBounce[VK_SPACE])
 		{
-			GameObject* go = FetchGO();
+			GameObject* go = FetchGO(dt);
 			go->active = true;
 			go->type = GameObject::GO_BULLET;
 			go->pos = m_ship->pos;
@@ -161,7 +162,7 @@ void SP3::Update(double dt)
 	{
 		bLButtonState = true;
 		std::cout << "LBUTTON DOWN" << std::endl;
-		GameObject *bombGO = FetchGO();
+		GameObject *bombGO = FetchGO(dt);
 		bombGO->active = true;
 		bombGO->type = GameObject::GO_NORMALBOMB;
 		bombGO->pos = playerinfo->pos;
@@ -314,8 +315,19 @@ void SP3::RenderGO(GameObject *go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_NORMALBOMB], true);
-		modelStack.PopMatrix();
+		RenderMesh(meshList[GEO_NORMALBOMB], false);
+		
+		if (go->bombTimer < 3.f)
+		{
+			go->bombTimer += doubletime;
+		}
+		else
+		{
+			go->bombTimer = 0.f;
+			go->active = false;
+			break;
+		}
+
 		break;
 	}
 	//	if (go->pos.x + go->scale.x > m_worldWidth)

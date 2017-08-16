@@ -26,7 +26,7 @@ public:
 
 	void RenderGO(GameObject *go);
 
-	GameObject* FetchGO();
+	GameObject* FetchGO(double dt);
 protected:
 
 	//Physics
@@ -42,6 +42,7 @@ protected:
 	int m_score;
 	Player* playerinfo;
 	GameObject *myInventory[10];
+	double doubletime;
 
 	bool KeyBounce[256];
 };
