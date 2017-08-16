@@ -24,17 +24,8 @@
     <Filter Include="Scenes">
       <UniqueIdentifier>{44620b6f-381e-41bb-bbb5-a9adad0072eb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scenes\Reference">
-      <UniqueIdentifier>{e0cb28e4-0128-4872-a6bb-47c1f9d16cef}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scenes\Actual Game">
       <UniqueIdentifier>{8471aaeb-1c75-4089-b867-a3dfb9a53f95}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scenes\Reference\SceneAsteroid">
-      <UniqueIdentifier>{efd296b5-a2c3-434c-9b19-1b7aaf55e0d3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scenes\Reference\SceneKinematics">
-      <UniqueIdentifier>{ef81f9f1-6e18-4e6a-a2b1-6fc28927dd02}</UniqueIdentifier>
     </Filter>
     <Filter Include="Scenes\SceneBase">
       <UniqueIdentifier>{5c5485d2-eefb-48bf-91be-79be18edf181}</UniqueIdentifier>
@@ -96,12 +87,6 @@
     <ClCompile Include="Source\SceneBase.cpp">
       <Filter>Scenes\SceneBase</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SceneAsteroid.cpp">
-      <Filter>Scenes\Reference\SceneAsteroid</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\SceneKinematics.cpp">
-      <Filter>Scenes\Reference\SceneKinematics</Filter>
-    </ClCompile>
     <ClCompile Include="Source\shader.cpp">
       <Filter>Miscellaneous\shader</Filter>
     </ClCompile>
@@ -157,12 +142,6 @@
     </ClInclude>
     <ClInclude Include="Source\Scene.h">
       <Filter>Scenes\SceneBase</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\SceneAsteroid.h">
-      <Filter>Scenes\Reference\SceneAsteroid</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\SceneKinematics.h">
-      <Filter>Scenes\Reference\SceneKinematics</Filter>
     </ClInclude>
     <ClInclude Include="Source\shader.hpp">
       <Filter>Miscellaneous\shader</Filter>
