@@ -46,7 +46,7 @@ void SP3::Init()
 		KeyBounce[i] = false;
 	}
 
-	playerinfo = new Player(100, 5);
+	playerinfo = new Player(100, 35);
 	playerinfo->pos = Vector3(50.f, 50.f, 0.f);
 	playerinfo->type = GameObject::GO_PLAYER;
 }
@@ -93,27 +93,27 @@ void SP3::Update(double dt)
 		m_force += m_ship->dir * 5.f;
 		m_torque += r.Cross(F);*/
 
-		playerinfo->pos.x -= playerinfo->getPlayerSpeed();
+		playerinfo->pos.x -= playerinfo->getPlayerSpeed() * dt;
 	}
 	if (Application::IsKeyPressed('D'))
 	{
 		/*Vector3 r(-1, -1, 0), F(0, 5, 0);
 		m_force += m_ship->dir * 5.f;
 		m_torque += r.Cross(F);*/
-		playerinfo->pos.x += playerinfo->getPlayerSpeed();
+		playerinfo->pos.x += playerinfo->getPlayerSpeed() * dt;
 		
 	}
 	if (Application::IsKeyPressed('W'))
 	{
 		/*m_force += m_ship->dir * 100.f;*/
-		playerinfo->pos.y += playerinfo->getPlayerSpeed();
+		playerinfo->pos.y += playerinfo->getPlayerSpeed() * dt;
 		
 	}
 	if (Application::IsKeyPressed('S'))
 	{
 		/*m_force -= m_ship->dir * 100.f;*/
 
-		playerinfo->pos.y -= playerinfo->getPlayerSpeed();
+		playerinfo->pos.y -= playerinfo->getPlayerSpeed() * dt;
 	}
 
 	//Exercise 8: use 2 keys to increase and decrease mass of ship
@@ -458,6 +458,12 @@ void SP3::Render()
 	modelStack.Translate(0, 0, 0);
 	modelStack.Scale(10, 10, 10);
 	RenderMesh(meshList[GEO_MAZEWALL], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(15, 40, 0);
+	modelStack.Scale(50, 50, 0);
+	RenderMesh(meshList[GEO_HOUSE], false);
 	modelStack.PopMatrix();
 
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)

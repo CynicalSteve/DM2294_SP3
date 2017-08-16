@@ -58,6 +58,7 @@ public:
 		GEO_PLAYER,
 		GEO_NORMALBOMB,
 		GEO_BOOM,
+		GEO_HOUSE,
 		ship,
 		NUM_GEOMETRY,
 	};
