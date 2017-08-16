@@ -14,7 +14,6 @@ SP3::~SP3()
 void SP3::Init()
 {
 	SceneBase::Init();
-
 	//Physics code here
 	m_speed = 1.f;
 
@@ -49,6 +48,10 @@ void SP3::Init()
 
 	/*meshList[ship] = MeshBuilder::GenerateQuad("ship", Color(), 5);
 	meshList[ship]->textureID = LoadTGA("Image//cheekibreeki.tga");*/
+
+	playerinfo = new Player(100, 5);
+	playerinfo->pos = Vector3(50.f, 50.f, 0.f);
+	playerinfo->type = GameObject::GO_PLAYER;
 }
 
 GameObject* SP3::FetchGO()
@@ -88,23 +91,31 @@ void SP3::Update(double dt)
 	//Exercise 6: set m_force values based on WASD
 	if (Application::IsKeyPressed('A'))
 	{
-		Vector3 r(1, -1, 0), F(0, 5, 0);
+		/*Vector3 r(1, -1, 0), F(0, 5, 0);
 		m_force += m_ship->dir * 5.f;
-		m_torque += r.Cross(F);
+		m_torque += r.Cross(F);*/
+
+		playerinfo->pos.x -= playerinfo->getPlayerSpeed();
 	}
 	if (Application::IsKeyPressed('D'))
 	{
-		Vector3 r(-1, -1, 0), F(0, 5, 0);
+		/*Vector3 r(-1, -1, 0), F(0, 5, 0);
 		m_force += m_ship->dir * 5.f;
-		m_torque += r.Cross(F);
+		m_torque += r.Cross(F);*/
+		playerinfo->pos.x += playerinfo->getPlayerSpeed();
+		
 	}
 	if (Application::IsKeyPressed('W'))
 	{
-		m_force += m_ship->dir * 100.f;
+		/*m_force += m_ship->dir * 100.f;*/
+		playerinfo->pos.y += playerinfo->getPlayerSpeed();
+		
 	}
 	if (Application::IsKeyPressed('S'))
 	{
-		m_force -= m_ship->dir * 100.f;
+		/*m_force -= m_ship->dir * 100.f;*/
+
+		playerinfo->pos.y -= playerinfo->getPlayerSpeed();
 	}
 
 	//Exercise 8: use 2 keys to increase and decrease mass of ship
@@ -406,12 +417,17 @@ modelStack.PopMatrix();
 	RenderMesh(meshList[GEO_GROUND], false);
 	modelStack.PopMatrix();
 
-	
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Scale(270, 200, 1);
+	RenderMesh(meshList[GEO_GROUND], false);
+	modelStack.PopMatrix();
 }
 
 void SP3::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glDisable(GL_DEPTH_TEST);
 
 	//Calculating aspect ratio
 	m_worldHeight = 100.f;
@@ -432,7 +448,8 @@ void SP3::Render()
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
 
-	RenderMesh(meshList[GEO_AXES], false);
+	
+	
 
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
@@ -447,6 +464,14 @@ void SP3::Render()
 	{
 		RenderGO(m_ship);
 	}
+
+	RenderMesh(meshList[GEO_AXES], false);
+
+	modelStack.PushMatrix();
+	modelStack.Translate(playerinfo->pos.x, playerinfo->pos.y, playerinfo->pos.z);
+	modelStack.Scale(10, 10, 1);
+	RenderMesh(meshList[GEO_PLAYER], false);
+	modelStack.PopMatrix();
 
 	std::ostringstream ss;
 	//On screen text
@@ -482,6 +507,10 @@ void SP3::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
 
 	RenderTextOnScreen(meshList[GEO_TEXT], "Asteroid", Color(0, 1, 0), 3, 0, 0);
+
+	
+	
+	glEnable(GL_DEPTH_TEST);
 }
 
 void SP3::Exit()
@@ -499,4 +528,6 @@ void SP3::Exit()
 		delete m_ship;
 		m_ship = NULL;
 	}
+
+	delete playerinfo;
 }

@@ -4,6 +4,9 @@
 #include "GameObject.h"
 #include <vector>
 #include "SceneBase.h"
+#include "AlienBase.h"
+#include "BombBase.h"
+#include "Player.h"
 
 class SP3 : public SceneBase
 {
@@ -37,6 +40,7 @@ protected:
 	int m_objectCount;
 	int m_lives;
 	int m_score;
+	Player* playerinfo;
 
 	bool KeyBounce[256];
 };

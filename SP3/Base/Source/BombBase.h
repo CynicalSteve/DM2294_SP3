@@ -5,14 +5,15 @@ using namespace std;
 class BombBase : GameObject
 {
 public:
-	BombBase(string bombName, unsigned int bombDamage);
+	BombBase(string bombName, float bombDamage);
 	~BombBase();
-
-	string setBombName();
-	int setBombDamage();
+	
+	void setBombName(string bombName), setBombDamage(float bombDamage), setBombTimer(float timeToExplode);
+	string getBombName();
+	float getBombDamage(), getBombTimer();
 
 private:
 	string bombName;
-	unsigned int bombDamage;
+	float bombDamage, timeToExplode;
 };
 

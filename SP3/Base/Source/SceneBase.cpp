@@ -17,7 +17,7 @@ void SceneBase::Init()
 	// Accept fragment if it closer to the camera than the former one
 	glDepthFunc(GL_LESS); 
 	
-	glEnable(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);
 	
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -100,11 +100,18 @@ void SceneBase::Init()
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
 
+	//SP3
 	meshList[GEO_GROUND] = MeshBuilder::GenerateQuad("Ground", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_GROUND]->textureID = LoadTGA("Image//ground.tga");
 
 	meshList[GEO_MAZEWALL] = MeshBuilder::GenerateQuad("MazeWall", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_MAZEWALL]->textureID = LoadTGA("Image//mazeWall.tga");
+
+	meshList[GEO_PLAYER] = MeshBuilder::GenerateQuad("Player", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_PLAYER]->textureID = LoadTGA("Image//player.tga");
+
+	meshList[GEO_NORMALBOMB] = MeshBuilder::GenerateQuad("NormalBomb", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_NORMALBOMB]->textureID = LoadTGA("Image//normalBomb.tga");
 
 	bLightEnabled = false;
 }

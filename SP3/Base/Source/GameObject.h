@@ -19,6 +19,11 @@ struct GameObject
 		GO_PILLAR,
 		GO_POWERUP, //powerup item
 		GO_WALL,
+
+		//SP3
+		GO_PLAYER,
+		GO_NORMALBOMB,
+
 		GO_TOTAL, //must be last
 	};
 	GAMEOBJECT_TYPE type;

@@ -55,6 +55,8 @@ public:
 		GEO_CUBE,
 		GEO_GROUND,
 		GEO_MAZEWALL,
+		GEO_PLAYER,
+		GEO_NORMALBOMB,
 		ship,
 		NUM_GEOMETRY,
 	};
