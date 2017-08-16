@@ -1,126 +1,162 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
+    <Filter Include="Miscellaneous">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Shader">
+    <Filter Include="Miscellaneous\Camera">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Miscellaneous\LoadOBJ">
+      <UniqueIdentifier>{0af8c530-55a8-4a25-9d0a-b7b4a5742751}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Miscellaneous\LoadTGA">
+      <UniqueIdentifier>{7d23f8c0-562e-4f8c-9a3f-43a63461eb54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Miscellaneous\Mesh">
+      <UniqueIdentifier>{9e2936e8-c216-4be6-af24-5e82ed94a272}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Miscellaneous\MeshBuilder">
+      <UniqueIdentifier>{88067cd9-c251-40a3-ba83-f9f432014c7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes">
+      <UniqueIdentifier>{44620b6f-381e-41bb-bbb5-a9adad0072eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes\Reference">
+      <UniqueIdentifier>{e0cb28e4-0128-4872-a6bb-47c1f9d16cef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes\Actual Game">
+      <UniqueIdentifier>{8471aaeb-1c75-4089-b867-a3dfb9a53f95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes\Reference\SceneAsteroid">
+      <UniqueIdentifier>{efd296b5-a2c3-434c-9b19-1b7aaf55e0d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes\Reference\SceneKinematics">
+      <UniqueIdentifier>{ef81f9f1-6e18-4e6a-a2b1-6fc28927dd02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes\SceneBase">
+      <UniqueIdentifier>{5c5485d2-eefb-48bf-91be-79be18edf181}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Miscellaneous\shader">
+      <UniqueIdentifier>{6ec75d4e-3001-4932-a269-348c5bac01ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Miscellaneous\Utitlity">
+      <UniqueIdentifier>{0787a93e-a712-4aff-bbdd-1d242a58920e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AlienBase">
+      <UniqueIdentifier>{d65d8528-5591-4250-824f-fa88340bd8a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{1b271566-ba5b-49e4-ab6f-867e234996a0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Application</Filter>
     </ClCompile>
     <ClCompile Include="Source\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\MeshBuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Utility.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\LoadTGA.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\LoadOBJ.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\SceneKinematics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\SceneAsteroid.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\SceneBase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\SP3.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Application</Filter>
     </ClCompile>
     <ClCompile Include="Source\AlienBase.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>AlienBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Camera.cpp">
+      <Filter>Miscellaneous\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObject.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LoadOBJ.cpp">
+      <Filter>Miscellaneous\LoadOBJ</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LoadTGA.cpp">
+      <Filter>Miscellaneous\LoadTGA</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Mesh.cpp">
+      <Filter>Miscellaneous\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MeshBuilder.cpp">
+      <Filter>Miscellaneous\MeshBuilder</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SP3.cpp">
+      <Filter>Scenes\Actual Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SceneBase.cpp">
+      <Filter>Scenes\SceneBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SceneAsteroid.cpp">
+      <Filter>Scenes\Reference\SceneAsteroid</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SceneKinematics.cpp">
+      <Filter>Scenes\Reference\SceneKinematics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\shader.cpp">
+      <Filter>Miscellaneous\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Utility.cpp">
+      <Filter>Miscellaneous\Utitlity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Application.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Geometry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\shader.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Vertex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\MeshBuilder.h">
-      <Filter>Header Files</Filter>
+      <Filter>Miscellaneous</Filter>
     </ClInclude>
     <ClInclude Include="Source\Light.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Utility.h">
-      <Filter>Header Files</Filter>
+      <Filter>Miscellaneous</Filter>
     </ClInclude>
     <ClInclude Include="Source\Material.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\LoadTGA.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\LoadOBJ.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\SceneKinematics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\SceneAsteroid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\SceneBase.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\SceneCollision.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\SP3.h">
-      <Filter>Header Files</Filter>
+      <Filter>Miscellaneous</Filter>
     </ClInclude>
     <ClInclude Include="Source\AlienBase.h">
-      <Filter>Header Files</Filter>
+      <Filter>AlienBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera.h">
+      <Filter>Miscellaneous\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObject.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LoadOBJ.h">
+      <Filter>Miscellaneous\LoadOBJ</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LoadTGA.h">
+      <Filter>Miscellaneous\LoadTGA</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Mesh.h">
+      <Filter>Miscellaneous\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MeshBuilder.h">
+      <Filter>Miscellaneous\MeshBuilder</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SP3.h">
+      <Filter>Scenes\Actual Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneBase.h">
+      <Filter>Scenes\SceneBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene.h">
+      <Filter>Scenes\SceneBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneAsteroid.h">
+      <Filter>Scenes\Reference\SceneAsteroid</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneKinematics.h">
+      <Filter>Scenes\Reference\SceneKinematics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\shader.hpp">
+      <Filter>Miscellaneous\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utility.h">
+      <Filter>Miscellaneous\Utitlity</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

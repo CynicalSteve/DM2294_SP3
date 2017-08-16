@@ -46,9 +46,6 @@ void SP3::Init()
 		KeyBounce[i] = false;
 	}
 
-	/*meshList[ship] = MeshBuilder::GenerateQuad("ship", Color(), 5);
-	meshList[ship]->textureID = LoadTGA("Image//cheekibreeki.tga");*/
-
 	playerinfo = new Player(100, 5);
 	playerinfo->pos = Vector3(50.f, 50.f, 0.f);
 	playerinfo->type = GameObject::GO_PLAYER;

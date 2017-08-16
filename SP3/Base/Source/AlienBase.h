@@ -15,4 +15,3 @@ private:
 	string alienName;
 	unsigned int alienHealth, alienSpeed, alienDamage;
 };
-

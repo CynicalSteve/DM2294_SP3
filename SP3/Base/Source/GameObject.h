@@ -22,7 +22,7 @@ struct GameObject
 
 		//SP3
 		GO_PLAYER,
-		GO_NORMALBOMB,
+		GO_BOMB,
 
 		GO_TOTAL, //must be last
 	};

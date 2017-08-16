@@ -41,6 +41,7 @@ protected:
 	int m_lives;
 	int m_score;
 	Player* playerinfo;
+	GameObject *myInventory[10];
 
 	bool KeyBounce[256];
 };
