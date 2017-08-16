@@ -113,6 +113,8 @@ void SceneBase::Init()
 	meshList[GEO_NORMALBOMB] = MeshBuilder::GenerateQuad("NormalBomb", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_NORMALBOMB]->textureID = LoadTGA("Image//normalBomb.tga");
 
+	meshList[GEO_BOOM] = MeshBuilder::GenerateQuad("Boom", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_BOOM]->textureID = LoadTGA("Image//boom.tga");
 	bLightEnabled = false;
 }
 

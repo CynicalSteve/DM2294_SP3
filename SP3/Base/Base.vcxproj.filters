@@ -55,6 +55,12 @@
     <Filter Include="GameObject">
       <UniqueIdentifier>{1b271566-ba5b-49e4-ab6f-867e234996a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Bombs">
+      <UniqueIdentifier>{78aeff0b-c852-45a0-80b8-bb9031e71e9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player">
+      <UniqueIdentifier>{cb5c5092-40b2-4a89-8580-800162b5d60b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -101,6 +107,12 @@
     </ClCompile>
     <ClCompile Include="Source\Utility.cpp">
       <Filter>Miscellaneous\Utitlity</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Player.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BombBase.cpp">
+      <Filter>Bombs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +169,12 @@
     </ClInclude>
     <ClInclude Include="Source\Utility.h">
       <Filter>Miscellaneous\Utitlity</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Player.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BombBase.h">
+      <Filter>Bombs</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

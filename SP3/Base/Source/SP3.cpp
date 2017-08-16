@@ -67,6 +67,7 @@ GameObject* SP3::FetchGO()
 void SP3::Update(double dt)
 {
 	SceneBase::Update(dt);
+	doubletime = dt;
 
 	if (Application::IsKeyPressed('9'))
 	{
@@ -293,6 +294,18 @@ void SP3::RenderGO(GameObject *go)
 	switch (go->type)
 	{
 	case GameObject::GO_NORMALBOMB:
+		
+		if (go->bombTimer < 3.f)
+		{
+			go->bombTimer += doubletime;
+		}
+		else
+		{
+			go->bombTimer = 0.f;
+			go->active = false;
+			break;
+		}
+
 		//exercise 4a: render a sphere with radius 1
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
@@ -300,6 +313,7 @@ void SP3::RenderGO(GameObject *go)
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_NORMALBOMB], true);
 		modelStack.PopMatrix();
+
 		break;
 	}
 	//	if (go->pos.x + go->scale.x > m_worldWidth)

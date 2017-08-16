@@ -42,6 +42,9 @@ protected:
 	int m_score;
 	Player* playerInfo;
 	int theMap[11][11];
+	Player* playerinfo;
+	GameObject *myInventory[10];
+	double doubletime;
 
 	bool KeyBounce[256];
 };
