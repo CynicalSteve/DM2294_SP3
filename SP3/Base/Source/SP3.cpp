@@ -34,21 +34,15 @@ void SP3::Init()
 	m_score = 0;
 
 	//Exercise 2c: Construct m_ship, set active, type, scale and pos
-	m_ship = new GameObject(GameObject::GO_SHIP);
-	m_ship->scale.Set(1, 1, 1);
-	m_ship->pos.Set(m_worldWidth / 2, m_worldHeight / 2, 0.f);
-	m_ship->active = true;
-	m_ship->angularVelocity = 0.f;
-	m_ship->momentOfInertia = 1.f;
 
 	for (size_t i = 0; i < 256; ++i)
 	{
 		KeyBounce[i] = false;
 	}
 
-	playerinfo = new Player(100, 5);
-	playerinfo->pos = Vector3(50.f, 50.f, 0.f);
-	playerinfo->type = GameObject::GO_PLAYER;
+	playerInfo = new Player(100, 5);
+	playerInfo->pos.set(5, 5);
+	playerInfo->type = GameObject::GO_PLAYER;
 }
 
 GameObject* SP3::FetchGO()
@@ -92,27 +86,27 @@ void SP3::Update(double dt)
 		m_force += m_ship->dir * 5.f;
 		m_torque += r.Cross(F);*/
 
-		playerinfo->pos.x -= playerinfo->getPlayerSpeed();
+		playerInfo->pos.x -= playerInfo->getPlayerSpeed();
 	}
 	if (Application::IsKeyPressed('D'))
 	{
 		/*Vector3 r(-1, -1, 0), F(0, 5, 0);
 		m_force += m_ship->dir * 5.f;
 		m_torque += r.Cross(F);*/
-		playerinfo->pos.x += playerinfo->getPlayerSpeed();
+		playerInfo->pos.x += playerInfo->getPlayerSpeed();
 		
 	}
 	if (Application::IsKeyPressed('W'))
 	{
 		/*m_force += m_ship->dir * 100.f;*/
-		playerinfo->pos.y += playerinfo->getPlayerSpeed();
+		playerInfo->pos.y += playerInfo->getPlayerSpeed();
 		
 	}
 	if (Application::IsKeyPressed('S'))
 	{
 		/*m_force -= m_ship->dir * 100.f;*/
 
-		playerinfo->pos.y -= playerinfo->getPlayerSpeed();
+		playerInfo->pos.y -= playerInfo->getPlayerSpeed();
 	}
 
 	//Exercise 8: use 2 keys to increase and decrease mass of ship
@@ -123,16 +117,6 @@ void SP3::Update(double dt)
 	if (Application::IsKeyPressed(VK_DOWN) && m_ship->mass > 0.02)
 	{
 		m_ship->mass -= 0.01;
-	}
-
-	//Exercise 11: use a key to spawn some asteroids
-	if (Application::IsKeyPressed('V'))
-	{
-		GameObject *go = FetchGO();
-		go->type = GameObject::GO_ASTEROID;
-		go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), 0);
-		go->vel.Set(Math::RandFloatMinMax(-5, 5), Math::RandFloatMinMax(-5, 5), 0);
-		go->scale.Set(1, 1, 1);
 	}
 
 	//Exercise 14: use a key to spawn a bullet
@@ -164,7 +148,7 @@ void SP3::Update(double dt)
 		GameObject *bombGO = FetchGO();
 		bombGO->active = true;
 		bombGO->type = GameObject::GO_NORMALBOMB;
-		bombGO->pos = playerinfo->pos;
+		bombGO->pos = playerInfo->pos;
 		bombGO->scale.Set(10, 10, 10);
 	}
 	else if (bLButtonState && !Application::IsMousePressed(0))
@@ -463,7 +447,7 @@ void SP3::Render()
 	RenderMesh(meshList[GEO_AXES], false);
 
 	modelStack.PushMatrix();
-	modelStack.Translate(playerinfo->pos.x, playerinfo->pos.y, playerinfo->pos.z);
+	modelStack.Translate(playerInfo->pos.x, playerInfo->pos.y, playerInfo->pos.z);
 	modelStack.Scale(10, 10, 1);
 	RenderMesh(meshList[GEO_PLAYER], false);
 	modelStack.PopMatrix();
@@ -524,5 +508,5 @@ void SP3::Exit()
 		m_ship = NULL;
 	}
 
-	delete playerinfo;
+	delete playerInfo;
 }

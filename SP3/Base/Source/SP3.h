@@ -40,8 +40,8 @@ protected:
 	int m_objectCount;
 	int m_lives;
 	int m_score;
-	Player* playerinfo;
-	GameObject *myInventory[10];
+	Player* playerInfo;
+	int theMap[11][11];
 
 	bool KeyBounce[256];
 };

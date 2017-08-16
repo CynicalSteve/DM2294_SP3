@@ -11,3 +11,6 @@ SP3/Base/Base.vcxproj.user
 SP3/Common/Common.vcxproj
 SP3/Common/Common.vcxproj.filters
 SP3/Common/Common.vcxproj.user
+*.opensdf
+*.sdf
+*.suo
