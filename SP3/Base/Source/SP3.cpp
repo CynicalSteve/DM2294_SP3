@@ -152,8 +152,9 @@ void SP3::RenderGO(GameObject *go)
 {
 	switch (go->type)
 	{
+		{
 	case GameObject::GO_NORMALBOMB:
-		
+
 		if (go->bombTimer < 3.f)
 		{
 			go->bombTimer += doubletime;
@@ -162,6 +163,22 @@ void SP3::RenderGO(GameObject *go)
 		{
 			go->bombTimer = 0.f;
 			go->active = false;
+
+			GameObject *bombFireGO = FetchGO();
+			bombFireGO->active = true;
+			bombFireGO->type = GameObject::GO_BOMBFIRE;
+			bombFireGO->pos = go->pos;
+			bombFireGO->scale.Set(10, 10, 10);
+
+			/*for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+			{
+				GameObject *bombFireFinder = (GameObject *)*it;
+				if (bombFireFinder->type == GameObject::GO_BOMBFIRE)
+				{
+					RenderGO(bombFireFinder);
+				}
+			}*/
+
 			break;
 		}
 
@@ -174,7 +191,88 @@ void SP3::RenderGO(GameObject *go)
 		modelStack.PopMatrix();
 
 		break;
+		}
+	case GameObject::GO_BOMBFIRE:
+	{
+		if (go->fireTimer < 2.f)
+		{
+			go->fireTimer += doubletime;
+		}
+		else
+		{
+			go->fireTimer = 0.f;
+			go->active = false;
+
+			break;
+		}
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, 0);
+		//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BOMBFIRE], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x - 5, go->pos.y, 0);
+		//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BOMBFIRE], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x - 10, go->pos.y, 0);
+		//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BOMBFIRE], true);
+		modelStack.PopMatrix();
+		
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x + 5, go->pos.y, 0);
+		//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BOMBFIRE], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x + 10, go->pos.y, 0);
+		//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BOMBFIRE], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y - 5, 0);
+		//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BOMBFIRE], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y - 10, 0);
+		//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BOMBFIRE], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y + 5, 0);
+		//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BOMBFIRE], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y + 10, 0);
+		//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BOMBFIRE], true);
+		modelStack.PopMatrix();
+
+		break;
 	}
+	}
+	
 }
 
 void SP3::Render()

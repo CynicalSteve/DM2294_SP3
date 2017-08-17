@@ -59,6 +59,7 @@ public:
 		GEO_NORMALBOMB,
 		GEO_BOOM,
 		GEO_HOUSE,
+		GEO_BOMBFIRE,
 		ship,
 		NUM_GEOMETRY,
 	};

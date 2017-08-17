@@ -119,6 +119,9 @@ void SceneBase::Init()
 	meshList[GEO_HOUSE] = MeshBuilder::GenerateQuad("House", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_HOUSE]->textureID = LoadTGA("Image//house.tga");
 
+	meshList[GEO_BOMBFIRE] = MeshBuilder::GenerateQuad("BombFire", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_BOMBFIRE]->textureID = LoadTGA("Image//bombFire.tga");
+
 	bLightEnabled = false;
 }
 
