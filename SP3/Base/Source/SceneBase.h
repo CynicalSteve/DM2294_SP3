@@ -60,6 +60,7 @@ public:
 		GEO_BOOM,
 		GEO_HOUSE,
 		GEO_BOMBFIRE,
+		GEO_ALIENGRUB,
 		ship,
 		NUM_GEOMETRY,
 	};

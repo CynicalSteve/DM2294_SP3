@@ -5,6 +5,7 @@
 #include <vector>
 #include "SceneBase.h"
 #include "AlienBase.h"
+#include "alienGrub.h"
 #include "BombBase.h"
 #include "Player.h"
 
@@ -25,6 +26,7 @@ public:
 	virtual void Exit();
 
 	void RenderGO(GameObject *go);
+	void renderAliens(alienBase *alien);
 
 	GameObject* FetchGO();
 protected:
@@ -37,6 +39,8 @@ protected:
 	int theMap[11][11];
 	GameObject *myInventory[10];
 	double doubletime;
+	alienBase** alienManager;
+	int currentAlien;
 
 	bool KeyBounce[256];
 };

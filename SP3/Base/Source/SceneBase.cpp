@@ -122,6 +122,9 @@ void SceneBase::Init()
 	meshList[GEO_BOMBFIRE] = MeshBuilder::GenerateQuad("BombFire", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_BOMBFIRE]->textureID = LoadTGA("Image//bombFire.tga");
 
+	meshList[GEO_ALIENGRUB] = MeshBuilder::GenerateQuad("AlienGrub", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_ALIENGRUB]->textureID = LoadTGA("Image//grub.tga");
+
 	bLightEnabled = false;
 }
 

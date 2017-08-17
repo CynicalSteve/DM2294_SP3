@@ -3,7 +3,8 @@
 #include "Application.h"
 #include <sstream>
 
-SP3::SP3()
+SP3::SP3() : alienManager(NULL),
+currentAlien(0)
 {
 }
 
@@ -34,6 +35,12 @@ void SP3::Init()
 	playerInfo = new Player(100, 35);
 	playerInfo->pos.set(50, 50);
 	playerInfo->type = GameObject::GO_PLAYER;
+
+	alienManager = new alienBase*[3];
+	alienManager[0] = NULL;
+	alienManager[1] = NULL;
+	alienManager[2] = NULL;
+	currentAlien = 0;
 }
 
 GameObject* SP3::FetchGO()
@@ -139,6 +146,16 @@ void SP3::Update(double dt)
 	{
 		bRButtonState = true;
 		std::cout << "RBUTTON DOWN" << std::endl;
+		
+		if (currentAlien < 3)
+		{
+			alienManager[currentAlien] = new alienGrub("Grub", 100, 100, 100);
+			alienManager[currentAlien]->alienType = alienGrub::TYPE_GRUB;
+			alienManager[currentAlien]->pos.set(50, 50);
+			alienManager[currentAlien]->scale.Set(10, 10, 1);
+
+			++currentAlien;
+		}
 	}
 	else if (bRButtonState && !Application::IsMousePressed(1))
 	{
@@ -262,8 +279,31 @@ void SP3::RenderGO(GameObject *go)
 
 		break;
 	}
+	//case GameObject::GO_ALIENGRUB:
+	//{
+	//	short DirectionX = playerInfo->pos.x - go->pos.x, directionY = playerInfo->pos.y - go->pos.y;
+
+	//	modelStack.PushMatrix();
+	//	modelStack.Translate(go->pos.x += (DirectionX * .05f), go->pos.y += (directionY * .05f), 0);
+	//	//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+	//	modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//	RenderMesh(meshList[GEO_ALIENGRUB], true);
+	//	modelStack.PopMatrix();
+	//}
 	}
 	
+}
+
+void SP3::renderAliens(alienBase *alien)
+{
+	short DirectionX = playerInfo->pos.x - alien->pos.x, directionY = playerInfo->pos.y - alien->pos.y;
+
+	modelStack.PushMatrix();
+	modelStack.Translate(alien->pos.x += (DirectionX * .05f), alien->pos.y += (directionY * .05f), 0);
+	//modelstack.rotate(math::radiantodegree(atan2(-alien->dir.x, alien->dir.y)), 0, 0, 1);
+	modelStack.Scale(alien->scale.x, alien->scale.y, alien->scale.z);
+	RenderMesh(meshList[GEO_ALIENGRUB], true);
+	modelStack.PopMatrix();
 }
 
 void SP3::Render()
@@ -308,6 +348,13 @@ void SP3::Render()
 	RenderMesh(meshList[GEO_HOUSE], false);
 	modelStack.PopMatrix();
 
+	for (int currentAlien = 0; currentAlien < 3; ++currentAlien)
+	{
+		if (alienManager[currentAlien])
+		{
+			renderAliens(alienManager[currentAlien]);
+		}
+	}
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
 		GameObject *go = (GameObject *)*it;
@@ -324,6 +371,7 @@ void SP3::Render()
 	modelStack.PopMatrix();
 
 	std::ostringstream ss;
+	std::ostringstream ss1;
 	//On screen text
 
 	ss.str("");
@@ -331,7 +379,10 @@ void SP3::Render()
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
 
-	RenderTextOnScreen(meshList[GEO_TEXT], "Asteroid", Color(0, 1, 0), 3, 0, 0);
+	ss1.str("");
+	ss1.precision(5);
+	ss1 << "Player - X: " << playerInfo->pos.x << " Y:" <<playerInfo->pos.y;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss1.str(), Color(0, 1, 0), 3, 0, 0);
 	
 	glEnable(GL_DEPTH_TEST);
 }
@@ -340,6 +391,17 @@ void SP3::Exit()
 {
 	SceneBase::Exit();
 	//Cleanup GameObjects
+	if (alienManager)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			delete alienManager[i];
+		}
+		delete[] alienManager;
+
+		alienManager = NULL;
+	}
+
 	while (m_goList.size() > 0)
 	{
 		GameObject *go = m_goList.back();

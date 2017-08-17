@@ -3,8 +3,9 @@
 
 #include "Vector3.h"
 
-struct GameObject
+class GameObject
 {
+public:
 	enum GAMEOBJECT_TYPE
 	{
 		GO_NONE = 0,
@@ -24,6 +25,7 @@ struct GameObject
 		GO_PLAYER,
 		GO_NORMALBOMB,
 		GO_BOMBFIRE,
+		GO_ALIENGRUB,
 
 		GO_TOTAL, //must be last
 	};
@@ -47,7 +49,7 @@ struct GameObject
 	float bombTimer, fireTimer;
 
 	GameObject(GAMEOBJECT_TYPE typeValue = GO_BALL);
-	~GameObject();
+	virtual ~GameObject();
 };
 
 #endif

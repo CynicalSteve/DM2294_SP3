@@ -1,13 +1,29 @@
 #include "AlienBase.h"
 
-alienBase::alienBase(string alienName, unsigned int alienHealth, unsigned int alienSpeed, unsigned int alienDamage)
+alienBase::alienBase() : alienName(""), alienHealth(0), alienDamage(0), alienSpeed(0)
 {
-	this->alienName = alienName;
-	this->alienHealth = alienHealth;
-	this->alienSpeed = alienSpeed;
-	this->alienDamage = alienDamage;
 }
 
 alienBase::~alienBase()
 {
+}
+
+string alienBase::setAlienName()
+{
+	return string();
+}
+
+int alienBase::setAlienHealth()
+{
+	return 0;
+}
+
+int alienBase::setAlienSpeed()
+{
+	return 0;
+}
+
+int alienBase::setAlienDamage()
+{
+	return 0;
 }

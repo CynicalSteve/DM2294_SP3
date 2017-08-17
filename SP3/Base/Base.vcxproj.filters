@@ -99,6 +99,9 @@
     <ClCompile Include="Source\BombBase.cpp">
       <Filter>Bombs</Filter>
     </ClCompile>
+    <ClCompile Include="Source\alienGrub.cpp">
+      <Filter>Aliens</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Vertex.h">
@@ -154,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="Source\BombBase.h">
       <Filter>Bombs</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\alienGrub.h">
+      <Filter>Aliens</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
