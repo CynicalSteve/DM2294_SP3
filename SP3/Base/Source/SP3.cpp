@@ -31,8 +31,8 @@ void SP3::Init()
 		KeyBounce[i] = false;
 	}
 
-	playerInfo = new Player(100, 1);
-	playerInfo->pos.set(5, 5);
+	playerInfo = new Player(100, 35);
+	playerInfo->pos.set(50, 50);
 	playerInfo->type = GameObject::GO_PLAYER;
 }
 
@@ -67,58 +67,34 @@ void SP3::Update(double dt)
 	{
 	}
 
-
-
+	//Exercise 6: set m_force values based on WASD
 	if (Application::IsKeyPressed('A'))
 	{
-		if (!KeyBounce['A'])
-		{
-			--playerInfo->pos.x;
-		}
-		KeyBounce['A'] = true;
-	}
-	else
-	{
-		KeyBounce['A'] = false;
-	}
+		/*Vector3 r(1, -1, 0), F(0, 5, 0);
+		m_force += m_ship->dir * 5.f;
+		m_torque += r.Cross(F);*/
 
+		playerInfo->pos.x -= playerInfo->getPlayerSpeed() * dt;
+	}
 	if (Application::IsKeyPressed('D'))
 	{
-		if (!KeyBounce['D'])
-		{
-			++playerInfo->pos.x;
-		}
-		KeyBounce['D'] = true;
+		/*Vector3 r(-1, -1, 0), F(0, 5, 0);
+		m_force += m_ship->dir * 5.f;
+		m_torque += r.Cross(F);*/
+		//playerInfo->pos.x += playerInfo->getPlayerSpeed() * dt;
+		playerInfo->pos.x += 1;
 	}
-	else
-	{
-		KeyBounce['D'] = false;
-	}
-
 	if (Application::IsKeyPressed('W'))
 	{
-		if (!KeyBounce['W'])
-		{
-			++playerInfo->pos.y;
-		}
-		KeyBounce['W'] = true;
+		/*m_force += m_ship->dir * 100.f;*/
+		//playerInfo->pos.y += playerInfo->getPlayerSpeed() * dt;
+		playerInfo->pos.y += 1;
 	}
-	else
-	{
-		KeyBounce['W'] = false;
-	}
-
 	if (Application::IsKeyPressed('S'))
 	{
-		if (!KeyBounce['S'])
-		{
-			--playerInfo->pos.y;
-		}
-		KeyBounce['S'] = true;
-	}
-	else
-	{
-		KeyBounce['S'] = false;
+		/*m_force -= m_ship->dir * 100.f;*/
+
+		playerInfo->pos.y -= playerInfo->getPlayerSpeed() * dt;
 	}
 
 	//Exercise 8: use 2 keys to increase and decrease mass of ship
@@ -176,8 +152,9 @@ void SP3::RenderGO(GameObject *go)
 {
 	switch (go->type)
 	{
+		{
 	case GameObject::GO_NORMALBOMB:
-		
+
 		if (go->bombTimer < 3.f)
 		{
 			go->bombTimer += doubletime;
@@ -186,6 +163,13 @@ void SP3::RenderGO(GameObject *go)
 		{
 			go->bombTimer = 0.f;
 			go->active = false;
+
+			GameObject *bombFireGO = FetchGO();
+			bombFireGO->active = true;
+			bombFireGO->type = GameObject::GO_BOMBFIRE;
+			bombFireGO->pos = go->pos;
+			bombFireGO->scale.Set(10, 10, 10);
+
 			break;
 		}
 
@@ -198,7 +182,88 @@ void SP3::RenderGO(GameObject *go)
 		modelStack.PopMatrix();
 
 		break;
+		}
+	case GameObject::GO_BOMBFIRE:
+	{
+		if (go->fireTimer < 2.f)
+		{
+			go->fireTimer += doubletime;
+		}
+		else
+		{
+			go->fireTimer = 0.f;
+			go->active = false;
+
+			break;
+		}
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, 0);
+		//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BOMBFIRE], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x - 5, go->pos.y, 0);
+		//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BOMBFIRE], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x - 10, go->pos.y, 0);
+		//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BOMBFIRE], true);
+		modelStack.PopMatrix();
+		
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x + 5, go->pos.y, 0);
+		//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BOMBFIRE], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x + 10, go->pos.y, 0);
+		//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BOMBFIRE], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y - 5, 0);
+		//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BOMBFIRE], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y - 10, 0);
+		//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BOMBFIRE], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y + 5, 0);
+		//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BOMBFIRE], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y + 10, 0);
+		//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BOMBFIRE], true);
+		modelStack.PopMatrix();
+
+		break;
 	}
+	}
+	
 }
 
 void SP3::Render()
@@ -227,7 +292,7 @@ void SP3::Render()
 
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 0, 0);
-	modelStack.Scale(270, 200, 1);
+	modelStack.Scale(385, 200, 1);
 	RenderMesh(meshList[GEO_GROUND], false);
 	modelStack.PopMatrix();
 
@@ -235,6 +300,12 @@ void SP3::Render()
 	modelStack.Translate(0, 0, 0);
 	modelStack.Scale(10, 10, 10);
 	RenderMesh(meshList[GEO_MAZEWALL], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(15, 40, 0);
+	modelStack.Scale(50, 50, 0);
+	RenderMesh(meshList[GEO_HOUSE], false);
 	modelStack.PopMatrix();
 
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)

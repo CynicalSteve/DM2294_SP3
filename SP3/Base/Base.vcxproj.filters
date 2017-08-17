@@ -36,9 +36,6 @@
     <Filter Include="Miscellaneous\Utitlity">
       <UniqueIdentifier>{0787a93e-a712-4aff-bbdd-1d242a58920e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AlienBase">
-      <UniqueIdentifier>{d65d8528-5591-4250-824f-fa88340bd8a9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Application">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
@@ -52,6 +49,9 @@
     <Filter Include="Player">
       <UniqueIdentifier>{cb5c5092-40b2-4a89-8580-800162b5d60b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Aliens">
+      <UniqueIdentifier>{d65d8528-5591-4250-824f-fa88340bd8a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -61,7 +61,7 @@
       <Filter>Application</Filter>
     </ClCompile>
     <ClCompile Include="Source\AlienBase.cpp">
-      <Filter>AlienBase</Filter>
+      <Filter>Aliens</Filter>
     </ClCompile>
     <ClCompile Include="Source\Camera.cpp">
       <Filter>Miscellaneous\Camera</Filter>
@@ -111,7 +111,7 @@
       <Filter>Miscellaneous</Filter>
     </ClInclude>
     <ClInclude Include="Source\AlienBase.h">
-      <Filter>AlienBase</Filter>
+      <Filter>Aliens</Filter>
     </ClInclude>
     <ClInclude Include="Source\Camera.h">
       <Filter>Miscellaneous\Camera</Filter>

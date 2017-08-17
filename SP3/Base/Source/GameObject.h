@@ -23,6 +23,7 @@ struct GameObject
 		//SP3
 		GO_PLAYER,
 		GO_NORMALBOMB,
+		GO_BOMBFIRE,
 
 		GO_TOTAL, //must be last
 	};
@@ -43,7 +44,7 @@ struct GameObject
 	float angularVelocity; //in radians
 	bool active;
 	float mass;
-	float bombTimer;
+	float bombTimer, fireTimer;
 
 	GameObject(GAMEOBJECT_TYPE typeValue = GO_BALL);
 	~GameObject();
