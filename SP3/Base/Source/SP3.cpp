@@ -256,11 +256,19 @@ void SP3::renderAliens(alienBase *alien)
 {
 	short DirectionX = playerInfo->pos.x - alien->pos.x, directionY = playerInfo->pos.y - alien->pos.y;
 
-	modelStack.PushMatrix();
-	modelStack.Translate(alien->pos.x += (DirectionX * .05f), alien->pos.y += (directionY * .05f), 0);
-	modelStack.Scale(10, 10, 10);
-	RenderMesh(meshList[GEO_ALIENGRUB], true);
-	modelStack.PopMatrix();
+	switch (alien->alienType)
+	{
+	case alienBase::TYPE_GRUB:
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(alien->pos.x += (DirectionX * .05f), alien->pos.y += (directionY * .05f), 0);
+		modelStack.Scale(10, 10, 10);
+		RenderMesh(meshList[GEO_ALIENGRUB], true);
+		modelStack.PopMatrix();
+	}
+	default:
+		break;
+	}
 }
 
 void SP3::renderBombs(BombBase *bomb, int currentBombIndex)
