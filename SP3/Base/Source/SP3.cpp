@@ -74,27 +74,27 @@ void SP3::Update(double dt)
 		m_force += m_ship->dir * 5.f;
 		m_torque += r.Cross(F);*/
 
-		playerInfo->pos.x -= playerInfo->getPlayerSpeed();
+		playerInfo->pos.x -= playerInfo->getPlayerSpeed() * dt;
 	}
 	if (Application::IsKeyPressed('D'))
 	{
 		/*Vector3 r(-1, -1, 0), F(0, 5, 0);
 		m_force += m_ship->dir * 5.f;
 		m_torque += r.Cross(F);*/
-		playerInfo->pos.x += playerInfo->getPlayerSpeed();
-		
+		//playerInfo->pos.x += playerInfo->getPlayerSpeed() * dt;
+		playerInfo->pos.x += 1;
 	}
 	if (Application::IsKeyPressed('W'))
 	{
 		/*m_force += m_ship->dir * 100.f;*/
-		playerInfo->pos.y += playerInfo->getPlayerSpeed();
-		
+		//playerInfo->pos.y += playerInfo->getPlayerSpeed() * dt;
+		playerInfo->pos.y += 1;
 	}
 	if (Application::IsKeyPressed('S'))
 	{
 		/*m_force -= m_ship->dir * 100.f;*/
 
-		playerInfo->pos.y -= playerInfo->getPlayerSpeed();
+		playerInfo->pos.y -= playerInfo->getPlayerSpeed() * dt;
 	}
 
 	//Exercise 8: use 2 keys to increase and decrease mass of ship
@@ -169,15 +169,6 @@ void SP3::RenderGO(GameObject *go)
 			bombFireGO->type = GameObject::GO_BOMBFIRE;
 			bombFireGO->pos = go->pos;
 			bombFireGO->scale.Set(10, 10, 10);
-
-			/*for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-			{
-				GameObject *bombFireFinder = (GameObject *)*it;
-				if (bombFireFinder->type == GameObject::GO_BOMBFIRE)
-				{
-					RenderGO(bombFireFinder);
-				}
-			}*/
 
 			break;
 		}
@@ -301,7 +292,7 @@ void SP3::Render()
 
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 0, 0);
-	modelStack.Scale(270, 200, 1);
+	modelStack.Scale(385, 200, 1);
 	RenderMesh(meshList[GEO_GROUND], false);
 	modelStack.PopMatrix();
 
