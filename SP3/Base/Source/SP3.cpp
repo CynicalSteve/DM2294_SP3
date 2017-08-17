@@ -31,7 +31,7 @@ void SP3::Init()
 		KeyBounce[i] = false;
 	}
 
-	playerInfo = new Player(100, 5);
+	playerInfo = new Player(100, 1);
 	playerInfo->pos.set(5, 5);
 	playerInfo->type = GameObject::GO_PLAYER;
 }
@@ -67,22 +67,58 @@ void SP3::Update(double dt)
 	{
 	}
 
-	//Exercise 6: set m_force values based on WASD
+
+
 	if (Application::IsKeyPressed('A'))
 	{
-		playerInfo->pos.x -= playerInfo->getPlayerSpeed();
+		if (!KeyBounce['A'])
+		{
+			--playerInfo->pos.x;
+		}
+		KeyBounce['A'] = true;
 	}
+	else
+	{
+		KeyBounce['A'] = false;
+	}
+
 	if (Application::IsKeyPressed('D'))
 	{
-		playerInfo->pos.x += playerInfo->getPlayerSpeed();
+		if (!KeyBounce['D'])
+		{
+			++playerInfo->pos.x;
+		}
+		KeyBounce['D'] = true;
 	}
+	else
+	{
+		KeyBounce['D'] = false;
+	}
+
 	if (Application::IsKeyPressed('W'))
 	{
-		playerInfo->pos.y += playerInfo->getPlayerSpeed();
+		if (!KeyBounce['W'])
+		{
+			++playerInfo->pos.y;
+		}
+		KeyBounce['W'] = true;
 	}
+	else
+	{
+		KeyBounce['W'] = false;
+	}
+
 	if (Application::IsKeyPressed('S'))
 	{
-		playerInfo->pos.y -= playerInfo->getPlayerSpeed();
+		if (!KeyBounce['S'])
+		{
+			--playerInfo->pos.y;
+		}
+		KeyBounce['S'] = true;
+	}
+	else
+	{
+		KeyBounce['S'] = false;
 	}
 
 	//Exercise 8: use 2 keys to increase and decrease mass of ship
