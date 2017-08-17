@@ -8,22 +8,42 @@ alienBase::~alienBase()
 {
 }
 
-string alienBase::setAlienName()
+string alienBase::getAlienName()
 {
-	return string();
+	return this->alienName;
 }
 
-int alienBase::setAlienHealth()
+int alienBase::getAlienHealth()
 {
-	return 0;
+	return this->alienHealth;
 }
 
-int alienBase::setAlienSpeed()
+int alienBase::getAlienSpeed()
 {
-	return 0;
+	return this->alienSpeed;
 }
 
-int alienBase::setAlienDamage()
+int alienBase::getAlienDamage()
 {
-	return 0;
+	return this->alienDamage;
+}
+
+void alienBase::setAlienName(string newAlienName)
+{
+	this->alienName = newAlienName;
+}
+
+void alienBase::setAlienHealth(float newAlienHealth)
+{
+	this->alienHealth = newAlienHealth;
+}
+
+void alienBase::setAlienSpeed(float newAlienSpeed)
+{
+	this->alienSpeed = newAlienSpeed;
+}
+
+void alienBase::setAlienDamage(float newAlienDamage)
+{
+	this->alienDamage = newAlienDamage;
 }

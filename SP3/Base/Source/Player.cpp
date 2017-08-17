@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(float playerHealth, float playerSpeed)
+Player::Player(float playerHealth, float playerSpeed) : bombManager(NULL), currentBomb(0)
 {
 	this->playerHealth = playerHealth;
 	this->playerSpeed = playerSpeed;
@@ -10,12 +10,12 @@ Player::~Player()
 {
 }
 
-void Player::setPlayerSpeed(unsigned int newPlayerSpeed)
+void Player::setPlayerSpeed(float newPlayerSpeed)
 {
 	this->playerSpeed = newPlayerSpeed;
 }
 
-void Player::setPlayerHealth(unsigned int newPlayerHealth)
+void Player::setPlayerHealth(float newPlayerHealth)
 {
 	this->playerHealth = newPlayerHealth;
 }

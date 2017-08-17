@@ -46,7 +46,8 @@ public:
 	float angularVelocity; //in radians
 	bool active;
 	float mass;
-	float bombTimer, fireTimer;
+
+	float fireBurnTime;
 
 	GameObject(GAMEOBJECT_TYPE typeValue = GO_BALL);
 	virtual ~GameObject();

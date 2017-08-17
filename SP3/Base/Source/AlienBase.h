@@ -3,9 +3,11 @@
 
 #include <string>
 #include "Vector3.h"
+#include "GameObject.h"
+
 using namespace std;
 
-class alienBase
+class alienBase : public GameObject
 {
 public:
 	enum alienType
@@ -23,16 +25,19 @@ public:
 		}
 	} pos;
 
-	Vector3 scale;
+	
 	alienBase(); //string alienName, unsigned int alienHealth, unsigned int alienSpeed, unsigned int alienDamage
-	virtual ~alienBase();
+	~alienBase();
 
-	virtual string setAlienName();
-	virtual int setAlienHealth(), setAlienSpeed(), setAlienDamage();
+	string getAlienName();
+	int getAlienHealth(), getAlienSpeed(), getAlienDamage();
+	void setAlienName(string newAlienName), setAlienHealth(float newAlienHealth), setAlienSpeed(float newAlienSpeed), setAlienDamage(float newAlienDamage);
+	
+	Vector3 scale;
 	alienType alienType;
 
 protected:
 	string alienName;
-	unsigned int alienHealth, alienSpeed, alienDamage;
+	float alienHealth, alienSpeed, alienDamage;
 };
 #endif

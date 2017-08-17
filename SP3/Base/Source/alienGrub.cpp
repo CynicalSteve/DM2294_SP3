@@ -1,11 +1,13 @@
 #include "alienGrub.h"
 
-alienGrub::alienGrub(string alienName, unsigned int alienHealth, unsigned int alienSpeed, unsigned int alienDamage)
+alienGrub::alienGrub(string alienName, float alienHealth, float alienSpeed, float alienDamage, short posX, short posY)
 {
 	this->alienName = alienName;
 	this->alienHealth = alienHealth;
 	this->alienSpeed = alienSpeed;
 	this->alienDamage = alienDamage;
+
+	this->pos.set(posX, posY);
 }
 
 alienGrub::~alienGrub()

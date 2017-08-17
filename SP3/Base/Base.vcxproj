@@ -15,6 +15,7 @@
     <ClCompile Include="Source\alienGrub.cpp" />
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\BombBase.cpp" />
+    <ClCompile Include="Source\BombNormal.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\LoadOBJ.cpp" />
@@ -33,6 +34,7 @@
     <ClInclude Include="Source\alienGrub.h" />
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\BombBase.h" />
+    <ClInclude Include="Source\BombNormal.h" />
     <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\Light.h" />

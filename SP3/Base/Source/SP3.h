@@ -7,6 +7,7 @@
 #include "AlienBase.h"
 #include "alienGrub.h"
 #include "BombBase.h"
+#include "BombNormal.h"
 #include "Player.h"
 
 class SP3 : public SceneBase
@@ -27,6 +28,7 @@ public:
 
 	void RenderGO(GameObject *go);
 	void renderAliens(alienBase *alien);
+	void renderBombs(BombBase *bomb, int currentBombIndex);
 
 	GameObject* FetchGO();
 protected:
@@ -39,7 +41,8 @@ protected:
 	int theMap[11][11];
 	GameObject *myInventory[10];
 	double doubletime;
-	alienBase** alienManager;
+	std::vector<alienBase *> alienManager;
+
 	int currentAlien;
 
 	bool KeyBounce[256];

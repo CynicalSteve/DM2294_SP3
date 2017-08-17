@@ -1,5 +1,8 @@
 #include <string>
+#include <vector>
 #include "GameObject.h"
+#include "BombBase.h"
+
 using namespace std;
 
 class Player : public GameObject
@@ -8,8 +11,11 @@ public:
 	Player (float playerHealth, float playerSpeed);
 	~Player();
 
-	void setPlayerHealth(unsigned int newPlayerHealth), setPlayerSpeed(unsigned int newPlayerSpeed);
+	void setPlayerHealth(float newPlayerHealth), setPlayerSpeed(float newPlayerSpeed);
 	float getPlayerHealth(), getPlayerSpeed();
+
+	vector<BombBase*> bombManager;
+	int currentBomb;
 
 private:
 	float playerHealth, playerSpeed;

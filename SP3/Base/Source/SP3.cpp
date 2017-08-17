@@ -36,10 +36,6 @@ void SP3::Init()
 	playerInfo->pos.set(50, 50);
 	playerInfo->type = GameObject::GO_PLAYER;
 
-	alienManager = new alienBase*[3];
-	alienManager[0] = NULL;
-	alienManager[1] = NULL;
-	alienManager[2] = NULL;
 	currentAlien = 0;
 }
 
@@ -130,11 +126,7 @@ void SP3::Update(double dt)
 	{
 		bLButtonState = true;
 		std::cout << "LBUTTON DOWN" << std::endl;
-		GameObject *bombGO = FetchGO();
-		bombGO->active = true;
-		bombGO->type = GameObject::GO_NORMALBOMB;
-		bombGO->pos = playerInfo->pos;
-		bombGO->scale.Set(10, 10, 10);
+		playerInfo->bombManager.push_back(new NormalBomb("Normal Bomb", 30, 3, 2, playerInfo->pos.x, playerInfo->pos.y));
 	}
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
@@ -149,10 +141,7 @@ void SP3::Update(double dt)
 		
 		if (currentAlien < 3)
 		{
-			alienManager[currentAlien] = new alienGrub("Grub", 100, 100, 100);
-			alienManager[currentAlien]->alienType = alienGrub::TYPE_GRUB;
-			alienManager[currentAlien]->pos.set(50, 50);
-			alienManager[currentAlien]->scale.Set(10, 10, 1);
+			alienManager.push_back(new alienGrub("Grub", 100, 100, 100, 50, 50));
 
 			++currentAlien;
 		}
@@ -169,46 +158,15 @@ void SP3::RenderGO(GameObject *go)
 {
 	switch (go->type)
 	{
-		{
-	case GameObject::GO_NORMALBOMB:
-
-		if (go->bombTimer < 3.f)
-		{
-			go->bombTimer += doubletime;
-		}
-		else
-		{
-			go->bombTimer = 0.f;
-			go->active = false;
-
-			GameObject *bombFireGO = FetchGO();
-			bombFireGO->active = true;
-			bombFireGO->type = GameObject::GO_BOMBFIRE;
-			bombFireGO->pos = go->pos;
-			bombFireGO->scale.Set(10, 10, 10);
-
-			break;
-		}
-
-		//exercise 4a: render a sphere with radius 1
-		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, 0);
-		//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_NORMALBOMB], true);
-		modelStack.PopMatrix();
-
-		break;
-		}
 	case GameObject::GO_BOMBFIRE:
 	{
-		if (go->fireTimer < 2.f)
+		if (go->fireBurnTime < 2.f)
 		{
-			go->fireTimer += doubletime;
+			go->fireBurnTime += doubletime;
 		}
 		else
 		{
-			go->fireTimer = 0.f;
+			go->fireBurnTime = 0.f;
 			go->active = false;
 
 			break;
@@ -300,9 +258,33 @@ void SP3::renderAliens(alienBase *alien)
 
 	modelStack.PushMatrix();
 	modelStack.Translate(alien->pos.x += (DirectionX * .05f), alien->pos.y += (directionY * .05f), 0);
-	//modelstack.rotate(math::radiantodegree(atan2(-alien->dir.x, alien->dir.y)), 0, 0, 1);
-	modelStack.Scale(alien->scale.x, alien->scale.y, alien->scale.z);
+	modelStack.Scale(10, 10, 10);
 	RenderMesh(meshList[GEO_ALIENGRUB], true);
+	modelStack.PopMatrix();
+}
+
+void SP3::renderBombs(BombBase *bomb, int currentBombIndex)
+{
+	if (bomb->bombTimer < bomb->getTimeToExplode())
+	{
+		bomb->bombTimer += doubletime;
+	}
+	else
+	{
+		GameObject *bombFireGO = FetchGO();
+		bombFireGO->active = true;
+		bombFireGO->type = GameObject::GO_BOMBFIRE;
+		bombFireGO->pos.set(bomb->pos.x, bomb->pos.y);
+		bombFireGO->scale.Set(10, 10, 10);
+
+		playerInfo->bombManager.erase(playerInfo->bombManager.begin() + currentBombIndex); //Destroys current bomb object in vector
+		return;
+	}
+	modelStack.PushMatrix();
+	modelStack.Translate(bomb->pos.x, bomb->pos.y, 0);
+	//modelstack.rotate(math::radiantodegree(atan2(-alien->dir.x, alien->dir.y)), 0, 0, 1);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[GEO_NORMALBOMB], true);
 	modelStack.PopMatrix();
 }
 
@@ -348,13 +330,24 @@ void SP3::Render()
 	RenderMesh(meshList[GEO_HOUSE], false);
 	modelStack.PopMatrix();
 
-	for (int currentAlien = 0; currentAlien < 3; ++currentAlien)
+	//Render Aliens
+	if (!alienManager.empty())  //Checks if alien manager vector is empty
 	{
-		if (alienManager[currentAlien])
+		for (int currentAlien = 0; currentAlien < alienManager.size(); ++currentAlien)
 		{
 			renderAliens(alienManager[currentAlien]);
 		}
 	}
+
+	//Render Bombs
+	if (!playerInfo->bombManager.empty())  //Checks if bomb manager vector is empty
+	{
+		for (int currentBomb = 0; currentBomb < playerInfo->bombManager.size(); ++currentBomb)
+		{
+			renderBombs(playerInfo->bombManager[currentBomb], currentBomb);
+		}
+	}
+	
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
 		GameObject *go = (GameObject *)*it;
@@ -391,16 +384,6 @@ void SP3::Exit()
 {
 	SceneBase::Exit();
 	//Cleanup GameObjects
-	if (alienManager)
-	{
-		for (int i = 0; i < 3; i++)
-		{
-			delete alienManager[i];
-		}
-		delete[] alienManager;
-
-		alienManager = NULL;
-	}
 
 	while (m_goList.size() > 0)
 	{
