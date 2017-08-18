@@ -14,15 +14,10 @@ SP3::~SP3()
 void SP3::Init()
 {
 	SceneBase::Init();
+	meshList[floor] = MeshBuilder::GenerateQuad("floor", Color(.2, .6, .2), 1);
+	meshList[wall] = MeshBuilder::GenerateQuad("wall", Color(.6, .3, .3), 1);
 
 	Math::InitRNG();
-
-	//Exercise 2a: Construct 100 GameObject with type GO_ASTEROID and add into m_goList
-	for (size_t i = 0; i < 100; ++i)
-	{
-		m_goList.push_back(new GameObject(GameObject::GO_ASTEROID));
-		m_goList[i]->scale.Set(2, 2, 2);
-	}
 
 	//Exercise 2c: Construct m_ship, set active, type, scale and pos
 
@@ -31,9 +26,40 @@ void SP3::Init()
 		KeyBounce[i] = false;
 	}
 
+	theMap = new short *[11];
+	for (short x = 0; x < 11; ++x)
+		theMap[x] = new short[11];
+
+	for (short y = 0; y < 11; ++y)
+		for (short x = 0; x < 11; ++x)
+			theMap[x][y] = 0;
+
+	for (short y = 0; y < 11; ++y)
+	{
+		for (short x = 0; x < 11; ++x)
+		{
+			if (y == 0 || y == 10)
+				theMap[x][y] = 1;
+			else if (y % 2)
+			{
+				theMap[0][y] = 1;
+				theMap[10][y] = 1;
+			}
+			else if (!(x % 2))
+				theMap[x][y] = 1;
+		}
+	}
+
 	playerInfo = new Player(100, 35);
-	playerInfo->pos.set(50, 50);
+	playerInfo->pos.set(1, 1);
 	playerInfo->type = GameObject::GO_PLAYER;
+
+	//Exercise 2a: Construct 100 GameObject with type GO_ASTEROID and add into m_goList
+	m_goList.push_back(playerInfo);
+	for (size_t i = 0; i < 100; ++i)
+	{
+		m_goList.push_back(new GameObject());
+	}
 }
 
 GameObject* SP3::FetchGO()
@@ -50,7 +76,7 @@ GameObject* SP3::FetchGO()
 	}
 	for (size_t i = 0; i < 10; ++i)
 	{
-		m_goList.push_back(new GameObject(GameObject::GO_ASTEROID));
+		m_goList.push_back(new GameObject());
 	}
 	return m_goList[m_goList.size() - 1];
 }
@@ -70,32 +96,39 @@ void SP3::Update(double dt)
 	//Exercise 6: set m_force values based on WASD
 	if (Application::IsKeyPressed('A'))
 	{
-		/*Vector3 r(1, -1, 0), F(0, 5, 0);
-		m_force += m_ship->dir * 5.f;
-		m_torque += r.Cross(F);*/
-
-		playerInfo->pos.x -= playerInfo->getPlayerSpeed() * dt;
+		if (!KeyBounce['A'])
+			//--playerInfo->pos.x;
+			playerInfo->move(2, 11, 11, theMap);
+		KeyBounce['A'] = true;
 	}
+	else KeyBounce['A'] = false;
+
 	if (Application::IsKeyPressed('D'))
 	{
-		/*Vector3 r(-1, -1, 0), F(0, 5, 0);
-		m_force += m_ship->dir * 5.f;
-		m_torque += r.Cross(F);*/
-		//playerInfo->pos.x += playerInfo->getPlayerSpeed() * dt;
-		playerInfo->pos.x += 1;
+		if (!KeyBounce['D'])
+			//++playerInfo->pos.x;
+			playerInfo->move(0, 11, 11, theMap);
+		KeyBounce['D'] = true;
 	}
+	else KeyBounce['D'] = false;
+
 	if (Application::IsKeyPressed('W'))
 	{
-		/*m_force += m_ship->dir * 100.f;*/
-		//playerInfo->pos.y += playerInfo->getPlayerSpeed() * dt;
-		playerInfo->pos.y += 1;
+		if (!KeyBounce['W'])
+			//++playerInfo->pos.y;
+			playerInfo->move(1, 11, 11, theMap);
+		KeyBounce['W'] = true;
 	}
+	else KeyBounce['W'] = false;
+
 	if (Application::IsKeyPressed('S'))
 	{
-		/*m_force -= m_ship->dir * 100.f;*/
-
-		playerInfo->pos.y -= playerInfo->getPlayerSpeed() * dt;
+		if (!KeyBounce['S'])
+			//--playerInfo->pos.y;
+			playerInfo->move(3, 11, 11, theMap);
+		KeyBounce['S'] = true;
 	}
+	else KeyBounce['S'] = false;
 
 	//Exercise 8: use 2 keys to increase and decrease mass of ship
 	if (Application::IsKeyPressed(VK_UP))
@@ -127,7 +160,6 @@ void SP3::Update(double dt)
 		bombGO->active = true;
 		bombGO->type = GameObject::GO_NORMALBOMB;
 		bombGO->pos = playerInfo->pos;
-		bombGO->scale.Set(10, 10, 10);
 	}
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
@@ -152,7 +184,14 @@ void SP3::RenderGO(GameObject *go)
 {
 	switch (go->type)
 	{
+	case GameObject::GO_PLAYER:
+		modelStack.PushMatrix();
 		{
+			modelStack.Translate(go->pos.x, go->pos.y, 0);
+			RenderMesh(meshList[GEO_PLAYER], false);
+		}
+		modelStack.PopMatrix();
+		break;
 	case GameObject::GO_NORMALBOMB:
 
 		if (go->bombTimer < 3.f)
@@ -168,7 +207,6 @@ void SP3::RenderGO(GameObject *go)
 			bombFireGO->active = true;
 			bombFireGO->type = GameObject::GO_BOMBFIRE;
 			bombFireGO->pos = go->pos;
-			bombFireGO->scale.Set(10, 10, 10);
 
 			break;
 		}
@@ -182,7 +220,6 @@ void SP3::RenderGO(GameObject *go)
 		modelStack.PopMatrix();
 
 		break;
-		}
 	case GameObject::GO_BOMBFIRE:
 	{
 		if (go->fireTimer < 2.f)
@@ -305,22 +342,43 @@ void SP3::Render()
 	modelStack.PushMatrix();
 	modelStack.Translate(15, 40, 0);
 	modelStack.Scale(50, 50, 0);
-	RenderMesh(meshList[GEO_HOUSE], false);
+	//RenderMesh(meshList[GEO_HOUSE], false);
 	modelStack.PopMatrix();
 
-	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	//map
+	modelStack.PushMatrix();
 	{
-		GameObject *go = (GameObject *)*it;
-		if (go->active)
+		modelStack.Scale(9, 9, 1);
+		modelStack.Translate(.5, .5, 0);
+
+		modelStack.PushMatrix();
 		{
-			RenderGO(go);
+			modelStack.Translate(10, -1, 0);
+			for (short y = 0; y < 11; ++y)
+			{
+				modelStack.Translate(-11, 1, 0);
+				for (short x = 0; x < 11; ++x)
+				{
+					modelStack.Translate(1, 0, 0);
+					if (theMap[x][y])
+						RenderMesh(meshList[wall], false);
+					else RenderMesh(meshList[floor], false);
+					if (playerInfo->pos.x == x && playerInfo->pos.y == y)
+						RenderMesh(meshList[GEO_PLAYER], false);
+				}
+			}
+		}
+		modelStack.PopMatrix();
+
+		for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+		{
+			GameObject *go = (GameObject *)*it;
+			if (go->active)
+			{
+				RenderGO(go);
+			}
 		}
 	}
-
-	modelStack.PushMatrix();
-	modelStack.Translate(playerInfo->pos.x, playerInfo->pos.y, 0);
-	modelStack.Scale(10, 10, 1);
-	RenderMesh(meshList[GEO_PLAYER], false);
 	modelStack.PopMatrix();
 
 	std::ostringstream ss;
@@ -347,5 +405,7 @@ void SP3::Exit()
 		m_goList.pop_back();
 	}
 
-	delete playerInfo;
+	for (short x = 0; x < 11; ++x)
+		delete theMap[x];
+	delete theMap;
 }

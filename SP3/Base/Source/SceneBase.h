@@ -60,6 +60,8 @@ public:
 		GEO_BOOM,
 		GEO_HOUSE,
 		GEO_BOMBFIRE,
+		floor,
+		wall,
 		ship,
 		NUM_GEOMETRY,
 	};

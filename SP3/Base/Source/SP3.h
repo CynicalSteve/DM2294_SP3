@@ -34,7 +34,7 @@ protected:
 	float m_worldWidth;
 	float m_worldHeight;
 	Player* playerInfo;
-	int theMap[11][11];
+	short **theMap;
 	GameObject *myInventory[10];
 	double doubletime;
 
