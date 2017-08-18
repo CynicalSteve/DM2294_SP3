@@ -100,16 +100,8 @@ void SP3::Update(double dt)
 		playerInfo->pos.y -= playerInfo->getPlayerSpeed() * dt;
 	}
 
-	if (Application::IsKeyPressed('P'))
+	if (Application::IsKeyPressed('P')) //Pause
 	{
-		
-			modelStack.PushMatrix();
-			modelStack.Translate(50, 50, 0);
-			//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
-			modelStack.Scale(1000, 1000, 0);
-			RenderMesh(meshList[GEO_MAZEWALL], true);
-			modelStack.PopMatrix();
-
 		
 	}
 
@@ -411,6 +403,22 @@ void SP3::Exit()
 		GameObject *go = m_goList.back();
 		delete go;
 		m_goList.pop_back();
+	}
+
+	if (!alienManager.empty())
+	{
+		for (int currentAlien = 0; currentAlien < alienManager.size(); ++currentAlien)
+		{
+			delete alienManager[currentAlien];
+		}
+	}
+
+	if (!playerInfo->bombManager.empty())
+	{
+		for (int currentBomb = 0; currentBomb < playerInfo->bombManager.size(); ++currentBomb)
+		{
+			delete playerInfo->bombManager[currentBomb];
+		}
 	}
 
 	delete playerInfo;

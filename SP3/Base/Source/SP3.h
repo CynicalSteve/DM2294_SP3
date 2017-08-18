@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include <vector>
 #include "SceneBase.h"
+#include "SceneManager.h"
 #include "AlienBase.h"
 #include "alienGrub.h"
 #include "BombBase.h"
