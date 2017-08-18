@@ -12,7 +12,11 @@ class alienBase : public GameObject
 public:
 	enum alienType
 	{
-		TYPE_GRUB
+		TYPE1_GRUB,
+		TYPE2_GHOUL,
+		TYPE3_RAPTOR,
+		TYPE4_GOLIATH,
+		TYPE5_LEVIATHAN
 	};
 
 	struct coord

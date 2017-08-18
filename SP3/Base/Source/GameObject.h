@@ -26,6 +26,11 @@ public:
 		GO_NORMALBOMB,
 		GO_BOMBFIRE,
 		GO_ALIENGRUB,
+		GO_WALL_LVL1,
+		GO_WALL_LVL2,
+		GO_WALL_LVL3,
+		GO_WALL_LVL4,
+		GO_WALL_LVL5,
 
 		GO_TOTAL, //must be last
 	};

@@ -100,6 +100,19 @@ void SP3::Update(double dt)
 		playerInfo->pos.y -= playerInfo->getPlayerSpeed() * dt;
 	}
 
+	if (Application::IsKeyPressed('P'))
+	{
+		
+			modelStack.PushMatrix();
+			modelStack.Translate(50, 50, 0);
+			//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
+			modelStack.Scale(1000, 1000, 0);
+			RenderMesh(meshList[GEO_MAZEWALL], true);
+			modelStack.PopMatrix();
+
+		
+	}
+
 	//Exercise 8: use 2 keys to increase and decrease mass of ship
 	if (Application::IsKeyPressed(VK_UP))
 	{
@@ -258,7 +271,7 @@ void SP3::renderAliens(alienBase *alien)
 
 	switch (alien->alienType)
 	{
-	case alienBase::TYPE_GRUB:
+	case alienBase::TYPE1_GRUB:
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(alien->pos.x += (DirectionX * .05f), alien->pos.y += (directionY * .05f), 0);
