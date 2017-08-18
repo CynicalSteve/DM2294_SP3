@@ -70,6 +70,9 @@ public:
 		GEO_WALL_LVL3,
 		GEO_WALL_LVL4,
 		GEO_WALL_LVL5,
+		GEO_STARTMENU_BACKGROUND,
+		GEO_STARTMENU_TITLE,
+
 		floor,
 		wall,
 		ship,

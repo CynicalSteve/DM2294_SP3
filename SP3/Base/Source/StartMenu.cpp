@@ -25,13 +25,6 @@ void StartMenu::Update(double dt)
 {
 	SceneBase::Update(dt);
 
-	if (Application::IsKeyPressed('9'))
-	{
-	}
-	if (Application::IsKeyPressed('0'))
-	{
-	}
-
 	//Exercise 6: set m_force values based on WASD
 	if (Application::IsKeyPressed('A'))
 	{
@@ -44,11 +37,6 @@ void StartMenu::Update(double dt)
 	}
 	if (Application::IsKeyPressed('S'))
 	{
-	}
-
-	if (Application::IsKeyPressed('P')) //Pause
-	{
-		
 	}
 
 	//Exercise 8: use 2 keys to increase and decrease mass of ship
@@ -119,7 +107,35 @@ void StartMenu::Render()
 		);
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
+	
+	modelStack.PushMatrix();  //All UI items in start menu
+	{
+		modelStack.PushMatrix();  //Start Menu Title
+		{
+			modelStack.Translate(100, 50, 0);
+			modelStack.Scale(50, 50, 0);
+			RenderMesh(meshList[GEO_STARTMENU_TITLE], false);
+		}
+		modelStack.PopMatrix();
 
+		modelStack.PushMatrix();  //Start Menu Background
+		{
+			modelStack.Translate(100, 50, 0);
+			modelStack.Scale(200, 100, 0);
+			RenderMesh(meshList[GEO_STARTMENU_BACKGROUND], false);
+		}
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();  //Start Menu Title
+		{
+			modelStack.Translate(87, 78, 0);
+			modelStack.Scale(160, 50, 0);
+			//modelStack.Rotate(90, 1, 0, 0);
+			RenderMesh(meshList[GEO_STARTMENU_TITLE], false);
+		}
+		modelStack.PopMatrix();
+	}
+	modelStack.PopMatrix();
 	
 	std::ostringstream ss;
 	std::ostringstream ss1;

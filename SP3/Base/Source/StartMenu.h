@@ -8,6 +8,14 @@
 
 class StartMenu : public SceneBase
 {
+	enum CurrentSelection
+	{
+		PLAYGAME,
+		HIGHSCORES,
+		SETTINGS,
+		EXIT,
+		END
+	};
 
 public:
 	StartMenu();

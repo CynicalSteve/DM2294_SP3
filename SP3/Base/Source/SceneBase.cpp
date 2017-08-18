@@ -152,6 +152,12 @@ void SceneBase::Init()
 	meshList[GEO_WALL_LVL5] = MeshBuilder::GenerateQuad("Wall_LVL5", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_WALL_LVL5]->textureID = LoadTGA("Image//wall_LVL5.tga");
 
+	meshList[GEO_STARTMENU_BACKGROUND] = MeshBuilder::GenerateQuad("StartMenu_Background", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_STARTMENU_BACKGROUND]->textureID = LoadTGA("Image//StartMenu_Background.tga");
+
+	meshList[GEO_STARTMENU_TITLE] = MeshBuilder::GenerateQuad("StartMenu_Title", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_STARTMENU_TITLE]->textureID = LoadTGA("Image//StartMenu_Title.tga");
+
 	bLightEnabled = false;
 }
 
