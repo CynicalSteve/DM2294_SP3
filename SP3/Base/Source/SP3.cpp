@@ -53,6 +53,7 @@ void SP3::Init()
 
 	playerInfo = new Player(100, 35);
 	playerInfo->pos.set(1, 1);
+	playerInfo->animationPos.SetZero();
 	playerInfo->type = GameObject::GO_PLAYER;
 
 	//Exercise 2a: Construct 100 GameObject with type GO_ASTEROID and add into m_goList
@@ -60,7 +61,7 @@ void SP3::Init()
 	for (size_t i = 0; i < 100; ++i)
 	{
 		m_goList.push_back(new GameObject());
-}
+	}
 }
 
 GameObject* SP3::FetchGO()
@@ -95,20 +96,13 @@ void SP3::Update(double dt)
 	}
 
 	//Exercise 6: set m_force values based on WASD
-	if (Application::IsKeyPressed('A'))
-	{
-		if (!KeyBounce['A'])
-			//--playerInfo->pos.x;
-			playerInfo->move(2, 11, 11, theMap);
-		KeyBounce['A'] = true;
-	}
-	else KeyBounce['A'] = false;
-
 	if (Application::IsKeyPressed('D'))
 	{
 		if (!KeyBounce['D'])
 			//++playerInfo->pos.x;
-			playerInfo->move(0, 11, 11, theMap);
+			if (playerInfo->move(0, theMap))
+			{
+			}
 		KeyBounce['D'] = true;
 	}
 	else KeyBounce['D'] = false;
@@ -117,31 +111,43 @@ void SP3::Update(double dt)
 	{
 		if (!KeyBounce['W'])
 			//++playerInfo->pos.y;
-			playerInfo->move(1, 11, 11, theMap);
+			if (playerInfo->move(1, theMap))
+			{
+			}
 		KeyBounce['W'] = true;
 	}
 	else KeyBounce['W'] = false;
+
+	if (Application::IsKeyPressed('A'))
+	{
+		if (!KeyBounce['A'])
+			//--playerInfo->pos.x;
+			if (playerInfo->move(2, theMap))
+			{
+			}
+		KeyBounce['A'] = true;
+	}
+	else KeyBounce['A'] = false;
 
 	if (Application::IsKeyPressed('S'))
 	{
 		if (!KeyBounce['S'])
 			//--playerInfo->pos.y;
-			playerInfo->move(3, 11, 11, theMap);
+			if (playerInfo->move(3, theMap))
+			{
+			}
 		KeyBounce['S'] = true;
 	}
 	else KeyBounce['S'] = false;
 
 	if (Application::IsKeyPressed('P'))
 	{
-		
 			modelStack.PushMatrix();
 			modelStack.Translate(50, 50, 0);
 			//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
 			modelStack.Scale(1000, 1000, 0);
 			RenderMesh(meshList[GEO_MAZEWALL], true);
 			modelStack.PopMatrix();
-
-		
 	}
 
 	//Exercise 8: use 2 keys to increase and decrease mass of ship
@@ -297,6 +303,13 @@ void SP3::renderBombs(BombBase *bomb, int currentBombIndex)
 	if (bomb->bombTimer < bomb->getTimeToExplode())
 	{
 		bomb->bombTimer += doubletime;
+		modelStack.PushMatrix(); //norrmal bomb
+		{
+			modelStack.Translate(bomb->pos.x, bomb->pos.y, 0);
+			//modelstack.rotate(math::radiantodegree(atan2(-alien->dir.x, alien->dir.y)), 0, 0, 1);
+			RenderMesh(meshList[GEO_NORMALBOMB], true);
+		}
+		modelStack.PopMatrix(); ///normal bomb
 	}
 	else
 	{
@@ -306,13 +319,7 @@ void SP3::renderBombs(BombBase *bomb, int currentBombIndex)
 		bombFireGO->pos.set(bomb->pos.x, bomb->pos.y);
 	
 		playerInfo->bombManager.erase(playerInfo->bombManager.begin() + currentBombIndex); //Destroys current bomb object in vector
-		return;
 	}
-	modelStack.PushMatrix();
-	modelStack.Translate(bomb->pos.x, bomb->pos.y, 0);
-	//modelstack.rotate(math::radiantodegree(atan2(-alien->dir.x, alien->dir.y)), 0, 0, 1);
-	RenderMesh(meshList[GEO_NORMALBOMB], true);
-	modelStack.PopMatrix();
 }
 
 void SP3::Render()
@@ -375,39 +382,37 @@ void SP3::Render()
 					if (theMap[x][y])
 						RenderMesh(meshList[wall], false);
 					else RenderMesh(meshList[floor], false);
-					if (playerInfo->pos.x == x && playerInfo->pos.y == y)
-						RenderMesh(meshList[GEO_PLAYER], false);
+					//if (playerInfo->pos.x == x && playerInfo->pos.y == y)
+						//RenderMesh(meshList[GEO_PLAYER], false);
 				}
 			}
 		}
-	modelStack.PopMatrix();
+		modelStack.PopMatrix();
 
-	//Render Aliens
-	if (!alienManager.empty())  //Checks if alien manager vector is empty
-	{
-		for (int currentAlien = 0; currentAlien < alienManager.size(); ++currentAlien)
+		//Render Aliens
+		if (!alienManager.empty())  //Checks if alien manager vector is empty
 		{
-			renderAliens(alienManager[currentAlien]);
+			for (int currentAlien = 0; currentAlien < alienManager.size(); ++currentAlien)
+			{
+				renderAliens(alienManager[currentAlien]);
+			}
 		}
-	}
 
-	//Render Bombs
-	if (!playerInfo->bombManager.empty())  //Checks if bomb manager vector is empty
-	{
-		for (int currentBomb = 0; currentBomb < playerInfo->bombManager.size(); ++currentBomb)
+		//Render Bombs
+		if (!playerInfo->bombManager.empty())  //Checks if bomb manager vector is empty
 		{
-			renderBombs(playerInfo->bombManager[currentBomb], currentBomb);
+			for (int currentBomb = 0; currentBomb < playerInfo->bombManager.size(); ++currentBomb)
+			{
+				renderBombs(playerInfo->bombManager[currentBomb], currentBomb);
+			}
 		}
-	}
 	
-	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-	{
-		GameObject *go = (GameObject *)*it;
-		if (go->active)
+		for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 		{
-			RenderGO(go);
+			GameObject *go = (GameObject *)*it;
+			if (go->active)
+				RenderGO(go);
 		}
-	}
 	}
 	modelStack.PopMatrix();
 

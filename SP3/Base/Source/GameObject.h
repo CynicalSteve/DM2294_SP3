@@ -44,7 +44,7 @@ public:
 			this->y = y;
 		}
 	} pos;
-	Vector3 vel;
+	Vector3 animationPos;
 	Vector3 scale;
 	Vector3 dir; //direction/orientation
 	float momentOfInertia;
@@ -54,7 +54,7 @@ public:
 
 	float fireBurnTime;
 
-	GameObject(GAMEOBJECT_TYPE typeValue = GO_BALL);
+	GameObject();
 	virtual ~GameObject();
 };
 

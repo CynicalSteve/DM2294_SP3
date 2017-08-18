@@ -25,7 +25,7 @@ Struct to define a 3D vector
 struct Vector3
 {
 	float x, y, z;
-	bool IsEqual(float a, float b) const;
+	static bool IsEqual(float a, float b);
 
 	Vector3(float a = 0.0, float b = 0.0, float c = 0.0);
 	Vector3(const Vector3 &rhs);
