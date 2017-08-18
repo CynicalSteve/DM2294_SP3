@@ -15,11 +15,11 @@ SceneManager *SceneManager::instance()
 
 void SceneManager::Init()
 {
-	scene = new StartMenu();
+	scene = new SP3();
 	nextScene = 0;
 	scene->Init();
 
-	state = SCENE_STARTMENU;
+	state = SCENE_MAINGAME;
 	sceneSwitching = false;
 }
 
@@ -47,7 +47,7 @@ void SceneManager::SwitchScene(unsigned int sceneID)
 
 	switch (sceneID)
 	{
-	case SCENE_STARTMENU: nextScene = new StartMenu(); break;
+	//case SCENE_STARTMENU: nextScene = new StartMenu(); break;
 	case SCENE_MAINGAME: nextScene = new SP3(); break;
 	default: return;
 	}

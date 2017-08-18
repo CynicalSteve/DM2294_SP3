@@ -111,6 +111,9 @@
     <ClCompile Include="Source\SceneManager.cpp">
       <Filter>Scenes\SceneManager</Filter>
     </ClCompile>
+    <ClCompile Include="Source\StartMenu.cpp">
+      <Filter>Scenes\Actual Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Vertex.h">
@@ -175,6 +178,9 @@
     </ClInclude>
     <ClInclude Include="Source\SceneManager.h">
       <Filter>Scenes\SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StartMenu.h">
+      <Filter>Scenes\Actual Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

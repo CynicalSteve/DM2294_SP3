@@ -70,6 +70,8 @@ public:
 		GEO_WALL_LVL3,
 		GEO_WALL_LVL4,
 		GEO_WALL_LVL5,
+		floor,
+		wall,
 		ship,
 		NUM_GEOMETRY,
 	};
