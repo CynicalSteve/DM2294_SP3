@@ -1,9 +1,7 @@
 #include "BombBase.h"
 
-BombBase::BombBase(string bombName, float bombDamage)
+BombBase::BombBase() : bombTimer(0.f)
 {
-	this->bombName = bombName;
-	this->bombDamage = bombDamage;
 }
 
 BombBase::~BombBase()
@@ -35,7 +33,12 @@ float BombBase::getBombDamage()
 	return this->bombDamage;
 }
 
-float BombBase::getBombTimer()
+float BombBase::getTimeToExplode()
 {
 	return this->timeToExplode;
+}
+
+float BombBase::getFireBurnTime()
+{
+	return this->fireBurnTime;
 }

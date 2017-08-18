@@ -5,7 +5,9 @@
 #include <vector>
 #include "SceneBase.h"
 #include "AlienBase.h"
+#include "alienGrub.h"
 #include "BombBase.h"
+#include "BombNormal.h"
 #include "Player.h"
 
 class SP3 : public SceneBase
@@ -25,6 +27,8 @@ public:
 	virtual void Exit();
 
 	void RenderGO(GameObject *go);
+	void renderAliens(alienBase *alien);
+	void renderBombs(BombBase *bomb, int currentBombIndex);
 
 	GameObject* FetchGO();
 protected:
@@ -37,6 +41,9 @@ protected:
 	short **theMap;
 	GameObject *myInventory[10];
 	double doubletime;
+	std::vector<alienBase *> alienManager;
+
+	int currentAlien;
 
 	bool KeyBounce[256];
 };

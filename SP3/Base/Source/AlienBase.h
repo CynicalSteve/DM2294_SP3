@@ -1,17 +1,47 @@
+#ifndef ALIEN_BASE_H
+#define ALIEN_BASE_H
+
 #include <string>
+#include "Vector3.h"
 #include "GameObject.h"
+
 using namespace std;
 
-class alienBase : GameObject
+class alienBase : public GameObject
 {
 public:
-	alienBase(string alienName, unsigned int alienHealth, unsigned int alienSpeed, unsigned int alienDamage);
+	enum alienType
+	{
+		TYPE1_GRUB,
+		TYPE2_GHOUL,
+		TYPE3_RAPTOR,
+		TYPE4_GOLIATH,
+		TYPE5_LEVIATHAN
+	};
+
+	struct coord
+	{
+		short x = 0, y = 0;
+		void set(short x, short y)
+		{
+			this->x = x;
+			this->y = y;
+		}
+	} pos;
+
+	
+	alienBase(); //string alienName, unsigned int alienHealth, unsigned int alienSpeed, unsigned int alienDamage
 	~alienBase();
 
-	string setAlienName();
-	int setAlienHealth(), setAlienSpeed(), setAlienDamage();
+	string getAlienName();
+	int getAlienHealth(), getAlienSpeed(), getAlienDamage();
+	void setAlienName(string newAlienName), setAlienHealth(float newAlienHealth), setAlienSpeed(float newAlienSpeed), setAlienDamage(float newAlienDamage);
+	
+	Vector3 scale;
+	alienType alienType;
 
-private:
+protected:
 	string alienName;
-	unsigned int alienHealth, alienSpeed, alienDamage;
+	float alienHealth, alienSpeed, alienDamage;
 };
+#endif

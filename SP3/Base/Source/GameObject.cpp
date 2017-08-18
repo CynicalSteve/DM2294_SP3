@@ -6,8 +6,7 @@ GameObject::GameObject(GAMEOBJECT_TYPE typeValue)
 	scale(1, 1, 1),
 	active(false),
 	mass(1.f),
-	bombTimer(0.f),
-	fireTimer(0.f)
+	fireBurnTime(0.f)
 {
 }
 

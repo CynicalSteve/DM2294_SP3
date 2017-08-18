@@ -122,6 +122,36 @@ void SceneBase::Init()
 	meshList[GEO_BOMBFIRE] = MeshBuilder::GenerateQuad("BombFire", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_BOMBFIRE]->textureID = LoadTGA("Image//bombFire.tga");
 
+	meshList[GEO_ALIENGRUB] = MeshBuilder::GenerateQuad("AlienGrub", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_ALIENGRUB]->textureID = LoadTGA("Image//grub.tga");
+
+	meshList[GEO_ALIENGHOUL] = MeshBuilder::GenerateQuad("AlienGhoul", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_ALIENGHOUL]->textureID = LoadTGA("Image//ghoul.tga");
+
+	meshList[GEO_ALIENRAPTOR] = MeshBuilder::GenerateQuad("AlienGrub", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_ALIENRAPTOR]->textureID = LoadTGA("Image//grub.tga");
+
+	meshList[GEO_ALIENGOLIATH] = MeshBuilder::GenerateQuad("AlienGoliath", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_ALIENGOLIATH]->textureID = LoadTGA("Image//goliath.tga");
+
+	meshList[GEO_ALIENLEVIATHAN] = MeshBuilder::GenerateQuad("AlienLeviathan", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_ALIENLEVIATHAN]->textureID = LoadTGA("Image//leviathan.tga");
+
+	meshList[GEO_WALL_LVL1] = MeshBuilder::GenerateQuad("Wall_LVL1", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_WALL_LVL1]->textureID = LoadTGA("Image//wall_LVL1.tga");
+
+	meshList[GEO_WALL_LVL2] = MeshBuilder::GenerateQuad("Wall_LVL2", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_WALL_LVL2]->textureID = LoadTGA("Image//wall_LVL2.tga");
+
+	meshList[GEO_WALL_LVL3] = MeshBuilder::GenerateQuad("Wall_LVL3", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_WALL_LVL3]->textureID = LoadTGA("Image//wall_LVL3.tga");
+
+	meshList[GEO_WALL_LVL4] = MeshBuilder::GenerateQuad("Wall_LVL4", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_WALL_LVL4]->textureID = LoadTGA("Image//wall_LVL4.tga");
+
+	meshList[GEO_WALL_LVL5] = MeshBuilder::GenerateQuad("Wall_LVL5", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_WALL_LVL5]->textureID = LoadTGA("Image//wall_LVL5.tga");
+
 	bLightEnabled = false;
 }
 
