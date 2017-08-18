@@ -14,7 +14,7 @@ SceneManager *SceneManager::instance()
 
 void SceneManager::Init()
 {
-	scene = new StartMenu();
+	scene = new SP3();
 	nextScene = 0;
 	scene->Init();
 

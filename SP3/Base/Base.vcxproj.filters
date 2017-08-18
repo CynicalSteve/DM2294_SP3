@@ -43,17 +43,17 @@
     <Filter Include="GameObject">
       <UniqueIdentifier>{1b271566-ba5b-49e4-ab6f-867e234996a0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Bombs">
-      <UniqueIdentifier>{78aeff0b-c852-45a0-80b8-bb9031e71e9e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Player">
       <UniqueIdentifier>{cb5c5092-40b2-4a89-8580-800162b5d60b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Aliens">
-      <UniqueIdentifier>{d65d8528-5591-4250-824f-fa88340bd8a9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scenes\SceneManager">
       <UniqueIdentifier>{ad756c0b-96d2-4db7-8a0f-b7847c2f0329}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bomb">
+      <UniqueIdentifier>{78aeff0b-c852-45a0-80b8-bb9031e71e9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Alien">
+      <UniqueIdentifier>{d65d8528-5591-4250-824f-fa88340bd8a9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -64,7 +64,7 @@
       <Filter>Application</Filter>
     </ClCompile>
     <ClCompile Include="Source\AlienBase.cpp">
-      <Filter>Aliens</Filter>
+      <Filter>Alien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Camera.cpp">
       <Filter>Miscellaneous\Camera</Filter>
@@ -100,13 +100,13 @@
       <Filter>Player</Filter>
     </ClCompile>
     <ClCompile Include="Source\BombBase.cpp">
-      <Filter>Bombs</Filter>
+      <Filter>Bomb</Filter>
     </ClCompile>
     <ClCompile Include="Source\alienGrub.cpp">
-      <Filter>Aliens</Filter>
+      <Filter>Alien</Filter>
     </ClCompile>
     <ClCompile Include="Source\BombNormal.cpp">
-      <Filter>Bombs</Filter>
+      <Filter>Bomb</Filter>
     </ClCompile>
     <ClCompile Include="Source\SceneManager.cpp">
       <Filter>Scenes\SceneManager</Filter>
@@ -126,7 +126,7 @@
       <Filter>Miscellaneous</Filter>
     </ClInclude>
     <ClInclude Include="Source\AlienBase.h">
-      <Filter>Aliens</Filter>
+      <Filter>Alien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Camera.h">
       <Filter>Miscellaneous\Camera</Filter>
@@ -168,13 +168,13 @@
       <Filter>Player</Filter>
     </ClInclude>
     <ClInclude Include="Source\BombBase.h">
-      <Filter>Bombs</Filter>
+      <Filter>Bomb</Filter>
     </ClInclude>
     <ClInclude Include="Source\alienGrub.h">
-      <Filter>Aliens</Filter>
+      <Filter>Alien</Filter>
     </ClInclude>
     <ClInclude Include="Source\BombNormal.h">
-      <Filter>Bombs</Filter>
+      <Filter>Bomb</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneManager.h">
       <Filter>Scenes\SceneManager</Filter>
