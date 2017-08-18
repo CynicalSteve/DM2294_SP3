@@ -52,6 +52,9 @@
     <Filter Include="Aliens">
       <UniqueIdentifier>{d65d8528-5591-4250-824f-fa88340bd8a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scenes\SceneManager">
+      <UniqueIdentifier>{ad756c0b-96d2-4db7-8a0f-b7847c2f0329}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -104,6 +107,12 @@
     </ClCompile>
     <ClCompile Include="Source\BombNormal.cpp">
       <Filter>Bombs</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SceneManager.cpp">
+      <Filter>Scenes\SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StartMenu.cpp">
+      <Filter>Scenes\Actual Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +175,12 @@
     </ClInclude>
     <ClInclude Include="Source\BombNormal.h">
       <Filter>Bombs</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneManager.h">
+      <Filter>Scenes\SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StartMenu.h">
+      <Filter>Scenes\Actual Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

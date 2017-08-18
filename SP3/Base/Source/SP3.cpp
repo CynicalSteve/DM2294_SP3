@@ -61,7 +61,7 @@ void SP3::Init()
 	for (size_t i = 0; i < 100; ++i)
 	{
 		m_goList.push_back(new GameObject());
-	}
+}
 }
 
 GameObject* SP3::FetchGO()
@@ -140,14 +140,9 @@ void SP3::Update(double dt)
 	}
 	else KeyBounce['S'] = false;
 
-	if (Application::IsKeyPressed('P'))
+	if (Application::IsKeyPressed('P')) //Pause
 	{
-			modelStack.PushMatrix();
-			modelStack.Translate(50, 50, 0);
-			//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
-			modelStack.Scale(1000, 1000, 0);
-			RenderMesh(meshList[GEO_MAZEWALL], true);
-			modelStack.PopMatrix();
+		
 	}
 
 	//Exercise 8: use 2 keys to increase and decrease mass of ship
@@ -177,10 +172,6 @@ void SP3::Update(double dt)
 		bLButtonState = true;
 		std::cout << "LBUTTON DOWN" << std::endl;
 		playerInfo->bombManager.push_back(new NormalBomb("Normal Bomb", 30, 3, 2, playerInfo->pos.x, playerInfo->pos.y));
-		GameObject *bombGO = FetchGO();
-		bombGO->active = true;
-		bombGO->type = GameObject::GO_NORMALBOMB;
-		bombGO->pos = playerInfo->pos;
 	}
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
@@ -265,17 +256,6 @@ void SP3::RenderGO(GameObject *go)
 		modelStack.PopMatrix();
 
 		break;
-	//case GameObject::GO_ALIENGRUB:
-	//{
-	//	short DirectionX = playerInfo->pos.x - go->pos.x, directionY = playerInfo->pos.y - go->pos.y;
-
-	//	modelStack.PushMatrix();
-	//	modelStack.Translate(go->pos.x += (DirectionX * .05f), go->pos.y += (directionY * .05f), 0);
-	//	//modelstack.rotate(math::radiantodegree(atan2(-go->dir.x, go->dir.y)), 0, 0, 1);
-	//	modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-	//	RenderMesh(meshList[GEO_ALIENGRUB], true);
-	//	modelStack.PopMatrix();
-	//}
 	}
 	
 }
@@ -308,7 +288,7 @@ void SP3::renderBombs(BombBase *bomb, int currentBombIndex)
 			modelStack.Translate(bomb->pos.x, bomb->pos.y, 0);
 			//modelstack.rotate(math::radiantodegree(atan2(-alien->dir.x, alien->dir.y)), 0, 0, 1);
 			RenderMesh(meshList[GEO_NORMALBOMB], true);
-		}
+	}
 		modelStack.PopMatrix(); ///normal bomb
 	}
 	else
@@ -387,31 +367,31 @@ void SP3::Render()
 				}
 			}
 		}
-		modelStack.PopMatrix();
+	modelStack.PopMatrix();
 
-		//Render Aliens
-		if (!alienManager.empty())  //Checks if alien manager vector is empty
+	//Render Aliens
+	if (!alienManager.empty())  //Checks if alien manager vector is empty
+	{
+		for (int currentAlien = 0; currentAlien < alienManager.size(); ++currentAlien)
 		{
-			for (int currentAlien = 0; currentAlien < alienManager.size(); ++currentAlien)
-			{
-				renderAliens(alienManager[currentAlien]);
-			}
+			renderAliens(alienManager[currentAlien]);
 		}
+	}
 
-		//Render Bombs
-		if (!playerInfo->bombManager.empty())  //Checks if bomb manager vector is empty
+	//Render Bombs
+	if (!playerInfo->bombManager.empty())  //Checks if bomb manager vector is empty
+	{
+		for (int currentBomb = 0; currentBomb < playerInfo->bombManager.size(); ++currentBomb)
 		{
-			for (int currentBomb = 0; currentBomb < playerInfo->bombManager.size(); ++currentBomb)
-			{
-				renderBombs(playerInfo->bombManager[currentBomb], currentBomb);
-			}
+			renderBombs(playerInfo->bombManager[currentBomb], currentBomb);
 		}
+	}
 	
-		for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-		{
-			GameObject *go = (GameObject *)*it;
-			if (go->active)
-				RenderGO(go);
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (go->active)
+			RenderGO(go);
 		}
 	}
 	modelStack.PopMatrix();
@@ -436,14 +416,27 @@ void SP3::Exit()
 {
 	SceneBase::Exit();
 	//Cleanup GameObjects
+	if (!alienManager.empty())
+	{
+		for (int currentAlien = 0; currentAlien < alienManager.size(); ++currentAlien)
+		{
+			delete alienManager[currentAlien];
+		}
+	}
 
+	if (!playerInfo->bombManager.empty())
+	{
+		for (int currentBomb = 0; currentBomb < playerInfo->bombManager.size(); ++currentBomb)
+		{
+			delete playerInfo->bombManager[currentBomb];
+		}
+	}
 	while (m_goList.size() > 0)
 	{
 		GameObject *go = m_goList.back();
 		delete go;
 		m_goList.pop_back();
 	}
-
 	for (short x = 0; x < 11; ++x)
 		delete theMap[x];
 	delete theMap;
