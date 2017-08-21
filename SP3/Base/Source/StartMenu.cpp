@@ -87,22 +87,33 @@ void StartMenu::Update(double dt)
 		KeyBounce[VK_SPACE] = false;
 	}
 
+	if (Application::IsKeyPressed(VK_RETURN))
+	{
+		if (!KeyBounce[VK_RETURN])
+		{
+			switch (currentSelectionState)
+			{
+			case PLAYGAME:
+			{
+				SceneManager::instance()->SwitchScene(SceneManager::SCENE_MAINGAME);
+			}
+			default:
+				break;
+			}
+		}
+		KeyBounce[VK_RETURN] = true;
+	}
+	else
+	{
+		KeyBounce[VK_RETURN] = false;
+	}
+
 	//Mouse Section
 	static bool bLButtonState = false;
 	if (!bLButtonState && Application::IsMousePressed(0))
 	{
 		bLButtonState = true;
-		std::cout << "LBUTTON DOWN" << std::endl;
-
-		switch (currentSelectionState)
-		{
-		case PLAYGAME:
-		{
-			SceneManager::instance()->SwitchScene(SceneManager::SCENE_MAINGAME);
-		}
-		default:
-			break;
-		}
+		std::cout << "LBUTTON DOWN" << std::endl;	
 	}
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
