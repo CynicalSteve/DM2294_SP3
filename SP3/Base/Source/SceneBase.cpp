@@ -158,6 +158,15 @@ void SceneBase::Init()
 	meshList[GEO_STARTMENU_TITLE] = MeshBuilder::GenerateQuad("StartMenu_Title", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_STARTMENU_TITLE]->textureID = LoadTGA("Image//StartMenu_Title.tga");
 
+	meshList[GEO_STARTMENU_STARTGAME] = MeshBuilder::GenerateQuad("StartMenu_StartGame", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_STARTMENU_STARTGAME]->textureID = LoadTGA("Image//StartMenu_StartGame.tga");
+
+	meshList[GEO_LOOTCRATE] = MeshBuilder::GenerateQuad("LootCrate", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_LOOTCRATE]->textureID = LoadTGA("Image//LootCrate.tga");
+
+	meshList[GEO_HEALTH] = MeshBuilder::GenerateQuad("Health", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_HEALTH]->textureID = LoadTGA("Image//Health.tga");
+
 	bLightEnabled = false;
 }
 

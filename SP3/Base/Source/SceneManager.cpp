@@ -14,7 +14,7 @@ SceneManager *SceneManager::instance()
 
 void SceneManager::Init()
 {
-	scene = new SP3();
+	scene = new StartMenu();
 	nextScene = 0;
 	scene->Init();
 
@@ -24,6 +24,16 @@ void SceneManager::Init()
 
 void SceneManager::Update(double dt)
 {
+	if (sceneSwitching == true)
+	{
+		scene->Exit();
+		delete scene;
+
+		nextScene->Init();
+		scene = nextScene;
+		sceneSwitching = false;
+	}
+
 	scene->Update(dt);
 	scene->Render();
 }

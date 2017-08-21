@@ -196,6 +196,11 @@ void SP3::Update(double dt)
 		bRButtonState = false;
 		std::cout << "RBUTTON UP" << std::endl;
 	}
+
+	GameObject *lootcrateGO = FetchGO();
+	lootcrateGO->active = true;
+	lootcrateGO->type = GameObject::GO_LOOTCRATE;
+	lootcrateGO->pos.set(5, 5);
 }
 
 
@@ -212,6 +217,7 @@ void SP3::RenderGO(GameObject *go)
 		modelStack.PopMatrix();
 		break;
 	case GameObject::GO_BOMBFIRE:
+	{
 		if (go->fireBurnTime < 2.f)
 		{
 			go->fireBurnTime += doubletime;
@@ -223,40 +229,87 @@ void SP3::RenderGO(GameObject *go)
 
 			break;
 		}
+		if (go->scale.x < 1.f && go->scale.y < 1.f)
+		{
+			go->scale.x += doubletime * 1.1f;
+			go->scale.y += doubletime * 1.1f;
+		}
 
 		modelStack.PushMatrix();
 		{
+			modelStack.PushMatrix();
 			modelStack.Translate(go->pos.x, go->pos.y, 0);
+			modelStack.Scale(go->scale.x, go->scale.y, 1);
 			RenderMesh(meshList[GEO_BOMBFIRE], false);
+			modelStack.PopMatrix();
 
-			modelStack.Translate(1, 0, 0);
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x + 1, go->pos.y, 0);
+			modelStack.Scale(go->scale.x, go->scale.y, 1);
 			RenderMesh(meshList[GEO_BOMBFIRE], false);
+			modelStack.PopMatrix();
 
-			modelStack.Translate(1, 0, 0);
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y + 1, 0);
+			modelStack.Scale(go->scale.x, go->scale.y, 1);
 			RenderMesh(meshList[GEO_BOMBFIRE], false);
+			modelStack.PopMatrix();
 
-			modelStack.Translate(-2, 1, 0);
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x - 1, go->pos.y, 0);
+			modelStack.Scale(go->scale.x, go->scale.y, 1);
 			RenderMesh(meshList[GEO_BOMBFIRE], false);
+			modelStack.PopMatrix();
 
-			modelStack.Translate(0, 1, 0);
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y - 1, 0);
+			modelStack.Scale(go->scale.x, go->scale.y, 1);
 			RenderMesh(meshList[GEO_BOMBFIRE], false);
+			modelStack.PopMatrix();
 
-			modelStack.Translate(-1, -2, 0);
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x + 2, go->pos.y, 0);
+			modelStack.Scale(go->scale.x, go->scale.y, 1);
 			RenderMesh(meshList[GEO_BOMBFIRE], false);
+			modelStack.PopMatrix();
 
-			modelStack.Translate(-1, 0, 0);
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y + 2, 0);
+			modelStack.Scale(go->scale.x, go->scale.y, 1);
 			RenderMesh(meshList[GEO_BOMBFIRE], false);
+			modelStack.PopMatrix();
 
-			modelStack.Translate(2, -1, 0);
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x - 2, go->pos.y, 0);
+			modelStack.Scale(go->scale.x, go->scale.y, 1);
 			RenderMesh(meshList[GEO_BOMBFIRE], false);
+			modelStack.PopMatrix();
 
-			modelStack.Translate(0, -1, 0);
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y - 2, 0);
+			modelStack.Scale(go->scale.x, go->scale.y, 1);
 			RenderMesh(meshList[GEO_BOMBFIRE], false);
+			modelStack.PopMatrix();
 		}
 		modelStack.PopMatrix();
 
 		break;
 	}
+	case GameObject::GO_LOOTCRATE:
+	{
+		modelStack.PushMatrix();
+		{
+			modelStack.Translate(go->pos.x, go->pos.y, 0);
+			RenderMesh(meshList[GEO_LOOTCRATE], false);
+		}
+		modelStack.PopMatrix();
+
+		break;
+	}
+	default:
+		break;
+	}
+	
 	
 }
 
@@ -297,6 +350,7 @@ void SP3::renderBombs(BombBase *bomb, int currentBombIndex)
 		bombFireGO->active = true;
 		bombFireGO->type = GameObject::GO_BOMBFIRE;
 		bombFireGO->pos.set(bomb->pos.x, bomb->pos.y);
+		bombFireGO->scale.Set(0.1f, 0.1f, 1);
 	
 		playerInfo->bombManager.erase(playerInfo->bombManager.begin() + currentBombIndex); //Destroys current bomb object in vector
 	}

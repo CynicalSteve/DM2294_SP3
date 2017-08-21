@@ -31,6 +31,7 @@ public:
 		GO_WALL_LVL3,
 		GO_WALL_LVL4,
 		GO_WALL_LVL5,
+		GO_LOOTCRATE,
 
 		GO_TOTAL, //must be last
 	};
@@ -53,6 +54,7 @@ public:
 	float mass;
 
 	float fireBurnTime;
+	float fireScaler;
 
 	GameObject();
 	virtual ~GameObject();

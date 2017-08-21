@@ -14,7 +14,7 @@ class StartMenu : public SceneBase
 		HIGHSCORES,
 		SETTINGS,
 		EXIT,
-		END
+		TOTAL_NUM
 	};
 
 public:
@@ -25,11 +25,16 @@ public:
 	virtual void Update(double dt);
 	virtual void Render();
 	virtual void Exit();
-
-protected:
-	float m_worldWidth;
-	float m_worldHeight;
 	
+	CurrentSelection currentSelectionState;
+	unsigned int CurrentSelectionIterator;
+
+private:
+	float leftBombPosition;
+	float rightBombPosition;
+
+	float m_worldHeight;
+	float m_worldWidth;
 
 	bool KeyBounce[256];
 };

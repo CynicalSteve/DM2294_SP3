@@ -3,7 +3,10 @@
 #include "Application.h"
 #include <sstream>
 
-StartMenu::StartMenu()
+StartMenu::StartMenu() : currentSelectionState(PLAYGAME),
+CurrentSelectionIterator(0),
+leftBombPosition(0.f),
+rightBombPosition(0.f)
 {
 }
 
@@ -34,10 +37,35 @@ void StartMenu::Update(double dt)
 	}
 	if (Application::IsKeyPressed('W'))
 	{
+		if (!KeyBounce['W'])
+		{
+			if (CurrentSelectionIterator != 0)
+			{
+				--CurrentSelectionIterator;
+				currentSelectionState = static_cast<CurrentSelection>(CurrentSelectionIterator);
+			}
+			std::cout << currentSelectionState << std::endl;
+		}
+		KeyBounce['W'] = true;
 	}
+	else KeyBounce['W'] = false;
+
 	if (Application::IsKeyPressed('S'))
 	{
+		if (!KeyBounce['S'])
+		{
+			if (CurrentSelectionIterator + 1 != TOTAL_NUM)
+			{
+				++CurrentSelectionIterator;
+				currentSelectionState = static_cast<CurrentSelection>(CurrentSelectionIterator);
+			}
+			std::cout << currentSelectionState << std::endl;
+		}
+		KeyBounce['S'] = true;
 	}
+	else KeyBounce['S'] = false;
+
+	
 
 	//Exercise 8: use 2 keys to increase and decrease mass of ship
 	if (Application::IsKeyPressed(VK_UP))
@@ -65,6 +93,16 @@ void StartMenu::Update(double dt)
 	{
 		bLButtonState = true;
 		std::cout << "LBUTTON DOWN" << std::endl;
+
+		switch (currentSelectionState)
+		{
+		case PLAYGAME:
+		{
+			SceneManager::instance()->SwitchScene(SceneManager::SCENE_MAINGAME);
+		}
+		default:
+			break;
+		}
 	}
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
@@ -82,6 +120,8 @@ void StartMenu::Update(double dt)
 		bRButtonState = false;
 		std::cout << "RBUTTON UP" << std::endl;
 	}
+
+	
 }
 
 void StartMenu::Render()
@@ -110,14 +150,6 @@ void StartMenu::Render()
 	
 	modelStack.PushMatrix();  //All UI items in start menu
 	{
-		modelStack.PushMatrix();  //Start Menu Title
-		{
-			modelStack.Translate(100, 50, 0);
-			modelStack.Scale(50, 50, 0);
-			RenderMesh(meshList[GEO_STARTMENU_TITLE], false);
-		}
-		modelStack.PopMatrix();
-
 		modelStack.PushMatrix();  //Start Menu Background
 		{
 			modelStack.Translate(100, 50, 0);
@@ -128,10 +160,35 @@ void StartMenu::Render()
 
 		modelStack.PushMatrix();  //Start Menu Title
 		{
-			modelStack.Translate(87, 78, 0);
+			modelStack.Translate(95, 78, 0);
 			modelStack.Scale(160, 50, 0);
 			//modelStack.Rotate(90, 1, 0, 0);
 			RenderMesh(meshList[GEO_STARTMENU_TITLE], false);
+		}
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();  //Start GAme Button
+		{
+			modelStack.Translate(95, 60, 1);
+			modelStack.Scale(50, 25, 0);
+			RenderMesh(meshList[GEO_STARTMENU_STARTGAME], false);
+		}
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix(); 
+		{
+			modelStack.Translate(70, 59 + leftBombPosition, 1);
+			modelStack.Scale(10, 10, 0);
+			RenderMesh(meshList[GEO_NORMALBOMB], false);
+		}
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		{
+			modelStack.Translate(122, 59 + rightBombPosition, 1);
+			modelStack.Scale(10, 10, 0);
+			modelStack.Rotate(180, 0, 1, 0);
+			RenderMesh(meshList[GEO_NORMALBOMB], false);
 		}
 		modelStack.PopMatrix();
 	}
@@ -152,6 +209,7 @@ void StartMenu::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ss1.str(), Color(0, 1, 0), 3, 0, 0);*/
 	
 	glEnable(GL_DEPTH_TEST);
+	SceneManager::instance()->State(SceneManager::SCENE_STARTMENU);
 }
 
 void StartMenu::Exit()
