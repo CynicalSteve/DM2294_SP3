@@ -97,14 +97,16 @@ void StartMenu::Update(double dt)
 			case PLAYGAME:
 			{
 				SceneManager::instance()->SwitchScene(SceneManager::SCENE_MAINGAME);
+				break;
 			}
 			case SETTINGS:
 			{
-
+				break;
 			}
 			case EXIT:
 			{
 				SceneManager::instance()->Quit(true);
+				break;
 			}
 			default:
 				break;
@@ -167,6 +169,7 @@ void StartMenu::Render()
 	modelStack.LoadIdentity();
 	
 	modelStack.PushMatrix();  //All UI items in start menu
+	modelStack.Translate(-5, 0, 0);
 	{
 		modelStack.PushMatrix();  //Start Menu Background
 		{
