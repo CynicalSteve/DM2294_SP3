@@ -53,7 +53,7 @@ void SP3::Init()
 
 	playerInfo = new Player(100, 35);
 	playerInfo->pos.set(1, 1);
-	playerInfo->animationPos.SetZero();
+	playerInfo->animationPos.Set(playerInfo->pos.x, playerInfo->pos.y, -1);
 	playerInfo->type = GameObject::GO_PLAYER;
 
 	//Exercise 2a: Construct 100 GameObject with type GO_ASTEROID and add into m_goList
@@ -98,47 +98,49 @@ void SP3::Update(double dt)
 	//Exercise 6: set m_force values based on WASD
 	if (Application::IsKeyPressed('D'))
 	{
-		if (!KeyBounce['D'])
+		if (!KeyBounce['D'] && playerInfo->move(-1, theMap))
 			//++playerInfo->pos.x;
 			if (playerInfo->move(0, theMap))
-			{
-			}
+				playerInfo->animationPos.z = dt / 0.2;
 		KeyBounce['D'] = true;
 	}
 	else KeyBounce['D'] = false;
 
 	if (Application::IsKeyPressed('W'))
 	{
-		if (!KeyBounce['W'])
+		if (!KeyBounce['W'] && playerInfo->move(-1, theMap))
+		{
 			//++playerInfo->pos.y;
 			if (playerInfo->move(1, theMap))
-			{
-			}
+				playerInfo->animationPos.z = 1 + dt / 0.2;
+		}
 		KeyBounce['W'] = true;
 	}
 	else KeyBounce['W'] = false;
 
 	if (Application::IsKeyPressed('A'))
 	{
-		if (!KeyBounce['A'])
+		if (!KeyBounce['A'] && playerInfo->move(-1, theMap))
+		{
 			//--playerInfo->pos.x;
 			if (playerInfo->move(2, theMap))
-			{
-			}
+				playerInfo->animationPos.z = 2 + dt / 0.2;
+		}
 		KeyBounce['A'] = true;
 	}
 	else KeyBounce['A'] = false;
 
 	if (Application::IsKeyPressed('S'))
 	{
-		if (!KeyBounce['S'])
+		if (!KeyBounce['S'] && playerInfo->move(-1, theMap))
 			//--playerInfo->pos.y;
 			if (playerInfo->move(3, theMap))
-			{
-			}
+				playerInfo->animationPos.z = 3 + dt / 0.2;
 		KeyBounce['S'] = true;
 	}
 	else KeyBounce['S'] = false;
+
+	playerInfo->move(4, theMap);
 
 	if (Application::IsKeyPressed('P')) //Pause
 	{
@@ -206,7 +208,7 @@ void SP3::RenderGO(GameObject *go)
 	case GameObject::GO_PLAYER:
 		modelStack.PushMatrix();
 		{
-			modelStack.Translate(go->pos.x, go->pos.y, 0);
+			modelStack.Translate(go->animationPos.x, go->animationPos.y, 0);
 			RenderMesh(meshList[GEO_PLAYER], false);
 		}
 		modelStack.PopMatrix();
@@ -262,17 +264,16 @@ void SP3::RenderGO(GameObject *go)
 
 void SP3::renderAliens(alienBase *alien)
 {
-	short DirectionX = playerInfo->pos.x - alien->pos.x, directionY = playerInfo->pos.y - alien->pos.y;
-
 	switch (alien->alienType)
 	{
 	case alienBase::TYPE1_GRUB:
 	{
 		modelStack.PushMatrix();
-		modelStack.Translate(alien->pos.x += (DirectionX * .05f), alien->pos.y += (directionY * .05f), 0);
+		modelStack.Translate(alien->animationPos.x, alien->animationPos.y, 0);
 		RenderMesh(meshList[GEO_ALIENGRUB], true);
 		modelStack.PopMatrix();
 	}
+		break;
 	default:
 		break;
 	}
@@ -367,31 +368,31 @@ void SP3::Render()
 				}
 			}
 		}
-	modelStack.PopMatrix();
+		modelStack.PopMatrix();
 
-	//Render Aliens
-	if (!alienManager.empty())  //Checks if alien manager vector is empty
-	{
-		for (int currentAlien = 0; currentAlien < alienManager.size(); ++currentAlien)
+		//Render Aliens
+		if (!alienManager.empty())  //Checks if alien manager vector is empty
 		{
-			renderAliens(alienManager[currentAlien]);
+			for (int currentAlien = 0; currentAlien < alienManager.size(); ++currentAlien)
+			{
+				renderAliens(alienManager[currentAlien]);
+			}
 		}
-	}
 
-	//Render Bombs
-	if (!playerInfo->bombManager.empty())  //Checks if bomb manager vector is empty
-	{
-		for (int currentBomb = 0; currentBomb < playerInfo->bombManager.size(); ++currentBomb)
+		//Render Bombs
+		if (!playerInfo->bombManager.empty())  //Checks if bomb manager vector is empty
 		{
-			renderBombs(playerInfo->bombManager[currentBomb], currentBomb);
+			for (int currentBomb = 0; currentBomb < playerInfo->bombManager.size(); ++currentBomb)
+			{
+				renderBombs(playerInfo->bombManager[currentBomb], currentBomb);
+			}
 		}
-	}
 	
-	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-	{
-		GameObject *go = (GameObject *)*it;
-		if (go->active)
-			RenderGO(go);
+		for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+		{
+			GameObject *go = (GameObject *)*it;
+			if (go->active)
+				RenderGO(go);
 		}
 	}
 	modelStack.PopMatrix();
