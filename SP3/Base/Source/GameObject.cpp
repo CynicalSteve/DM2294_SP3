@@ -1,10 +1,11 @@
 #include "GameObject.h"
 
-GameObject::GameObject() 
+GameObject::GameObject()
 	: scale(1, 1, 1),
 	active(false),
 	mass(1.f),
-	fireBurnTime(0.f)
+	fireBurnTime(0.f),
+	fireScaler(0.f)
 {
 }
 

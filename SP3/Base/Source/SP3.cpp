@@ -21,7 +21,6 @@ void SP3::Init()
 	Math::InitRNG();
 
 	//Exercise 2c: Construct m_ship, set active, type, scale and pos
-
 	for (size_t i = 0; i < 256; ++i)
 	{
 		KeyBounce[i] = false;
@@ -198,6 +197,11 @@ void SP3::Update(double dt)
 		bRButtonState = false;
 		std::cout << "RBUTTON UP" << std::endl;
 	}
+
+	GameObject *lootcrateGO = FetchGO();
+	lootcrateGO->active = true;
+	lootcrateGO->type = GameObject::GO_LOOTCRATE;
+	lootcrateGO->pos.set(5, 5);
 }
 
 
@@ -214,6 +218,7 @@ void SP3::RenderGO(GameObject *go)
 		modelStack.PopMatrix();
 		break;
 	case GameObject::GO_BOMBFIRE:
+	{
 		if (go->fireBurnTime < 2.f)
 		{
 			go->fireBurnTime += doubletime;
@@ -225,40 +230,39 @@ void SP3::RenderGO(GameObject *go)
 
 			break;
 		}
+		if (go->scale.x < 1.f && go->scale.y < 1.f)
+		{
+			go->scale.x += doubletime * 1.1f;
+			go->scale.y += doubletime * 1.1f;
+		}
 
 		modelStack.PushMatrix();
 		{
+			modelStack.PushMatrix();
 			modelStack.Translate(go->pos.x, go->pos.y, 0);
+			modelStack.Scale(go->scale.x, go->scale.y, 1);
 			RenderMesh(meshList[GEO_BOMBFIRE], false);
-
-			modelStack.Translate(1, 0, 0);
-			RenderMesh(meshList[GEO_BOMBFIRE], false);
-
-			modelStack.Translate(1, 0, 0);
-			RenderMesh(meshList[GEO_BOMBFIRE], false);
-
-			modelStack.Translate(-2, 1, 0);
-			RenderMesh(meshList[GEO_BOMBFIRE], false);
-
-			modelStack.Translate(0, 1, 0);
-			RenderMesh(meshList[GEO_BOMBFIRE], false);
-
-			modelStack.Translate(-1, -2, 0);
-			RenderMesh(meshList[GEO_BOMBFIRE], false);
-
-			modelStack.Translate(-1, 0, 0);
-			RenderMesh(meshList[GEO_BOMBFIRE], false);
-
-			modelStack.Translate(2, -1, 0);
-			RenderMesh(meshList[GEO_BOMBFIRE], false);
-
-			modelStack.Translate(0, -1, 0);
-			RenderMesh(meshList[GEO_BOMBFIRE], false);
+			modelStack.PopMatrix();
 		}
 		modelStack.PopMatrix();
 
 		break;
 	}
+	case GameObject::GO_LOOTCRATE:
+	{
+		modelStack.PushMatrix();
+		{
+			modelStack.Translate(go->pos.x, go->pos.y, 0);
+			RenderMesh(meshList[GEO_LOOTCRATE], false);
+		}
+		modelStack.PopMatrix();
+
+		break;
+	}
+	default:
+		break;
+	}
+	
 	
 }
 
@@ -294,10 +298,59 @@ void SP3::renderBombs(BombBase *bomb, int currentBombIndex)
 	}
 	else
 	{
-		GameObject *bombFireGO = FetchGO();
-		bombFireGO->active = true;
-		bombFireGO->type = GameObject::GO_BOMBFIRE;
-		bombFireGO->pos.set(bomb->pos.x, bomb->pos.y);
+		GameObject *bombFireGO1 = FetchGO();
+		bombFireGO1->active = true;
+		bombFireGO1->type = GameObject::GO_BOMBFIRE;
+		bombFireGO1->pos.set(bomb->pos.x, bomb->pos.y);
+		bombFireGO1->scale.Set(0.1f, 0.1f, 1);
+
+		GameObject *bombFireGO2 = FetchGO();
+		bombFireGO2->active = true;
+		bombFireGO2->type = GameObject::GO_BOMBFIRE;
+		bombFireGO2->pos.set(bomb->pos.x + 1, bomb->pos.y);
+		bombFireGO2->scale.Set(0.1f, 0.1f, 1);
+
+		GameObject *bombFireGO3 = FetchGO();
+		bombFireGO3->active = true;
+		bombFireGO3->type = GameObject::GO_BOMBFIRE;
+		bombFireGO3->pos.set(bomb->pos.x + 2, bomb->pos.y);
+		bombFireGO3->scale.Set(0.1f, 0.1f, 1);
+
+		GameObject *bombFireGO4 = FetchGO();
+		bombFireGO4->active = true;
+		bombFireGO4->type = GameObject::GO_BOMBFIRE;
+		bombFireGO4->pos.set(bomb->pos.x, bomb->pos.y + 1);
+		bombFireGO4->scale.Set(0.1f, 0.1f, 1);
+
+		GameObject *bombFireGO5 = FetchGO();
+		bombFireGO5->active = true;
+		bombFireGO5->type = GameObject::GO_BOMBFIRE;
+		bombFireGO5->pos.set(bomb->pos.x, bomb->pos.y + 2);
+		bombFireGO5->scale.Set(0.1f, 0.1f, 1);
+
+		GameObject *bombFireGO6 = FetchGO();
+		bombFireGO6->active = true;
+		bombFireGO6->type = GameObject::GO_BOMBFIRE;
+		bombFireGO6->pos.set(bomb->pos.x - 1, bomb->pos.y);
+		bombFireGO6->scale.Set(0.1f, 0.1f, 1);
+
+		GameObject *bombFireGO7 = FetchGO();
+		bombFireGO7->active = true;
+		bombFireGO7->type = GameObject::GO_BOMBFIRE;
+		bombFireGO7->pos.set(bomb->pos.x - 2, bomb->pos.y);
+		bombFireGO7->scale.Set(0.1f, 0.1f, 1);
+
+		GameObject *bombFireGO8 = FetchGO();
+		bombFireGO8->active = true;
+		bombFireGO8->type = GameObject::GO_BOMBFIRE;
+		bombFireGO8->pos.set(bomb->pos.x, bomb->pos.y - 1);
+		bombFireGO8->scale.Set(0.1f, 0.1f, 1);
+
+		GameObject *bombFireGO9 = FetchGO();
+		bombFireGO9->active = true;
+		bombFireGO9->type = GameObject::GO_BOMBFIRE;
+		bombFireGO9->pos.set(bomb->pos.x, bomb->pos.y - 2);
+		bombFireGO9->scale.Set(0.1f, 0.1f, 1);
 	
 		playerInfo->bombManager.erase(playerInfo->bombManager.begin() + currentBombIndex); //Destroys current bomb object in vector
 	}
