@@ -13,7 +13,6 @@ public:
 
 	void setPlayerHealth(float newPlayerHealth), setPlayerSpeed(float newPlayerSpeed);
 	float getPlayerHealth(), getPlayerSpeed();
-	bool move(char direction, short **map);
 
 	vector<BombBase*> bombManager;
 	int currentBomb;
