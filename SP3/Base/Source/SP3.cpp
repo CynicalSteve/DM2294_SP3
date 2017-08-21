@@ -60,7 +60,11 @@ void SP3::Init()
 	for (size_t i = 0; i < 100; ++i)
 	{
 		m_goList.push_back(new GameObject());
-}
+	}
+
+	GameObject *lootcrateGO = FetchGO();
+	lootcrateGO->type = GameObject::GO_LOOTCRATE;
+	lootcrateGO->pos.set(5, 5);
 }
 
 GameObject* SP3::FetchGO()
@@ -197,11 +201,6 @@ void SP3::Update(double dt)
 		bRButtonState = false;
 		std::cout << "RBUTTON UP" << std::endl;
 	}
-
-	GameObject *lootcrateGO = FetchGO();
-	lootcrateGO->active = true;
-	lootcrateGO->type = GameObject::GO_LOOTCRATE;
-	lootcrateGO->pos.set(5, 5);
 }
 
 
