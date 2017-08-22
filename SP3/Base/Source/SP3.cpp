@@ -65,6 +65,7 @@ void SP3::Init()
 	GameObject *lootcrateGO = FetchGO();
 	lootcrateGO->type = GameObject::GO_LOOTCRATE;
 	lootcrateGO->pos.set(5, 5);
+	lootcrateGO->isDestructible = true;
 }
 
 GameObject* SP3::FetchGO()
@@ -296,6 +297,19 @@ void SP3::Update(double dt)
 				go->scale.x += doubletime * 1.1f;
 				go->scale.y += doubletime * 1.1f;
 			}
+
+			//Checks if any m_golist is in the bombfire
+			for (unsigned int i = 0; i < m_goList.size(); ++i)
+			{
+				if (m_goList[i]->active == true && m_goList[i]->isDestructible == true)
+				{
+					if (go->pos.x == m_goList[i]->pos.x && go->pos.y == m_goList[i]->pos.y)
+					{
+						//m_goList[i]->isDestructible = false;
+						m_goList[i]->active = false;
+					}
+				}
+			}
 		}
 	}
 }
@@ -322,18 +336,6 @@ void SP3::RenderGO(GameObject *go)
 			RenderMesh(meshList[GEO_BOMBFIRE], false);
 		}
 		modelStack.PopMatrix(); ///bombfire
-
-		//Checks if anything is in the bombfire
-		for (unsigned int i = 0; i < m_goList.size(); ++i)
-		{
-			if (m_goList[i]->type != GameObject::GO_PLAYER && m_goList[i]->type != GameObject::GO_BOMBFIRE && m_goList[i]->type != GameObject::GO_NORMALBOMB)
-			{
-				if (go->pos.x == m_goList[i]->pos.x && go->pos.y == m_goList[i]->pos.y)
-				{
-					m_goList[i]->active = false;
-				}
-			}
-		}
 
 		break;
 	}

@@ -5,7 +5,8 @@ GameObject::GameObject()
 	active(false),
 	mass(1.f),
 	fireBurnTime(0.f),
-	fireScaler(0.f)
+	fireScaler(0.f),
+	isDestructible(false)
 {
 }
 
