@@ -133,20 +133,6 @@ void SP3::Update(double dt)
 			}
 		}
 	}
-	if (!alienManager.empty())
-	{
-		for (unsigned int i = 0; i < alienManager.size(); ++i)
-		{
-			if (alienManager[i]->move(-1, theMap))
-			{
-				if (alienManager[i]->move(2, theMap))
-				{
-					alienManager[i]->animationPos.z = 2 + dt / alienManager[i]->getAlienSpeed();
-				}
-			}
-			alienManager[i]->move(4, theMap);
-		}
-	}
 
 	if (Application::IsKeyPressed('S'))
 	{
@@ -273,8 +259,39 @@ void SP3::Update(double dt)
 		it = playerInfo->bombManager.erase(it);
 		if (it == playerInfo->bombManager.end())
 			break;
-		//if (playerInfo->bombManager.erase(it) == playerInfo->bombManager.end()) //Destroys current bomb object in vector
-		//	break; //NOT WORKING
+	}
+
+	for (std::vector<alienBase *>::iterator it = alienManager.begin(); it != alienManager.end(); ++it)
+	{
+		alienBase *go = (alienBase *)*it;
+
+		if (go->move(-1, theMap))
+		{
+			GameObject::coord distance;
+			distance.set(go->pos.x - playerInfo->pos.x, go->pos.y - playerInfo->pos.y);
+			if (distance.x == 0 && distance.y == 0);
+			else if (distance.x > abs(distance.y))
+			{
+				if (go->move(2, theMap))
+					go->animationPos.z = 2 + dt / go->getAlienSpeed();
+			}
+			else if (distance.y > abs(distance.x))
+			{
+				if (go->move(3, theMap))
+					go->animationPos.z = 3 + dt / go->getAlienSpeed();
+			}
+			else if (distance.x < -abs(distance.y))
+			{
+				if (go->move(0, theMap))
+					go->animationPos.z = 0 + dt / go->getAlienSpeed();
+			}
+			else
+			{
+				if (go->move(1, theMap))
+					go->animationPos.z = 1 + dt / go->getAlienSpeed();
+			}
+		}
+		go->move(4, theMap);
 	}
 
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
@@ -311,22 +328,22 @@ void SP3::Update(double dt)
 				{
 					if (go->pos.x == m_goList[i]->pos.x && go->pos.y == m_goList[i]->pos.y)
 					{
-						//m_goList[i]->isDestructible = false;
+						m_goList[i]->isDestructible = false;
 						m_goList[i]->active = false;
 					}
+				}
+			}
 
-					for (std::vector<alienBase *>::iterator it2 = alienManager.begin(); it2 != alienManager.end(); ++it2)
-					{
-						alienBase *go2 = (alienBase *)*it2;
+			for (std::vector<alienBase *>::iterator it2 = alienManager.begin(); it2 != alienManager.end(); ++it2)
+			{
+				alienBase *go2 = (alienBase *)*it2;
 
-						if (go->pos == go2->pos)
-						{
-							it2 = alienManager.erase(it2);
-							--currentAlien;
-							if (it2 == alienManager.end())
-								break;
-						}
-					}
+				if (go->pos == go2->pos)
+				{
+					it2 = alienManager.erase(it2);
+					--currentAlien;
+					if (it2 == alienManager.end())
+						break;
 				}
 			}
 		}
@@ -339,12 +356,12 @@ void SP3::RenderGO(GameObject *go)
 	switch (go->type)
 	{
 	case GameObject::GO_PLAYER:
-		modelStack.PushMatrix();
+		modelStack.PushMatrix(); //player
 		{
 			modelStack.Translate(go->animationPos.x, go->animationPos.y, 0);
 			RenderMesh(meshList[GEO_PLAYER], false);
 		}
-		modelStack.PopMatrix();
+		modelStack.PopMatrix(); ///player
 		break;
 	case GameObject::GO_BOMBFIRE:
 	{
@@ -360,12 +377,12 @@ void SP3::RenderGO(GameObject *go)
 	}
 	case GameObject::GO_LOOTCRATE:
 	{
-		modelStack.PushMatrix();
+		modelStack.PushMatrix(); //lootcrate
 		{
 			modelStack.Translate(go->pos.x, go->pos.y, 0);
 			RenderMesh(meshList[GEO_LOOTCRATE], false);
 		}
-		modelStack.PopMatrix();
+		modelStack.PopMatrix(); ///lootcrate
 
 		break;
 	}
