@@ -201,6 +201,103 @@ void SP3::Update(double dt)
 		bRButtonState = false;
 		std::cout << "RBUTTON UP" << std::endl;
 	}
+
+	for (std::vector<BombBase *>::iterator it = playerInfo->bombManager.begin(); it != playerInfo->bombManager.end(); ++it)
+	{
+		BombBase *go = (BombBase *)*it;
+		if (!go->active)
+			continue;
+
+		if (go->bombTimer < go->getTimeToExplode())
+		{
+			go->bombTimer += doubletime;
+		}
+		else
+		{
+			GameObject *bombFireGO[9];
+			for (short i = 0; i < 9; ++i)
+				bombFireGO[i] = FetchGO();
+
+			bombFireGO[0]->active = true;
+			bombFireGO[0]->type = GameObject::GO_BOMBFIRE;
+			bombFireGO[0]->pos.set(go->pos.x, go->pos.y);
+			bombFireGO[0]->scale.Set(0.1f, 0.1f, 1);
+
+			bombFireGO[1]->active = true;
+			bombFireGO[1]->type = GameObject::GO_BOMBFIRE;
+			bombFireGO[1]->pos.set(go->pos.x + 1, go->pos.y);
+			bombFireGO[1]->scale.Set(0.1f, 0.1f, 1);
+
+			bombFireGO[2]->active = true;
+			bombFireGO[2]->type = GameObject::GO_BOMBFIRE;
+			bombFireGO[2]->pos.set(go->pos.x + 2, go->pos.y);
+			bombFireGO[2]->scale.Set(0.1f, 0.1f, 1);
+
+			bombFireGO[3]->active = true;
+			bombFireGO[3]->type = GameObject::GO_BOMBFIRE;
+			bombFireGO[3]->pos.set(go->pos.x, go->pos.y + 1);
+			bombFireGO[3]->scale.Set(0.1f, 0.1f, 1);
+
+			bombFireGO[4]->active = true;
+			bombFireGO[4]->type = GameObject::GO_BOMBFIRE;
+			bombFireGO[4]->pos.set(go->pos.x, go->pos.y + 2);
+			bombFireGO[4]->scale.Set(0.1f, 0.1f, 1);
+
+			bombFireGO[5]->active = true;
+			bombFireGO[5]->type = GameObject::GO_BOMBFIRE;
+			bombFireGO[5]->pos.set(go->pos.x - 1, go->pos.y);
+			bombFireGO[5]->scale.Set(0.1f, 0.1f, 1);
+
+			bombFireGO[6]->active = true;
+			bombFireGO[6]->type = GameObject::GO_BOMBFIRE;
+			bombFireGO[6]->pos.set(go->pos.x - 2, go->pos.y);
+			bombFireGO[6]->scale.Set(0.1f, 0.1f, 1);
+
+			bombFireGO[7]->active = true;
+			bombFireGO[7]->type = GameObject::GO_BOMBFIRE;
+			bombFireGO[7]->pos.set(go->pos.x, go->pos.y - 1);
+			bombFireGO[7]->scale.Set(0.1f, 0.1f, 1);
+
+			bombFireGO[8]->active = true;
+			bombFireGO[8]->type = GameObject::GO_BOMBFIRE;
+			bombFireGO[8]->pos.set(go->pos.x, go->pos.y - 2);
+			bombFireGO[8]->scale.Set(0.1f, 0.1f, 1);
+
+			playerInfo->bombManager.erase(playerInfo->bombManager.begin() + currentBombIndex); //Destroys current bomb object in vector
+		}
+	}
+
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (!go->active)
+			continue;
+
+		if (go->type == GameObject::GO_BOMBFIRE)
+		{
+			if (go->fireBurnTime < 2.f)
+			{
+				go->fireBurnTime += doubletime;
+			}
+			else
+			{
+				go->fireBurnTime = 0.f;
+				go->active = false;
+				continue;
+			}
+
+			if (go->scale.x < 1.f && go->scale.y < 1.f)
+			{
+				go->scale.x += doubletime * 1.1f;
+				go->scale.y += doubletime * 1.1f;
+			}
+		}
+
+		//for (std::vector<GameObject *>::iterator it2 = it + 1; it != m_goList.end(); ++it2)
+		//{
+		//	GameObject *go2 = (GameObject *)*it2;
+		//}
+	}
 }
 
 
@@ -218,23 +315,6 @@ void SP3::RenderGO(GameObject *go)
 		break;
 	case GameObject::GO_BOMBFIRE:
 	{
-		if (go->fireBurnTime < 2.f)
-		{
-			go->fireBurnTime += doubletime;
-		}
-		else
-		{
-			go->fireBurnTime = 0.f;
-			go->active = false;
-
-			break;
-		}
-		if (go->scale.x < 1.f && go->scale.y < 1.f)
-		{
-			go->scale.x += doubletime * 1.1f;
-			go->scale.y += doubletime * 1.1f;
-		}
-
 		modelStack.PushMatrix();
 		{
 			modelStack.PushMatrix();
@@ -292,7 +372,7 @@ void SP3::renderBombs(BombBase *bomb, int currentBombIndex)
 			modelStack.Translate(bomb->pos.x, bomb->pos.y, 0);
 			//modelstack.rotate(math::radiantodegree(atan2(-alien->dir.x, alien->dir.y)), 0, 0, 1);
 			RenderMesh(meshList[GEO_NORMALBOMB], true);
-	}
+		}
 		modelStack.PopMatrix(); ///normal bomb
 	}
 	else
