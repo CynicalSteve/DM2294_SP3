@@ -14,3 +14,5 @@ SP3/Common/Common.vcxproj.user
 *.opensdf
 *.sdf
 *.suo
+/SP3/Physics.VC.db
+/SP3/Physics.VC.VC.opendb

@@ -59,6 +59,8 @@ public:
 	GameObject();
 	virtual ~GameObject();
 	bool move(char direction, short **map);
+
+	friend bool operator == (coord &lhs, coord &rhs);
 };
 
 #endif
