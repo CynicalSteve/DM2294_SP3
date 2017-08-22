@@ -222,9 +222,9 @@ void SP3::Update(double dt)
 		std::cout << "RBUTTON UP" << std::endl;
 	}
 
-	for (short it = 0; it < playerInfo->bombManager.size(); ++it)
+	for (std::vector<BombBase *>::iterator it = playerInfo->bombManager.begin(); it != playerInfo->bombManager.end(); ++it)
 	{
-		BombBase *go = playerInfo->bombManager[it];
+		BombBase *go = (BombBase *)*it;
 
 		if (go->bombTimer < go->getTimeToExplode())
 		{
@@ -270,12 +270,17 @@ void SP3::Update(double dt)
 			bombFireGO->scale.Set(0.1, 0.1, 1);
 		}
 
-		playerInfo->bombManager.erase(playerInfo->bombManager.begin() + it); //Destroys current bomb object in vector
+		it = playerInfo->bombManager.erase(it);
+		if (it == playerInfo->bombManager.end())
+			break;
+		//if (playerInfo->bombManager.erase(it) == playerInfo->bombManager.end()) //Destroys current bomb object in vector
+		//	break; //NOT WORKING
 	}
 
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
 		GameObject *go = (GameObject *)*it;
+
 		if (!go->active)
 			continue;
 
@@ -298,6 +303,7 @@ void SP3::Update(double dt)
 				go->scale.y += doubletime * 1.1f;
 			}
 
+
 			//Checks if any m_golist is in the bombfire
 			for (unsigned int i = 0; i < m_goList.size(); ++i)
 			{
@@ -307,6 +313,19 @@ void SP3::Update(double dt)
 					{
 						//m_goList[i]->isDestructible = false;
 						m_goList[i]->active = false;
+					}
+
+					for (std::vector<alienBase *>::iterator it2 = alienManager.begin(); it2 != alienManager.end(); ++it2)
+					{
+						alienBase *go2 = (alienBase *)*it2;
+
+						if (go->pos == go2->pos)
+						{
+							it2 = alienManager.erase(it2);
+							--currentAlien;
+							if (it2 == alienManager.end())
+								break;
+						}
 					}
 				}
 			}

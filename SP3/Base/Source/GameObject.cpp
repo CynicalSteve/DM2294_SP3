@@ -93,3 +93,8 @@ bool GameObject::move(char direction, short **map)
 		return true;
 	}
 }
+
+bool operator == (GameObject::coord &lhs, GameObject::coord &rhs)
+{
+	return lhs.x == rhs.x && lhs.y == rhs.y;
+}
