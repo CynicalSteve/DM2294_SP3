@@ -270,25 +270,37 @@ void SP3::Update(double dt)
 			GameObject::coord distance;
 			distance.set(go->pos.x - playerInfo->pos.x, go->pos.y - playerInfo->pos.y);
 			if (distance.x == 0 && distance.y == 0);
-			else if (distance.x > abs(distance.y))
+			else if (distance.x => abs(distance.y))
 			{
 				if (go->move(2, theMap))
 					go->animationPos.z = 2 + dt / go->getAlienSpeed();
+				else if (distance.y > 0)
+					if (go->move(3, theMap))
+						go->animationPos.z = 3 + dt / go->getAlienSpeed();
 			}
 			else if (distance.y > abs(distance.x))
 			{
 				if (go->move(3, theMap))
 					go->animationPos.z = 3 + dt / go->getAlienSpeed();
+				else if (distance.x > 0)
+					if (go->move(2, theMap))
+						go->animationPos.z = 2 + dt / go->getAlienSpeed();
 			}
-			else if (distance.x < -abs(distance.y))
+			else if (distance.x <= -abs(distance.y))
 			{
 				if (go->move(0, theMap))
 					go->animationPos.z = 0 + dt / go->getAlienSpeed();
+				else if (distance.y > 0)
+					if (go->move(3, theMap))
+						go->animationPos.z = 3 + dt / go->getAlienSpeed();
 			}
 			else
 			{
 				if (go->move(1, theMap))
 					go->animationPos.z = 1 + dt / go->getAlienSpeed();
+				else if (distance.x > 0)
+					if (go->move(2, theMap))
+						go->animationPos.z = 2 + dt / go->getAlienSpeed();
 			}
 		}
 		go->move(4, theMap);
