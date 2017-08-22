@@ -30,7 +30,7 @@ float alienBase::getAlienDamage()
 
 int alienBase::getAlienCurrencyWorth()
 {
-	return this->getAlienCurrencyWorth();
+	return this->alienCurrencyWorth;
 }
 
 void alienBase::setAlienName(string newAlienName)

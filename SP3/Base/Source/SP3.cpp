@@ -311,22 +311,38 @@ void SP3::Update(double dt)
 				{
 					if (go->pos.x == m_goList[i]->pos.x && go->pos.y == m_goList[i]->pos.y)
 					{
-						//m_goList[i]->isDestructible = false;
+						m_goList[i]->isDestructible = false;
 						m_goList[i]->active = false;
-					}
 
-					for (std::vector<alienBase *>::iterator it2 = alienManager.begin(); it2 != alienManager.end(); ++it2)
-					{
-						alienBase *go2 = (alienBase *)*it2;
-
-						if (go->pos == go2->pos)
-						{
-							it2 = alienManager.erase(it2);
-							--currentAlien;
-							if (it2 == alienManager.end())
-								break;
-						}
+						playerInfo->setPlayerHealth(100);
 					}
+				}
+			}
+
+			/*for (std::vector<alienBase *>::iterator it2 = alienManager.begin(); it2 != alienManager.end(); ++it2)
+			{
+				alienBase *go2 = (alienBase *)*it2;
+
+				if (go->pos == go2->pos)
+				{
+					playerInfo->setPlayerCurrency(playerInfo->getEquipmentCurrency() + go2->getAlienCurrencyWorth());
+
+					it2 = alienManager.erase(it2);
+					--currentAlien;
+
+
+
+					if (it2 == alienManager.end())
+						break;
+				}
+			}*/
+
+			for (unsigned int i = 0; i < alienManager.size(); ++i)
+			{
+				if (go->pos == alienManager[i]->pos)
+				{
+					playerInfo->setPlayerCurrency(playerInfo->getEquipmentCurrency() + alienManager[i]->getAlienCurrencyWorth());
+					alienManager.erase(alienManager.begin() + i);
 				}
 			}
 		}
