@@ -11,7 +11,6 @@ class StartMenu : public SceneBase
 	enum CurrentSelection
 	{
 		PLAYGAME,
-		HIGHSCORES,
 		SETTINGS,
 		EXIT,
 		TOTAL_NUM
@@ -30,8 +29,7 @@ public:
 	unsigned int CurrentSelectionIterator;
 
 private:
-	float leftBombPosition;
-	float rightBombPosition;
+	float BombPosition;
 
 	float m_worldHeight;
 	float m_worldWidth;

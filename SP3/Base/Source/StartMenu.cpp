@@ -5,8 +5,7 @@
 
 StartMenu::StartMenu() : currentSelectionState(PLAYGAME),
 CurrentSelectionIterator(0),
-leftBombPosition(0.f),
-rightBombPosition(0.f)
+BombPosition(0.f)
 {
 }
 
@@ -43,6 +42,7 @@ void StartMenu::Update(double dt)
 			{
 				--CurrentSelectionIterator;
 				currentSelectionState = static_cast<CurrentSelection>(CurrentSelectionIterator);
+				BombPosition += 22;
 			}
 			std::cout << currentSelectionState << std::endl;
 		}
@@ -58,6 +58,7 @@ void StartMenu::Update(double dt)
 			{
 				++CurrentSelectionIterator;
 				currentSelectionState = static_cast<CurrentSelection>(CurrentSelectionIterator);
+				BombPosition -= 22;
 			}
 			std::cout << currentSelectionState << std::endl;
 		}
@@ -96,6 +97,16 @@ void StartMenu::Update(double dt)
 			case PLAYGAME:
 			{
 				SceneManager::instance()->SwitchScene(SceneManager::SCENE_MAINGAME);
+				break;
+			}
+			case SETTINGS:
+			{
+				break;
+			}
+			case EXIT:
+			{
+				SceneManager::instance()->Quit(true);
+				break;
 			}
 			default:
 				break;
@@ -131,8 +142,6 @@ void StartMenu::Update(double dt)
 		bRButtonState = false;
 		std::cout << "RBUTTON UP" << std::endl;
 	}
-
-	
 }
 
 void StartMenu::Render()
@@ -160,6 +169,7 @@ void StartMenu::Render()
 	modelStack.LoadIdentity();
 	
 	modelStack.PushMatrix();  //All UI items in start menu
+	modelStack.Translate(-5, 0, 0);
 	{
 		modelStack.PushMatrix();  //Start Menu Background
 		{
@@ -178,17 +188,33 @@ void StartMenu::Render()
 		}
 		modelStack.PopMatrix();
 
-		modelStack.PushMatrix();  //Start GAme Button
+		modelStack.PushMatrix();  //Start Game Button
 		{
-			modelStack.Translate(95, 60, 1);
-			modelStack.Scale(50, 25, 0);
+			modelStack.Translate(95, 66, 1);
+			modelStack.Scale(43, 32, 0);
 			RenderMesh(meshList[GEO_STARTMENU_STARTGAME], false);
+		}
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();  //Settings Button
+		{
+			modelStack.Translate(95, 44, 1);
+			modelStack.Scale(43, 32, 0);
+			RenderMesh(meshList[GEO_STARTMENU_SETTINGS], false);
+		}
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();  //Exit Button
+		{
+			modelStack.Translate(95, 22, 1);
+			modelStack.Scale(43, 32, 0);
+			RenderMesh(meshList[GEO_STARTMENU_EXIT], false);
 		}
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix(); 
 		{
-			modelStack.Translate(70, 59 + leftBombPosition, 1);
+			modelStack.Translate(70, 59 + BombPosition, 1);
 			modelStack.Scale(10, 10, 0);
 			RenderMesh(meshList[GEO_NORMALBOMB], false);
 		}
@@ -196,7 +222,7 @@ void StartMenu::Render()
 
 		modelStack.PushMatrix();
 		{
-			modelStack.Translate(122, 59 + rightBombPosition, 1);
+			modelStack.Translate(121, 59  + BombPosition, 1);
 			modelStack.Scale(10, 10, 0);
 			modelStack.Rotate(180, 0, 1, 0);
 			RenderMesh(meshList[GEO_NORMALBOMB], false);
@@ -213,11 +239,6 @@ void StartMenu::Render()
 	ss.precision(5);
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
-
-	/*ss1.str("");
-	ss1.precision(5);
-	ss1 << "Player - X: " << playerInfo->pos.x << " Y:" <<playerInfo->pos.y;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss1.str(), Color(0, 1, 0), 3, 0, 0);*/
 	
 	glEnable(GL_DEPTH_TEST);
 	SceneManager::instance()->State(SceneManager::SCENE_STARTMENU);

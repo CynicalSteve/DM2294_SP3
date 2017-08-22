@@ -161,6 +161,12 @@ void SceneBase::Init()
 	meshList[GEO_STARTMENU_STARTGAME] = MeshBuilder::GenerateQuad("StartMenu_StartGame", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_STARTMENU_STARTGAME]->textureID = LoadTGA("Image//StartMenu_StartGame.tga");
 
+	meshList[GEO_STARTMENU_SETTINGS] = MeshBuilder::GenerateQuad("StartMenu_Settings", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_STARTMENU_SETTINGS]->textureID = LoadTGA("Image//StartMenu_Settings.tga");
+
+	meshList[GEO_STARTMENU_EXIT] = MeshBuilder::GenerateQuad("StartMenu_Exit", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_STARTMENU_EXIT]->textureID = LoadTGA("Image//StartMenu_Exit.tga");
+
 	meshList[GEO_LOOTCRATE] = MeshBuilder::GenerateQuad("LootCrate", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_LOOTCRATE]->textureID = LoadTGA("Image//LootCrate.tga");
 

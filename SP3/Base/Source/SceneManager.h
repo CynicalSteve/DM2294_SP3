@@ -34,7 +34,6 @@ private:
 
 	SceneManager() : quit(false) {}
 	SceneManager(SceneManager const&);
-	void operator=(SceneManager const&);
 };
 
 #endif
