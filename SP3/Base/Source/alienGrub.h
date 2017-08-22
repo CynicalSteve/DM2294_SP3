@@ -8,7 +8,7 @@ using namespace std;
 class alienGrub : public alienBase
 {
 public:
-	alienGrub(string alienName, float alienHealth, float alienSpeed, float alienDamage, short posX, short posY);
+	alienGrub(string alienName, float alienHealth, float alienSpeed, float alienDamage, int alienCurrencyWorth, short posX, short posY);
 	virtual ~alienGrub();
 };
 #endif

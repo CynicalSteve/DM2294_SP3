@@ -24,13 +24,15 @@ public:
 
 	string getAlienName();
 	float getAlienHealth(), getAlienSpeed(), getAlienDamage();
-	void setAlienName(string newAlienName), setAlienHealth(float newAlienHealth), setAlienSpeed(float newAlienSpeed), setAlienDamage(float newAlienDamage);
-	
+	int getAlienCurrencyWorth();
+	void setAlienName(string newAlienName), setAlienHealth(float newAlienHealth), setAlienSpeed(float newAlienSpeed), setAlienDamage(float newAlienDamage), setAlienCurrencyWorth(int newAlienCurrencyWorth);
+
 	Vector3 scale;
 	alienType alienType;
 
 protected:
 	string alienName;
 	float alienHealth, alienSpeed, alienDamage;
+	int alienCurrencyWorth;
 };
 #endif

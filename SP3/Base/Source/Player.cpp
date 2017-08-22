@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(float playerHealth, float playerSpeed) : bombManager(NULL), currentBomb(0), playerHealth(playerHealth), playerSpeed(playerSpeed)
+Player::Player(float playerHealth, float playerSpeed) : bombManager(NULL), currentBomb(0), playerHealth(playerHealth), playerSpeed(playerSpeed), equipmentCurrency(0)
 {
 	active = true;
 }
@@ -27,4 +27,9 @@ float Player::getPlayerHealth()
 float Player::getPlayerSpeed()
 {
 	return this->playerSpeed;
+}
+
+int Player::getEquipmentCurrency()
+{
+	return this->equipmentCurrency;
 }

@@ -28,6 +28,11 @@ float alienBase::getAlienDamage()
 	return this->alienDamage;
 }
 
+int alienBase::getAlienCurrencyWorth()
+{
+	return this->getAlienCurrencyWorth();
+}
+
 void alienBase::setAlienName(string newAlienName)
 {
 	this->alienName = newAlienName;
@@ -46,4 +51,9 @@ void alienBase::setAlienSpeed(float newAlienSpeed)
 void alienBase::setAlienDamage(float newAlienDamage)
 {
 	this->alienDamage = newAlienDamage;
+}
+
+void alienBase::setAlienCurrencyWorth(int newAlienCurrencyWorth)
+{
+	 this->alienCurrencyWorth = newAlienCurrencyWorth;
 }

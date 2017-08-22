@@ -1,11 +1,12 @@
 #include "alienGrub.h"
 
-alienGrub::alienGrub(string alienName, float alienHealth, float alienSpeed, float alienDamage, short posX, short posY)
+alienGrub::alienGrub(string alienName, float alienHealth, float alienSpeed, float alienDamage, int alienCurrencyWorth, short posX, short posY)
 {
 	this->alienName = alienName;
 	this->alienHealth = alienHealth;
 	this->alienSpeed = alienSpeed;
 	this->alienDamage = alienDamage;
+	this->alienCurrencyWorth = alienCurrencyWorth;
 
 	this->alienType = alienBase::TYPE1_GRUB;
 

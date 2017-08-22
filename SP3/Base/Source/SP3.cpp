@@ -159,11 +159,16 @@ void SP3::Update(double dt)
 
 	playerInfo->move(4, theMap);
 
-	if (Application::IsKeyPressed('P')) //Pause
+	if (Application::IsKeyPressed('C')) //Lower player health
 	{
+		if (!KeyBounce['C'])
+		{
+			playerInfo->setPlayerHealth(playerInfo->getPlayerHealth() - 10);
+		}
 
+		KeyBounce['C'] = true;
 	}
-
+	else KeyBounce['C'] = false;
 	//Exercise 8: use 2 keys to increase and decrease mass of ship
 	if (Application::IsKeyPressed(VK_UP))
 	{
@@ -205,7 +210,7 @@ void SP3::Update(double dt)
 
 		if (currentAlien < 3)
 		{
-			alienManager.push_back(new alienGrub("Grub", 100, 0.7f, 5, 9, 1));
+			alienManager.push_back(new alienGrub("Grub", 100, 0.7f, 5, 5, 9, 1));
 
 			++currentAlien;
 		}
@@ -348,6 +353,18 @@ void SP3::RenderGO(GameObject *go)
 		}
 		modelStack.PopMatrix();
 
+		//Checks if anything is in the bombfire
+		for (unsigned int i = 0; i < m_goList.size(); ++i)
+		{
+			if (m_goList[i]->type != GameObject::GO_PLAYER && m_goList[i]->type != GameObject::GO_BOMBFIRE && m_goList[i]->type != GameObject::GO_NORMALBOMB)
+			{
+				if (go->pos.x == m_goList[i]->pos.x && go->pos.y == m_goList[i]->pos.y)
+				{
+					m_goList[i]->active = false;
+				}
+			}
+		}
+
 		break;
 	}
 	case GameObject::GO_LOOTCRATE:
@@ -390,7 +407,7 @@ void SP3::renderBombs(BombBase *bomb, int currentBombIndex)
 	if (bomb->bombTimer < bomb->getTimeToExplode())
 	{
 		bomb->bombTimer += doubletime;
-		modelStack.PushMatrix(); //norrmal bomb
+		modelStack.PushMatrix(); //normal bomb
 		{
 			modelStack.Translate(bomb->pos.x, bomb->pos.y, 0);
 			//modelstack.rotate(math::radiantodegree(atan2(-alien->dir.x, alien->dir.y)), 0, 0, 1);
@@ -554,6 +571,15 @@ void SP3::Render()
 
 	std::ostringstream ss;
 	//On screen text
+	ss.str("");
+	ss.precision(5);
+	ss << "EP: " << playerInfo->getEquipmentCurrency();
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 6);
+
+	ss.str("");
+	ss.precision(5);
+	ss << "Health: " << playerInfo->getPlayerHealth();
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 40, 6);
 
 	ss.str("");
 	ss.precision(5);
