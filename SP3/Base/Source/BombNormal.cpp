@@ -6,6 +6,8 @@ NormalBomb::NormalBomb(string bombName, float bombDamage, float timeToExplode, f
 	this->bombDamage = bombDamage;
 	this->timeToExplode = timeToExplode;
 	this->fireBurnTime = fireBurnTime;
+	this->type = GameObject::GO_NORMALBOMB;
+	this->active = false;
 
 	this->pos.set(posX, posY);
 }

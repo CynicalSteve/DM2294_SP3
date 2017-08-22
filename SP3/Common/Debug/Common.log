@@ -1,13 +1,6 @@
-﻿Build started 21/08/2017 16:41:53.
-     1>Project "C:\Users\rickc\Documents\SP3\SP3\Common\Common.vcxproj" on node 2 (Build target(s)).
-     1>Lib:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"C:\Users\rickc\Documents\SP3\SP3\Debug\Common.lib" /NOLOGO Debug\MatrixStack.obj
-         Debug\Mtx44.obj
-         Debug\timer.obj
-         Debug\Vector3.obj
-         Common.vcxproj -> C:\Users\rickc\Documents\SP3\SP3\Debug\Common.lib
-     1>Done Building Project "C:\Users\rickc\Documents\SP3\SP3\Common\Common.vcxproj" (Build target(s)).
-
-Build succeeded.
-
-Time Elapsed 00:00:00.10
+﻿  Vector3.cpp
+  timer.cpp
+  Mtx44.cpp
+  MatrixStack.cpp
+  Generating Code...
+  Common.vcxproj -> C:\Users\530\Source\Repos\DM2294_SP3\SP3\Debug\Common.lib

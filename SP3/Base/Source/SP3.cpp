@@ -202,69 +202,55 @@ void SP3::Update(double dt)
 		std::cout << "RBUTTON UP" << std::endl;
 	}
 
-	for (std::vector<BombBase *>::iterator it = playerInfo->bombManager.begin(); it != playerInfo->bombManager.end(); ++it)
+	for (short it = 0; it < playerInfo->bombManager.size(); ++it)
 	{
-		BombBase *go = (BombBase *)*it;
-		if (!go->active)
-			continue;
+		BombBase *go = playerInfo->bombManager[it];
 
 		if (go->bombTimer < go->getTimeToExplode())
 		{
 			go->bombTimer += doubletime;
+			continue;
 		}
-		else
+
+		GameObject *bombFireGO = FetchGO();
+		bombFireGO->type = GameObject::GO_BOMBFIRE;
+		bombFireGO->pos.set(go->pos.x, go->pos.y);
+		bombFireGO->scale.Set(0.1, 0.1, 1);
+		short i = 1;
+
+		for (; i < 3 && !theMap[go->pos.x + i][go->pos.y]; ++i)
 		{
-			GameObject *bombFireGO[9];
-			for (short i = 0; i < 9; ++i)
-				bombFireGO[i] = FetchGO();
-
-			bombFireGO[0]->active = true;
-			bombFireGO[0]->type = GameObject::GO_BOMBFIRE;
-			bombFireGO[0]->pos.set(go->pos.x, go->pos.y);
-			bombFireGO[0]->scale.Set(0.1f, 0.1f, 1);
-
-			bombFireGO[1]->active = true;
-			bombFireGO[1]->type = GameObject::GO_BOMBFIRE;
-			bombFireGO[1]->pos.set(go->pos.x + 1, go->pos.y);
-			bombFireGO[1]->scale.Set(0.1f, 0.1f, 1);
-
-			bombFireGO[2]->active = true;
-			bombFireGO[2]->type = GameObject::GO_BOMBFIRE;
-			bombFireGO[2]->pos.set(go->pos.x + 2, go->pos.y);
-			bombFireGO[2]->scale.Set(0.1f, 0.1f, 1);
-
-			bombFireGO[3]->active = true;
-			bombFireGO[3]->type = GameObject::GO_BOMBFIRE;
-			bombFireGO[3]->pos.set(go->pos.x, go->pos.y + 1);
-			bombFireGO[3]->scale.Set(0.1f, 0.1f, 1);
-
-			bombFireGO[4]->active = true;
-			bombFireGO[4]->type = GameObject::GO_BOMBFIRE;
-			bombFireGO[4]->pos.set(go->pos.x, go->pos.y + 2);
-			bombFireGO[4]->scale.Set(0.1f, 0.1f, 1);
-
-			bombFireGO[5]->active = true;
-			bombFireGO[5]->type = GameObject::GO_BOMBFIRE;
-			bombFireGO[5]->pos.set(go->pos.x - 1, go->pos.y);
-			bombFireGO[5]->scale.Set(0.1f, 0.1f, 1);
-
-			bombFireGO[6]->active = true;
-			bombFireGO[6]->type = GameObject::GO_BOMBFIRE;
-			bombFireGO[6]->pos.set(go->pos.x - 2, go->pos.y);
-			bombFireGO[6]->scale.Set(0.1f, 0.1f, 1);
-
-			bombFireGO[7]->active = true;
-			bombFireGO[7]->type = GameObject::GO_BOMBFIRE;
-			bombFireGO[7]->pos.set(go->pos.x, go->pos.y - 1);
-			bombFireGO[7]->scale.Set(0.1f, 0.1f, 1);
-
-			bombFireGO[8]->active = true;
-			bombFireGO[8]->type = GameObject::GO_BOMBFIRE;
-			bombFireGO[8]->pos.set(go->pos.x, go->pos.y - 2);
-			bombFireGO[8]->scale.Set(0.1f, 0.1f, 1);
-
-			playerInfo->bombManager.erase(playerInfo->bombManager.begin() + currentBombIndex); //Destroys current bomb object in vector
+			bombFireGO = FetchGO();
+			bombFireGO->type = GameObject::GO_BOMBFIRE;
+			bombFireGO->pos.set(go->pos.x + i, go->pos.y);
+			bombFireGO->scale.Set(0.1, 0.1, 1);
 		}
+
+		for (i = 1; i < 3 && !theMap[go->pos.x][go->pos.y + i]; ++i)
+		{
+			bombFireGO = FetchGO();
+			bombFireGO->type = GameObject::GO_BOMBFIRE;
+			bombFireGO->pos.set(go->pos.x, go->pos.y + i);
+			bombFireGO->scale.Set(0.1, 0.1, 1);
+		}
+
+		for (i = 1; i < 3 && !theMap[go->pos.x - i][go->pos.y]; ++i)
+		{
+			bombFireGO = FetchGO();
+			bombFireGO->type = GameObject::GO_BOMBFIRE;
+			bombFireGO->pos.set(go->pos.x - i, go->pos.y);
+			bombFireGO->scale.Set(0.1, 0.1, 1);
+		}
+
+		for (i = 1; i < 3 && !theMap[go->pos.x][go->pos.y - i]; ++i)
+		{
+			bombFireGO = FetchGO();
+			bombFireGO->type = GameObject::GO_BOMBFIRE;
+			bombFireGO->pos.set(go->pos.x, go->pos.y - i);
+			bombFireGO->scale.Set(0.1, 0.1, 1);
+		}
+
+		playerInfo->bombManager.erase(playerInfo->bombManager.begin() + it); //Destroys current bomb object in vector
 	}
 
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
@@ -315,15 +301,13 @@ void SP3::RenderGO(GameObject *go)
 		break;
 	case GameObject::GO_BOMBFIRE:
 	{
-		modelStack.PushMatrix();
+		modelStack.PushMatrix(); //bombfire
 		{
-			modelStack.PushMatrix();
 			modelStack.Translate(go->pos.x, go->pos.y, 0);
 			modelStack.Scale(go->scale.x, go->scale.y, 1);
 			RenderMesh(meshList[GEO_BOMBFIRE], false);
-			modelStack.PopMatrix();
 		}
-		modelStack.PopMatrix();
+		modelStack.PopMatrix(); ///bombfire
 
 		break;
 	}
@@ -351,10 +335,12 @@ void SP3::renderAliens(alienBase *alien)
 	{
 	case alienBase::TYPE1_GRUB:
 	{
-		modelStack.PushMatrix();
-		modelStack.Translate(alien->animationPos.x, alien->animationPos.y, 0);
-		RenderMesh(meshList[GEO_ALIENGRUB], true);
-		modelStack.PopMatrix();
+		modelStack.PushMatrix(); //AlienGrub
+		{
+			modelStack.Translate(alien->animationPos.x, alien->animationPos.y, 0);
+			RenderMesh(meshList[GEO_ALIENGRUB], true);
+		}
+		modelStack.PopMatrix(); ///AlienGrub
 	}
 		break;
 	default:
@@ -364,75 +350,13 @@ void SP3::renderAliens(alienBase *alien)
 
 void SP3::renderBombs(BombBase *bomb, int currentBombIndex)
 {
-	if (bomb->bombTimer < bomb->getTimeToExplode())
+	modelStack.PushMatrix(); //norrmal bomb
 	{
-		bomb->bombTimer += doubletime;
-		modelStack.PushMatrix(); //norrmal bomb
-		{
-			modelStack.Translate(bomb->pos.x, bomb->pos.y, 0);
-			//modelstack.rotate(math::radiantodegree(atan2(-alien->dir.x, alien->dir.y)), 0, 0, 1);
-			RenderMesh(meshList[GEO_NORMALBOMB], true);
-		}
-		modelStack.PopMatrix(); ///normal bomb
+		modelStack.Translate(bomb->pos.x, bomb->pos.y, 0);
+		//modelstack.rotate(math::radiantodegree(atan2(-alien->dir.x, alien->dir.y)), 0, 0, 1);
+		RenderMesh(meshList[GEO_NORMALBOMB], true);
 	}
-	else
-	{
-		GameObject *bombFireGO1 = FetchGO();
-		bombFireGO1->active = true;
-		bombFireGO1->type = GameObject::GO_BOMBFIRE;
-		bombFireGO1->pos.set(bomb->pos.x, bomb->pos.y);
-		bombFireGO1->scale.Set(0.1f, 0.1f, 1);
-
-		GameObject *bombFireGO2 = FetchGO();
-		bombFireGO2->active = true;
-		bombFireGO2->type = GameObject::GO_BOMBFIRE;
-		bombFireGO2->pos.set(bomb->pos.x + 1, bomb->pos.y);
-		bombFireGO2->scale.Set(0.1f, 0.1f, 1);
-
-		GameObject *bombFireGO3 = FetchGO();
-		bombFireGO3->active = true;
-		bombFireGO3->type = GameObject::GO_BOMBFIRE;
-		bombFireGO3->pos.set(bomb->pos.x + 2, bomb->pos.y);
-		bombFireGO3->scale.Set(0.1f, 0.1f, 1);
-
-		GameObject *bombFireGO4 = FetchGO();
-		bombFireGO4->active = true;
-		bombFireGO4->type = GameObject::GO_BOMBFIRE;
-		bombFireGO4->pos.set(bomb->pos.x, bomb->pos.y + 1);
-		bombFireGO4->scale.Set(0.1f, 0.1f, 1);
-
-		GameObject *bombFireGO5 = FetchGO();
-		bombFireGO5->active = true;
-		bombFireGO5->type = GameObject::GO_BOMBFIRE;
-		bombFireGO5->pos.set(bomb->pos.x, bomb->pos.y + 2);
-		bombFireGO5->scale.Set(0.1f, 0.1f, 1);
-
-		GameObject *bombFireGO6 = FetchGO();
-		bombFireGO6->active = true;
-		bombFireGO6->type = GameObject::GO_BOMBFIRE;
-		bombFireGO6->pos.set(bomb->pos.x - 1, bomb->pos.y);
-		bombFireGO6->scale.Set(0.1f, 0.1f, 1);
-
-		GameObject *bombFireGO7 = FetchGO();
-		bombFireGO7->active = true;
-		bombFireGO7->type = GameObject::GO_BOMBFIRE;
-		bombFireGO7->pos.set(bomb->pos.x - 2, bomb->pos.y);
-		bombFireGO7->scale.Set(0.1f, 0.1f, 1);
-
-		GameObject *bombFireGO8 = FetchGO();
-		bombFireGO8->active = true;
-		bombFireGO8->type = GameObject::GO_BOMBFIRE;
-		bombFireGO8->pos.set(bomb->pos.x, bomb->pos.y - 1);
-		bombFireGO8->scale.Set(0.1f, 0.1f, 1);
-
-		GameObject *bombFireGO9 = FetchGO();
-		bombFireGO9->active = true;
-		bombFireGO9->type = GameObject::GO_BOMBFIRE;
-		bombFireGO9->pos.set(bomb->pos.x, bomb->pos.y - 2);
-		bombFireGO9->scale.Set(0.1f, 0.1f, 1);
-	
-		playerInfo->bombManager.erase(playerInfo->bombManager.begin() + currentBombIndex); //Destroys current bomb object in vector
-	}
+	modelStack.PopMatrix(); ///normal bomb
 }
 
 void SP3::Render()
@@ -477,30 +401,28 @@ void SP3::Render()
 	//RenderMesh(meshList[GEO_HOUSE], false);
 	modelStack.PopMatrix();
 
-	//map
-	modelStack.PushMatrix();
+	modelStack.PushMatrix(); //grid system
 	{
 		modelStack.Scale(9, 9, 1);
 		modelStack.Translate(.5, .5, 0);
 
-		modelStack.PushMatrix();
+		modelStack.PushMatrix(); //map
 		{
-			modelStack.Translate(10, -1, 0);
 			for (short y = 0; y < 11; ++y)
 			{
-				modelStack.Translate(-11, 1, 0);
 				for (short x = 0; x < 11; ++x)
 				{
-					modelStack.Translate(1, 0, 0);
 					if (theMap[x][y])
 						RenderMesh(meshList[wall], false);
 					else RenderMesh(meshList[floor], false);
+					modelStack.Translate(1, 0, 0);
 					//if (playerInfo->pos.x == x && playerInfo->pos.y == y)
 						//RenderMesh(meshList[GEO_PLAYER], false);
 				}
+				modelStack.Translate(-11, 1, 0);
 			}
 		}
-		modelStack.PopMatrix();
+		modelStack.PopMatrix(); ///map
 
 		//Render Aliens
 		if (!alienManager.empty())  //Checks if alien manager vector is empty
@@ -527,7 +449,7 @@ void SP3::Render()
 				RenderGO(go);
 		}
 	}
-	modelStack.PopMatrix();
+	modelStack.PopMatrix(); ///grid system
 
 	std::ostringstream ss;
 	//On screen text
