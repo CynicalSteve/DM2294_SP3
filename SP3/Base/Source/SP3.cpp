@@ -50,7 +50,7 @@ void SP3::Init()
 		}
 	}
 
-	playerInfo = new Player(100, 35);
+	playerInfo = new Player(100, 0.2f);
 	playerInfo->pos.set(1, 1);
 	playerInfo->animationPos.Set(playerInfo->pos.x, playerInfo->pos.y, -1);
 	playerInfo->type = GameObject::GO_PLAYER;
@@ -101,21 +101,21 @@ void SP3::Update(double dt)
 	//Exercise 6: set m_force values based on WASD
 	if (Application::IsKeyPressed('D'))
 	{
-		if (!KeyBounce['D'] && playerInfo->move(-1, theMap))
+		if (playerInfo->move(-1, theMap))
 			//++playerInfo->pos.x;
 			if (playerInfo->move(0, theMap))
-				playerInfo->animationPos.z = dt / 0.2;
+				playerInfo->animationPos.z = dt / playerInfo->getPlayerSpeed();
 		KeyBounce['D'] = true;
 	}
 	else KeyBounce['D'] = false;
-
+	
 	if (Application::IsKeyPressed('W'))
 	{
-		if (!KeyBounce['W'] && playerInfo->move(-1, theMap))
+		if (playerInfo->move(-1, theMap))
 		{
 			//++playerInfo->pos.y;
 			if (playerInfo->move(1, theMap))
-				playerInfo->animationPos.z = 1 + dt / 0.2;
+				playerInfo->animationPos.z = 1 + dt / playerInfo->getPlayerSpeed();
 		}
 		KeyBounce['W'] = true;
 	}
@@ -123,22 +123,36 @@ void SP3::Update(double dt)
 
 	if (Application::IsKeyPressed('A'))
 	{
-		if (!KeyBounce['A'] && playerInfo->move(-1, theMap))
+		if (playerInfo->move(-1, theMap))
 		{
 			//--playerInfo->pos.x;
 			if (playerInfo->move(2, theMap))
-				playerInfo->animationPos.z = 2 + dt / 0.2;
+			{
+				playerInfo->animationPos.z = 2 + dt / playerInfo->getPlayerSpeed();
+			}
 		}
-		KeyBounce['A'] = true;
 	}
-	else KeyBounce['A'] = false;
+	if (!alienManager.empty())
+	{
+		for (unsigned int i = 0; i < alienManager.size(); ++i)
+		{
+			if (alienManager[i]->move(-1, theMap))
+			{
+				if (alienManager[i]->move(2, theMap))
+				{
+					alienManager[i]->animationPos.z = 2 + dt / alienManager[i]->getAlienSpeed();
+				}
+			}
+			alienManager[i]->move(4, theMap);
+		}
+	}
 
 	if (Application::IsKeyPressed('S'))
 	{
-		if (!KeyBounce['S'] && playerInfo->move(-1, theMap))
+		if (playerInfo->move(-1, theMap))
 			//--playerInfo->pos.y;
 			if (playerInfo->move(3, theMap))
-				playerInfo->animationPos.z = 3 + dt / 0.2;
+				playerInfo->animationPos.z = 3 + dt / playerInfo->getPlayerSpeed();
 		KeyBounce['S'] = true;
 	}
 	else KeyBounce['S'] = false;
@@ -191,7 +205,7 @@ void SP3::Update(double dt)
 		
 		if (currentAlien < 3)
 		{
-			alienManager.push_back(new alienGrub("Grub", 100, 100, 100, 50, 50));
+			alienManager.push_back(new alienGrub("Grub", 100, 0.7f, 5, 9, 1));
 
 			++currentAlien;
 		}
@@ -201,6 +215,22 @@ void SP3::Update(double dt)
 		bRButtonState = false;
 		std::cout << "RBUTTON UP" << std::endl;
 	}
+
+	/*if (!alienManager.empty())
+	{
+		for (unsigned int i = 0; i < alienManager.size(); ++i)
+		{
+			if (alienManager[i]->move(-1, theMap))
+			{
+				if (alienManager[i]->move(2, theMap))
+				{
+					alienManager[i]->animationPos.z = 2 + (dt / alienManager[i]->getAlienSpeed());
+				}
+
+				alienManager[i]->move(4, theMap);
+			}
+		}
+	}*/
 }
 
 
@@ -220,7 +250,7 @@ void SP3::RenderGO(GameObject *go)
 	{
 		if (go->fireBurnTime < 2.f)
 		{
-			go->fireBurnTime += doubletime;
+			go->fireBurnTime += doubletime * 1.2f;
 		}
 		else
 		{

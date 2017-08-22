@@ -8,7 +8,9 @@ alienGrub::alienGrub(string alienName, float alienHealth, float alienSpeed, floa
 	this->alienDamage = alienDamage;
 
 	this->alienType = alienBase::TYPE1_GRUB;
+
 	this->pos.set(posX, posY);
+	this->animationPos.Set(posX, posY);
 }
 
 alienGrub::~alienGrub()
