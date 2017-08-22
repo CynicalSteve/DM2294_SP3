@@ -11,7 +11,7 @@ public:
 	Player (float playerHealth, float playerSpeed);
 	~Player();
 
-	void setPlayerHealth(float newPlayerHealth), setPlayerSpeed(float newPlayerSpeed);
+	void setPlayerHealth(float newPlayerHealth), setPlayerSpeed(float newPlayerSpeed), setPlayerCurrency(int newCurrencyAmount);
 	float getPlayerHealth(), getPlayerSpeed();
 	int getEquipmentCurrency();
 

@@ -19,6 +19,11 @@ void Player::setPlayerHealth(float newPlayerHealth)
 	this->playerHealth = newPlayerHealth;
 }
 
+void Player::setPlayerCurrency(int newCurrencyAmount)
+{
+	this->equipmentCurrency = newCurrencyAmount;
+}
+
 float Player::getPlayerHealth()
 {
 	return this->playerHealth;
