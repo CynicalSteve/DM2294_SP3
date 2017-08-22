@@ -13,17 +13,17 @@ string alienBase::getAlienName()
 	return this->alienName;
 }
 
-int alienBase::getAlienHealth()
+float alienBase::getAlienHealth()
 {
 	return this->alienHealth;
 }
 
-int alienBase::getAlienSpeed()
+float alienBase::getAlienSpeed()
 {
 	return this->alienSpeed;
 }
 
-int alienBase::getAlienDamage()
+float alienBase::getAlienDamage()
 {
 	return this->alienDamage;
 }

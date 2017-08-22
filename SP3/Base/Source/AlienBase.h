@@ -19,22 +19,11 @@ public:
 		TYPE5_LEVIATHAN
 	};
 
-	struct coord
-	{
-		short x = 0, y = 0;
-		void set(short x, short y)
-		{
-			this->x = x;
-			this->y = y;
-		}
-	} pos;
-
-	
 	alienBase(); //string alienName, unsigned int alienHealth, unsigned int alienSpeed, unsigned int alienDamage
 	~alienBase();
 
 	string getAlienName();
-	int getAlienHealth(), getAlienSpeed(), getAlienDamage();
+	float getAlienHealth(), getAlienSpeed(), getAlienDamage();
 	void setAlienName(string newAlienName), setAlienHealth(float newAlienHealth), setAlienSpeed(float newAlienSpeed), setAlienDamage(float newAlienDamage);
 	
 	Vector3 scale;
