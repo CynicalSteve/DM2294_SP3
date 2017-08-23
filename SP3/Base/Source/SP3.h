@@ -9,6 +9,7 @@
 #include "alienGrub.h"
 #include "BombBase.h"
 #include "BombNormal.h"
+#include "BombMine.h"
 #include "Player.h"
 
 class SP3 : public SceneBase

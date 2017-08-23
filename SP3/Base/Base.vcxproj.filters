@@ -114,6 +114,12 @@
     <ClCompile Include="Source\StartMenu.cpp">
       <Filter>Scenes\Actual Game</Filter>
     </ClCompile>
+    <ClCompile Include="Source\BombMine.cpp">
+      <Filter>Bomb</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Inventory.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Vertex.h">
@@ -181,6 +187,12 @@
     </ClInclude>
     <ClInclude Include="Source\StartMenu.h">
       <Filter>Scenes\Actual Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BombMine.h">
+      <Filter>Bomb</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Inventory.h">
+      <Filter>Player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
