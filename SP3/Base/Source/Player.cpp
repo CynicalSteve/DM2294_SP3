@@ -50,6 +50,16 @@ void Player::subtractCurrency(int currencyToSubtract)
 	this->equipmentCurrency -= currencyToSubtract;
 }
 
+void Player::addHealth(int healthToAdd)
+{
+	this->playerHealth += healthToAdd;
+}
+
+void Player::subtractHealth(int healthToSubtract)
+{
+	this->playerHealth -= healthToSubtract;
+}
+
 float Player::getPlayerHealth()
 {
 	return this->playerHealth;

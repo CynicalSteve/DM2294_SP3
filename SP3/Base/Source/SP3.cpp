@@ -326,6 +326,7 @@ void SP3::Update(double dt)
 		if (it == playerInfo->bombManager.end())
 			break;
 	}
+
 	//Alien Movement
 	for (std::vector<alienBase *>::iterator it = alienManager.begin(); it != alienManager.end(); ++it)
 	{
@@ -417,6 +418,8 @@ void SP3::Update(double dt)
 		}
 
 		//Checks if any m_golist is in the bombfire
+		bool lostHealth = false;
+
 		for (std::vector<GameObject *>::iterator it2 = it + 1; it2 != m_goList.end(); ++it2)
 		{
 			GameObject *go2 = (GameObject *)*it2;
@@ -424,12 +427,12 @@ void SP3::Update(double dt)
 			if (!go2->active)
 				continue;
 
-			if (go->type == GameObject::GO_BOMBFIRE && go2->type == GameObject::GO_LOOTCRATE)
+			/*if (go->type == GameObject::GO_BOMBFIRE && go2->type == GameObject::GO_LOOTCRATE)
 				if (go->pos == go2->pos)
 				{
 					go2->active = false;
 					playerInfo->setPlayerHealth(100);
-				}
+				}*/
 
 			if (go->type == GameObject::GO_LOOTCRATE && go2->type == GameObject::GO_BOMBFIRE)
 				if (go->pos == go2->pos)
@@ -437,25 +440,19 @@ void SP3::Update(double dt)
 					go->active = false;
 					playerInfo->setPlayerHealth(100);
 				}
+
+			/*if (go->type == GameObject::GO_BOMBFIRE && go2->type == GameObject::GO_PLAYER)
+				if (go->pos == go2->pos)
+				{
+					playerInfo->subtractHealth(10);
+				}*/
+
+			if (go->type == GameObject::GO_PLAYER && go2->type == GameObject::GO_BOMBFIRE)
+				if (go->pos == go2->pos)
+				{
+					playerInfo->subtractHealth(10);
+				}
 		}
-
-		/*for (std::vector<alienBase *>::iterator it2 = alienManager.begin(); it2 != alienManager.end(); ++it2)
-		{
-			alienBase *go2 = (alienBase *)*it2;
-
-			if (go->pos == go2->pos)
-			{
-				playerInfo->setPlayerCurrency(playerInfo->getEquipmentCurrency() + go2->getAlienCurrencyWorth());
-
-				it2 = alienManager.erase(it2);
-				--currentAlien;
-
-
-
-				if (it2 == alienManager.end())
-					break;
-			}
-		}*/
 
 		for (unsigned int i = 0; i < alienManager.size(); ++i)
 		{
