@@ -5,8 +5,7 @@ GameObject::GameObject()
 	active(false),
 	mass(1.f),
 	fireBurnTime(0.f),
-	fireScaler(0.f),
-	isDestructible(false)
+	fireScaler(0.f)
 {
 }
 
@@ -97,4 +96,14 @@ bool GameObject::move(char direction, short **map)
 bool operator == (GameObject::coord &lhs, GameObject::coord &rhs)
 {
 	return lhs.x == rhs.x && lhs.y == rhs.y;
+}
+
+bool operator > (GameObject::coord &lhs, GameObject::coord &rhs)
+{
+	return lhs.x > rhs.x && lhs.y > rhs.y;
+}
+
+bool operator < (GameObject::coord &lhs, GameObject::coord &rhs)
+{
+	return lhs.x < rhs.x && lhs.y < rhs.y;
 }

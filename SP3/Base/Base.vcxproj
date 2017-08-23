@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="Source\AlienBase.cpp" />
     <ClCompile Include="Source\alienGrub.cpp" />
+    <ClCompile Include="Source\alienRaptor.cpp" />
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\BombBase.cpp" />
     <ClCompile Include="Source\BombMine.cpp" />
@@ -36,6 +37,7 @@
   <ItemGroup>
     <ClInclude Include="Source\AlienBase.h" />
     <ClInclude Include="Source\alienGrub.h" />
+    <ClInclude Include="Source\alienRaptor.h" />
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\BombBase.h" />
     <ClInclude Include="Source\BombMine.h" />

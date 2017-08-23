@@ -60,8 +60,10 @@ public:
 	GameObject();
 	virtual ~GameObject();
 	bool move(char direction, short **map);
-	bool isDestructible;
+
 	friend bool operator == (coord &lhs, coord &rhs);
+	friend bool operator > (coord &lhs, coord &rhs);
+	friend bool operator < (coord &lhs, coord &rhs);
 
 };
 

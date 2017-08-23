@@ -120,6 +120,9 @@
     <ClCompile Include="Source\Inventory.cpp">
       <Filter>Player</Filter>
     </ClCompile>
+    <ClCompile Include="Source\alienRaptor.cpp">
+      <Filter>Alien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Vertex.h">
@@ -193,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="Source\Inventory.h">
       <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\alienRaptor.h">
+      <Filter>Alien</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
