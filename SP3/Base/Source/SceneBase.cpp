@@ -94,6 +94,7 @@ void SceneBase::Init()
 		meshList[i] = NULL;
 	}
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("reference", 1000, 1000, 1000);
+	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("Quad", Color(0.f, 0.f, 0.f), 1.f);
 	meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(1, 1, 1), 10, 10, 1.f);
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 1, 1), 2.f);
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
@@ -101,6 +102,9 @@ void SceneBase::Init()
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
 
 	//SP3
+	meshList[GEO_HEALTH_GREEN] = MeshBuilder::GenerateQuad("Quad", Color(0.f, 1.f, 0.f), 1.f);
+	meshList[GEO_HEALTH_RED] = MeshBuilder::GenerateQuad("Quad", Color(1.f, 0.f, 0.f), 1.f);
+
 	meshList[GEO_GROUND] = MeshBuilder::GenerateQuad("Ground", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_GROUND]->textureID = LoadTGA("Image//ground.tga");
 

@@ -15,17 +15,17 @@ public:
 	Player (float playerHealth, float playerSpeed);
 	~Player();
 
-	void setPlayerHealth(float newPlayerHealth), setPlayerSpeed(float newPlayerSpeed), setPlayerCurrency(int newCurrencyAmount), addCurrency(int currencyToAdd), subtractCurrency(int currencyToSubtract);
+	void setPlayerHealth(float newPlayerHealth), setPlayerSpeed(float newPlayerSpeed), setMaxPlayerHealth(float newMaxPlayerHealth), setPlayerCurrency(int newCurrencyAmount), addCurrency(int currencyToAdd), subtractCurrency(int currencyToSubtract);
 		
 	float getPlayerHealth(), getPlayerSpeed();
-	int getEquipmentCurrency();
+	int getEquipmentCurrency(), getMaxPlayerHealth();
 
 	vector<BombBase*> bombManager;
 	int currentBomb;
 	Inventory* playerInventory[5];
 
 private:
-	float playerHealth, playerSpeed;
+	float playerHealth, playerSpeed, maxPlayerHealth;
 	int equipmentCurrency;
 };
 #endif

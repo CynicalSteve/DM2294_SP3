@@ -1,12 +1,13 @@
 #include "Player.h"
 
-Player::Player(float playerHealth, float playerSpeed) : bombManager(NULL), currentBomb(0), playerHealth(playerHealth), playerSpeed(playerSpeed), equipmentCurrency(0)
+Player::Player(float playerHealth, float playerSpeed) : bombManager(NULL), currentBomb(0), playerHealth(playerHealth), playerSpeed(playerSpeed), equipmentCurrency(0),
+maxPlayerHealth(100)
 {
 	active = true;
 
 	for (unsigned int i = 0; i < 5; ++i)
 	{
-		playerInventory[i] = new Inventory();
+		playerInventory[i] = new Inventory(); 
 	}
 
 	playerInventory[0]->inventoryBombType = Inventory::INVENTORY_NORMALBOMB;
@@ -34,6 +35,11 @@ void Player::setPlayerCurrency(int newCurrencyAmount)
 	this->equipmentCurrency = newCurrencyAmount;
 }
 
+void Player::setMaxPlayerHealth(float newMaxPlayerHealth)
+{
+	this->maxPlayerHealth = newMaxPlayerHealth;
+}
+
 void Player::addCurrency(int currencyToAdd)
 {
 	this->equipmentCurrency += currencyToAdd;
@@ -57,4 +63,9 @@ float Player::getPlayerSpeed()
 int Player::getEquipmentCurrency()
 {
 	return this->equipmentCurrency;
+}
+
+int Player::getMaxPlayerHealth()
+{
+	return this->maxPlayerHealth;
 }

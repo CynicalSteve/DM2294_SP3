@@ -220,7 +220,8 @@ void SP3::Update(double dt)
 		std::cout << "RBUTTON UP" << std::endl;
 	}
 
-	for (std::vector<BombBase *>::iterator it = playerInfo->bombManager.begin(); it != playerInfo->bombManager.end(); ++it)
+	//Creation of bomb fire after bomb goes off
+	for (std::vector<BombBase *>::iterator it = playerInfo->bombManager.begin(); it != playerInfo->bombManager.end(); ++it)  
 	{
 		BombBase *go = (BombBase *)*it;
 
@@ -335,6 +336,7 @@ void SP3::Update(double dt)
 			break;
 	}
 		
+	//Alien Movement
 	for (std::vector<alienBase *>::iterator it = alienManager.begin(); it != alienManager.end(); ++it)
 	{
 		alienBase *go = (alienBase *)*it;
@@ -380,6 +382,7 @@ void SP3::Update(double dt)
 		go->move(4, theMap);
 	}
 
+	//Checking if any destuctible/killable objects are inside bomb fire
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
 		GameObject *go = (GameObject *)*it;
@@ -449,6 +452,16 @@ void SP3::Update(double dt)
 				}
 			}
 		}
+	}
+
+	//Player stats checks & adjustments
+	if (playerInfo->getPlayerHealth() < 0) //Reset health to 0 if current player health is under 0
+	{
+		playerInfo->setPlayerHealth(0);
+	}
+	if (playerInfo->getPlayerHealth() > playerInfo->getMaxPlayerHealth()) //Health cap
+	{
+		playerInfo->setMaxPlayerHealth(playerInfo->getMaxPlayerHealth());
 	}
 }
 
@@ -544,6 +557,37 @@ void SP3::renderBombs(BombBase *bomb, int currentBombIndex)
 
 }
 
+void SP3::renderUI()
+{
+	
+
+	modelStack.PushMatrix(); //UI background
+	{
+		modelStack.Translate(100, 100, 0);
+		modelStack.Scale(200, 20, 1);
+		RenderMesh(meshList[GEO_QUAD], true);
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix(); //Health Bar (Red)
+	{
+		modelStack.Translate(25, 95, 0);
+		modelStack.Scale(100 / 3, 5, 1);
+		RenderMesh(meshList[GEO_HEALTH_RED], true);
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix(); //Health Bar (Green)
+	{
+		modelStack.Translate(25, 95, 0);
+		modelStack.Scale(playerInfo->getPlayerHealth() / 3, 5, 1);
+		RenderMesh(meshList[GEO_HEALTH_GREEN], true);
+	}
+	modelStack.PopMatrix();
+
+	
+}
+
 void SP3::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -636,6 +680,8 @@ void SP3::Render()
 	}
 	modelStack.PopMatrix(); ///grid system
 
+	renderUI();  //Main Game UI
+
 	std::ostringstream ss;
 	//On screen text
 	ss.str("");
@@ -645,8 +691,8 @@ void SP3::Render()
 
 	ss.str("");
 	ss.precision(5);
-	ss << "Health: " << playerInfo->getPlayerHealth();
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 40, 6);
+	ss << playerInfo->getPlayerHealth() << "/" << playerInfo->getMaxPlayerHealth();
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2, 4.5f, 41.6f);
 
 	ss.str("");
 	ss.precision(5);
