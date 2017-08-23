@@ -126,7 +126,7 @@ void SP3::Update(double dt)
 			if (playerInfo->move(2, theMap))
 				playerInfo->animationPos.z = 2 + dt * playerInfo->getPlayerSpeed();
 		KeyBounce['A'] = true;
-			}
+	}
 	else KeyBounce['A'] = false;
 
 	if (Application::IsKeyPressed('S'))
@@ -212,7 +212,7 @@ void SP3::Update(double dt)
 	}
 
 	//Creation of bomb fire after bomb goes off
-	for (std::vector<BombBase *>::iterator it = playerInfo->bombManager.begin(); it != playerInfo->bombManager.end(); ++it)  
+	for (std::vector<BombBase *>::iterator it = playerInfo->bombManager.begin(); it != playerInfo->bombManager.end(); ++it)
 	{
 		BombBase *go = (BombBase *)*it;
 
@@ -274,51 +274,51 @@ void SP3::Update(double dt)
 		}
 		case GameObject::GO_NORMALBOMB:
 		{
-		if (go->bombTimer < go->getTimeToExplode())
-		{
+			if (go->bombTimer < go->getTimeToExplode())
+			{
 				go->bombTimer += dt;
-			continue;
-		}
+				continue;
+			}
 
-		GameObject *bombFireGO = FetchGO();
-		bombFireGO->type = GameObject::GO_BOMBFIRE;
-		bombFireGO->pos.set(go->pos.x, go->pos.y);
-		bombFireGO->scale.Set(0.1, 0.1, 1);
-		short i = 1;
-
-		for (; i < 3 && !theMap[go->pos.x + i][go->pos.y]; ++i)
-		{
-			bombFireGO = FetchGO();
+			GameObject *bombFireGO = FetchGO();
 			bombFireGO->type = GameObject::GO_BOMBFIRE;
-			bombFireGO->pos.set(go->pos.x + i, go->pos.y);
+			bombFireGO->pos.set(go->pos.x, go->pos.y);
 			bombFireGO->scale.Set(0.1, 0.1, 1);
-		}
+			short i = 1;
 
-		for (i = 1; i < 3 && !theMap[go->pos.x][go->pos.y + i]; ++i)
-		{
-			bombFireGO = FetchGO();
-			bombFireGO->type = GameObject::GO_BOMBFIRE;
-			bombFireGO->pos.set(go->pos.x, go->pos.y + i);
-			bombFireGO->scale.Set(0.1, 0.1, 1);
-		}
+			for (; i < 3 && !theMap[go->pos.x + i][go->pos.y]; ++i)
+			{
+				bombFireGO = FetchGO();
+				bombFireGO->type = GameObject::GO_BOMBFIRE;
+				bombFireGO->pos.set(go->pos.x + i, go->pos.y);
+				bombFireGO->scale.Set(0.1, 0.1, 1);
+			}
 
-		for (i = 1; i < 3 && !theMap[go->pos.x - i][go->pos.y]; ++i)
-		{
-			bombFireGO = FetchGO();
-			bombFireGO->type = GameObject::GO_BOMBFIRE;
-			bombFireGO->pos.set(go->pos.x - i, go->pos.y);
-			bombFireGO->scale.Set(0.1, 0.1, 1);
-		}
+			for (i = 1; i < 3 && !theMap[go->pos.x][go->pos.y + i]; ++i)
+			{
+				bombFireGO = FetchGO();
+				bombFireGO->type = GameObject::GO_BOMBFIRE;
+				bombFireGO->pos.set(go->pos.x, go->pos.y + i);
+				bombFireGO->scale.Set(0.1, 0.1, 1);
+			}
 
-		for (i = 1; i < 3 && !theMap[go->pos.x][go->pos.y - i]; ++i)
-		{
-			bombFireGO = FetchGO();
-			bombFireGO->type = GameObject::GO_BOMBFIRE;
-			bombFireGO->pos.set(go->pos.x, go->pos.y - i);
-			bombFireGO->scale.Set(0.1, 0.1, 1);
-		}
+			for (i = 1; i < 3 && !theMap[go->pos.x - i][go->pos.y]; ++i)
+			{
+				bombFireGO = FetchGO();
+				bombFireGO->type = GameObject::GO_BOMBFIRE;
+				bombFireGO->pos.set(go->pos.x - i, go->pos.y);
+				bombFireGO->scale.Set(0.1, 0.1, 1);
+			}
 
-		it = playerInfo->bombManager.erase(it);
+			for (i = 1; i < 3 && !theMap[go->pos.x][go->pos.y - i]; ++i)
+			{
+				bombFireGO = FetchGO();
+				bombFireGO->type = GameObject::GO_BOMBFIRE;
+				bombFireGO->pos.set(go->pos.x, go->pos.y - i);
+				bombFireGO->scale.Set(0.1, 0.1, 1);
+			}
+
+			it = playerInfo->bombManager.erase(it);
 			break;
 		}
 		}
@@ -344,9 +344,9 @@ void SP3::Update(double dt)
 				{
 					if (go->move(3, theMap))
 						go->animationPos.z = 3 + dt * go->getAlienSpeed();
-			}
+				}
 				else if (go->move(1, theMap))
-						go->animationPos.z = 1 + dt * go->getAlienSpeed();
+					go->animationPos.z = 1 + dt * go->getAlienSpeed();
 			}
 			else if (distance.y >= abs(distance.x))
 			{
@@ -416,9 +416,9 @@ void SP3::Update(double dt)
 			}
 		}
 
-			//Checks if any m_golist is in the bombfire
+		//Checks if any m_golist is in the bombfire
 		for (std::vector<GameObject *>::iterator it2 = it + 1; it2 != m_goList.end(); ++it2)
-					{
+		{
 			GameObject *go2 = (GameObject *)*it2;
 
 			if (!go2->active)
@@ -428,8 +428,8 @@ void SP3::Update(double dt)
 				if (go->pos == go2->pos)
 				{
 					go2->active = false;
-						playerInfo->setPlayerHealth(100);
-					}
+					playerInfo->setPlayerHealth(100);
+				}
 
 			if (go->type == GameObject::GO_LOOTCRATE && go2->type == GameObject::GO_BOMBFIRE)
 				if (go->pos == go2->pos)
@@ -437,39 +437,39 @@ void SP3::Update(double dt)
 					go->active = false;
 					playerInfo->setPlayerHealth(100);
 				}
+		}
+
+		/*for (std::vector<alienBase *>::iterator it2 = alienManager.begin(); it2 != alienManager.end(); ++it2)
+		{
+			alienBase *go2 = (alienBase *)*it2;
+
+			if (go->pos == go2->pos)
+			{
+				playerInfo->setPlayerCurrency(playerInfo->getEquipmentCurrency() + go2->getAlienCurrencyWorth());
+
+				it2 = alienManager.erase(it2);
+				--currentAlien;
+
+
+
+				if (it2 == alienManager.end())
+					break;
 			}
+		}*/
 
-			/*for (std::vector<alienBase *>::iterator it2 = alienManager.begin(); it2 != alienManager.end(); ++it2)
-			{
-				alienBase *go2 = (alienBase *)*it2;
-
-				if (go->pos == go2->pos)
-				{
-					playerInfo->setPlayerCurrency(playerInfo->getEquipmentCurrency() + go2->getAlienCurrencyWorth());
-
-					it2 = alienManager.erase(it2);
-					--currentAlien;
-
-
-
-					if (it2 == alienManager.end())
-						break;
-				}
-			}*/
-
-			for (unsigned int i = 0; i < alienManager.size(); ++i)
-			{
+		for (unsigned int i = 0; i < alienManager.size(); ++i)
+		{
 			if (go->type != GameObject::GO_BOMBFIRE)
 				continue;
 
-				if (go->pos == alienManager[i]->pos)
-				{
-					playerInfo->addCurrency(alienManager[i]->getAlienCurrencyWorth());
-					alienManager.erase(alienManager.begin() + i);
-				}
+			if (go->pos == alienManager[i]->pos)
+			{
+				playerInfo->addCurrency(alienManager[i]->getAlienCurrencyWorth());
+				alienManager.erase(alienManager.begin() + i);
 			}
 		}
 	}
+
 
 	//Player stats checks & adjustments
 	if (playerInfo->getPlayerHealth() < 0) //Reset health to 0 if current player health is under 0
@@ -480,7 +480,7 @@ void SP3::Update(double dt)
 	{
 		playerInfo->setMaxPlayerHealth(playerInfo->getMaxPlayerHealth());
 	}
-
+}
 
 void SP3::RenderGO(GameObject *go)
 {
