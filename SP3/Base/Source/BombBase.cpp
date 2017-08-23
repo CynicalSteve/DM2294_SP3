@@ -23,6 +23,11 @@ void BombBase::setBombTimer(float timeToExplode)
 	this->timeToExplode = timeToExplode;
 }
 
+void BombBase::setTriggeredState(bool newTriggeredState)
+{
+	this->Triggered = newTriggeredState;
+}
+
 string BombBase::getBombName()
 {
 	return this->bombName;
@@ -41,4 +46,9 @@ float BombBase::getTimeToExplode()
 float BombBase::getFireBurnTime()
 {
 	return this->fireBurnTime;
+}
+
+bool BombBase::getTriggeredState()
+{
+	return this->Triggered;
 }

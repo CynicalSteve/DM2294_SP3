@@ -156,6 +156,18 @@ void SP3::Update(double dt)
 		KeyBounce['C'] = true;
 	}
 	else KeyBounce['C'] = false;
+
+	if (Application::IsKeyPressed('F')) //Temporary button for placing mine
+	{
+		if (!KeyBounce['F'])
+		{
+			playerInfo->bombManager.push_back(new MineBomb("MineBomb", 100, 2, playerInfo->pos.x, playerInfo->pos.y));
+		}
+
+		KeyBounce['F'] = true;
+	}
+	else KeyBounce['F'] = false;
+
 	//Exercise 8: use 2 keys to increase and decrease mass of ship
 	if (Application::IsKeyPressed(VK_UP))
 	{
@@ -212,55 +224,117 @@ void SP3::Update(double dt)
 	{
 		BombBase *go = (BombBase *)*it;
 
-		if (go->bombTimer < go->getTimeToExplode())
+		switch (go->type)
 		{
-			go->bombTimer += doubletime;
-			continue;
+		case GameObject::GO_MINEBOMB:
+		{
+			for (unsigned int x = 0; x < alienManager.size(); ++x)
+			{
+				if (go->pos == alienManager[x]->pos)
+				{
+					go->setTriggeredState(true);
+				}
+			}
+
+			if (go->getTriggeredState() == true)
+			{
+				GameObject *bombFireGO = FetchGO();
+				bombFireGO->type = GameObject::GO_BOMBFIRE;
+				bombFireGO->pos.set(go->pos.x, go->pos.y);
+				bombFireGO->scale.Set(0.1, 0.1, 1);
+				short i = 1;
+
+				for (; i < 3 && !theMap[go->pos.x + i][go->pos.y]; ++i)
+				{
+					bombFireGO = FetchGO();
+					bombFireGO->type = GameObject::GO_BOMBFIRE;
+					bombFireGO->pos.set(go->pos.x + i, go->pos.y);
+					bombFireGO->scale.Set(0.1, 0.1, 1);
+				}
+
+				for (i = 1; i < 3 && !theMap[go->pos.x][go->pos.y + i]; ++i)
+				{
+					bombFireGO = FetchGO();
+					bombFireGO->type = GameObject::GO_BOMBFIRE;
+					bombFireGO->pos.set(go->pos.x, go->pos.y + i);
+					bombFireGO->scale.Set(0.1, 0.1, 1);
+				}
+
+				for (i = 1; i < 3 && !theMap[go->pos.x - i][go->pos.y]; ++i)
+				{
+					bombFireGO = FetchGO();
+					bombFireGO->type = GameObject::GO_BOMBFIRE;
+					bombFireGO->pos.set(go->pos.x - i, go->pos.y);
+					bombFireGO->scale.Set(0.1, 0.1, 1);
+				}
+
+				for (i = 1; i < 3 && !theMap[go->pos.x][go->pos.y - i]; ++i)
+				{
+					bombFireGO = FetchGO();
+					bombFireGO->type = GameObject::GO_BOMBFIRE;
+					bombFireGO->pos.set(go->pos.x, go->pos.y - i);
+					bombFireGO->scale.Set(0.1, 0.1, 1);
+				}
+
+				it = playerInfo->bombManager.erase(it);
+			}
+			break;
 		}
-
-		GameObject *bombFireGO = FetchGO();
-		bombFireGO->type = GameObject::GO_BOMBFIRE;
-		bombFireGO->pos.set(go->pos.x, go->pos.y);
-		bombFireGO->scale.Set(0.1, 0.1, 1);
-		short i = 1;
-
-		for (; i < 3 && !theMap[go->pos.x + i][go->pos.y]; ++i)
+		case GameObject::GO_NORMALBOMB:
 		{
-			bombFireGO = FetchGO();
+			if (go->bombTimer < go->getTimeToExplode())
+			{
+				go->bombTimer += dt;
+				continue;
+			}
+
+			GameObject *bombFireGO = FetchGO();
 			bombFireGO->type = GameObject::GO_BOMBFIRE;
-			bombFireGO->pos.set(go->pos.x + i, go->pos.y);
+			bombFireGO->pos.set(go->pos.x, go->pos.y);
 			bombFireGO->scale.Set(0.1, 0.1, 1);
+			short i = 1;
+
+			for (; i < 3 && !theMap[go->pos.x + i][go->pos.y]; ++i)
+			{
+				bombFireGO = FetchGO();
+				bombFireGO->type = GameObject::GO_BOMBFIRE;
+				bombFireGO->pos.set(go->pos.x + i, go->pos.y);
+				bombFireGO->scale.Set(0.1, 0.1, 1);
+			}
+
+			for (i = 1; i < 3 && !theMap[go->pos.x][go->pos.y + i]; ++i)
+			{
+				bombFireGO = FetchGO();
+				bombFireGO->type = GameObject::GO_BOMBFIRE;
+				bombFireGO->pos.set(go->pos.x, go->pos.y + i);
+				bombFireGO->scale.Set(0.1, 0.1, 1);
+			}
+
+			for (i = 1; i < 3 && !theMap[go->pos.x - i][go->pos.y]; ++i)
+			{
+				bombFireGO = FetchGO();
+				bombFireGO->type = GameObject::GO_BOMBFIRE;
+				bombFireGO->pos.set(go->pos.x - i, go->pos.y);
+				bombFireGO->scale.Set(0.1, 0.1, 1);
+			}
+
+			for (i = 1; i < 3 && !theMap[go->pos.x][go->pos.y - i]; ++i)
+			{
+				bombFireGO = FetchGO();
+				bombFireGO->type = GameObject::GO_BOMBFIRE;
+				bombFireGO->pos.set(go->pos.x, go->pos.y - i);
+				bombFireGO->scale.Set(0.1, 0.1, 1);
+			}
+
+			it = playerInfo->bombManager.erase(it);
+			break;
+		}
 		}
 
-		for (i = 1; i < 3 && !theMap[go->pos.x][go->pos.y + i]; ++i)
-		{
-			bombFireGO = FetchGO();
-			bombFireGO->type = GameObject::GO_BOMBFIRE;
-			bombFireGO->pos.set(go->pos.x, go->pos.y + i);
-			bombFireGO->scale.Set(0.1, 0.1, 1);
-		}
-
-		for (i = 1; i < 3 && !theMap[go->pos.x - i][go->pos.y]; ++i)
-		{
-			bombFireGO = FetchGO();
-			bombFireGO->type = GameObject::GO_BOMBFIRE;
-			bombFireGO->pos.set(go->pos.x - i, go->pos.y);
-			bombFireGO->scale.Set(0.1, 0.1, 1);
-		}
-
-		for (i = 1; i < 3 && !theMap[go->pos.x][go->pos.y - i]; ++i)
-		{
-			bombFireGO = FetchGO();
-			bombFireGO->type = GameObject::GO_BOMBFIRE;
-			bombFireGO->pos.set(go->pos.x, go->pos.y - i);
-			bombFireGO->scale.Set(0.1, 0.1, 1);
-		}
-
-		it = playerInfo->bombManager.erase(it);
 		if (it == playerInfo->bombManager.end())
 			break;
 	}
-
+		
 	for (std::vector<alienBase *>::iterator it = alienManager.begin(); it != alienManager.end(); ++it)
 	{
 		alienBase *go = (alienBase *)*it;
@@ -370,7 +444,7 @@ void SP3::Update(double dt)
 			{
 				if (go->pos == alienManager[i]->pos)
 				{
-					playerInfo->setPlayerCurrency(playerInfo->getEquipmentCurrency() + alienManager[i]->getAlienCurrencyWorth());
+					playerInfo->addCurrency(alienManager[i]->getAlienCurrencyWorth());
 					alienManager.erase(alienManager.begin() + i);
 				}
 			}
@@ -442,14 +516,32 @@ void SP3::renderAliens(alienBase *alien)
 
 void SP3::renderBombs(BombBase *bomb, int currentBombIndex)
 {
-
-	modelStack.PushMatrix(); //norrmal bomb
+	switch (bomb->type)
 	{
-		modelStack.Translate(bomb->pos.x, bomb->pos.y, 0);
-		//modelstack.rotate(math::radiantodegree(atan2(-alien->dir.x, alien->dir.y)), 0, 0, 1);
-		RenderMesh(meshList[GEO_NORMALBOMB], true);
+	case GameObject::GO_NORMALBOMB:
+	{
+		modelStack.PushMatrix(); //normal bomb
+		{
+			modelStack.Translate(bomb->pos.x, bomb->pos.y, 0);
+			RenderMesh(meshList[GEO_NORMALBOMB], true);
+		}
+		modelStack.PopMatrix(); ///normal bomb
+		break;
 	}
-	modelStack.PopMatrix(); ///normal bomb
+	case GameObject::GO_MINEBOMB:
+	{
+		modelStack.PushMatrix(); //mine bomb
+		{
+			modelStack.Translate(bomb->pos.x, bomb->pos.y, 0);
+			RenderMesh(meshList[GEO_MINEBOMB], true);
+		}
+		modelStack.PopMatrix(); ///mine bomb
+		break;
+	}
+	default:
+		break;
+	}
+
 }
 
 void SP3::Render()

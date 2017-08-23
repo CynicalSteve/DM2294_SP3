@@ -11,24 +11,17 @@ public:
 	BombBase();
 	~BombBase();
 
-	struct coord
-	{
-		short x = 0, y = 0;
-		void set(short x, short y)
-		{
-			this->x = x;
-			this->y = y;
-		}
-	} pos;
-
-	void setBombName(string bombName), setBombDamage(float bombDamage), setBombTimer(float timeToExplode);
+	void setBombName(string bombName), setBombDamage(float bombDamage), setBombTimer(float timeToExplode), setTriggeredState(bool newTriggeredState);
 	string getBombName();
 	float getBombDamage(), getTimeToExplode(), getFireBurnTime();
+	bool getTriggeredState();
 
 	float bombTimer;
+	
 protected:
 	string bombName;
 	float bombDamage, timeToExplode;
+	bool Triggered;
 };
 #endif
 
