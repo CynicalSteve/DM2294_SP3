@@ -664,6 +664,7 @@ void SP3::Render()
 void SP3::Exit()
 {
 	SceneBase::Exit();
+
 	//Cleanup GameObjects
 	if (!alienManager.empty())
 	{
