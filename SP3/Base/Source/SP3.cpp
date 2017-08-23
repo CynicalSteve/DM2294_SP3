@@ -50,7 +50,7 @@ void SP3::Init()
 		}
 	}
 
-	playerInfo = new Player(100, 0.2f);
+	playerInfo = new Player(100, 5.f);
 	playerInfo->pos.set(1, 1);
 	playerInfo->animationPos.Set(playerInfo->pos.x, playerInfo->pos.y, -1);
 	playerInfo->type = GameObject::GO_PLAYER;
@@ -65,7 +65,6 @@ void SP3::Init()
 	GameObject *lootcrateGO = FetchGO();
 	lootcrateGO->type = GameObject::GO_LOOTCRATE;
 	lootcrateGO->pos.set(5, 5);
-	lootcrateGO->isDestructible = true;
 }
 
 GameObject* SP3::FetchGO()
@@ -105,7 +104,7 @@ void SP3::Update(double dt)
 		if (playerInfo->move(-1, theMap))
 			//++playerInfo->pos.x;
 			if (playerInfo->move(0, theMap))
-				playerInfo->animationPos.z = dt / playerInfo->getPlayerSpeed();
+				playerInfo->animationPos.z = dt * playerInfo->getPlayerSpeed();
 		KeyBounce['D'] = true;
 	}
 	else KeyBounce['D'] = false;
@@ -113,11 +112,9 @@ void SP3::Update(double dt)
 	if (Application::IsKeyPressed('W'))
 	{
 		if (playerInfo->move(-1, theMap))
-		{
 			//++playerInfo->pos.y;
 			if (playerInfo->move(1, theMap))
-				playerInfo->animationPos.z = 1 + dt / playerInfo->getPlayerSpeed();
-		}
+				playerInfo->animationPos.z = 1 + dt * playerInfo->getPlayerSpeed();
 		KeyBounce['W'] = true;
 	}
 	else KeyBounce['W'] = false;
@@ -125,21 +122,19 @@ void SP3::Update(double dt)
 	if (Application::IsKeyPressed('A'))
 	{
 		if (playerInfo->move(-1, theMap))
-		{
 			//--playerInfo->pos.x;
 			if (playerInfo->move(2, theMap))
-			{
-				playerInfo->animationPos.z = 2 + dt / playerInfo->getPlayerSpeed();
-			}
-		}
+				playerInfo->animationPos.z = 2 + dt * playerInfo->getPlayerSpeed();
+		KeyBounce['A'] = true;
 	}
+	else KeyBounce['A'] = false;
 
 	if (Application::IsKeyPressed('S'))
 	{
 		if (playerInfo->move(-1, theMap))
 			//--playerInfo->pos.y;
 			if (playerInfo->move(3, theMap))
-				playerInfo->animationPos.z = 3 + dt / playerInfo->getPlayerSpeed();
+				playerInfo->animationPos.z = 3 + dt * playerInfo->getPlayerSpeed();
 		KeyBounce['S'] = true;
 	}
 	else KeyBounce['S'] = false;
@@ -149,14 +144,11 @@ void SP3::Update(double dt)
 	if (Application::IsKeyPressed('C')) //Lower player health
 	{
 		if (!KeyBounce['C'])
-		{
 			playerInfo->setPlayerHealth(playerInfo->getPlayerHealth() - 10);
-		}
-
 		KeyBounce['C'] = true;
 	}
 	else KeyBounce['C'] = false;
-	//Exercise 8: use 2 keys to increase and decrease mass of ship
+
 	if (Application::IsKeyPressed(VK_UP))
 	{
 	}
@@ -197,7 +189,7 @@ void SP3::Update(double dt)
 
 		if (currentAlien < 3)
 		{
-			alienManager.push_back(new alienGrub("Grub", 100, 0.7f, 5, 5, 9, 1));
+			alienManager.push_back(new alienGrub("Grub", 100, 4.f, 5, 5, 9, 1));
 
 			++currentAlien;
 		}
@@ -270,37 +262,53 @@ void SP3::Update(double dt)
 			GameObject::coord distance;
 			distance.set(go->pos.x - playerInfo->pos.x, go->pos.y - playerInfo->pos.y);
 			if (distance.x == 0 && distance.y == 0);
-			else if (distance.x > abs(distance.y))
+			else if (distance.x >= abs(distance.y))
 			{
 				if (go->move(2, theMap))
-					go->animationPos.z = 2 + dt / go->getAlienSpeed();
+					go->animationPos.z = 2 + dt * go->getAlienSpeed();
 				else if (distance.y > 0)
+				{
 					if (go->move(3, theMap))
-						go->animationPos.z = 3 + dt / go->getAlienSpeed();
+						go->animationPos.z = 3 + dt * go->getAlienSpeed();
+				}
+				else if (go->move(1, theMap))
+						go->animationPos.z = 1 + dt * go->getAlienSpeed();
 			}
-			else if (distance.y > abs(distance.x))
+			else if (distance.y >= abs(distance.x))
 			{
 				if (go->move(3, theMap))
-					go->animationPos.z = 3 + dt / go->getAlienSpeed();
+					go->animationPos.z = 3 + dt * go->getAlienSpeed();
 				else if (distance.x > 0)
+				{
 					if (go->move(2, theMap))
-						go->animationPos.z = 2 + dt / go->getAlienSpeed();
+						go->animationPos.z = 2 + dt * go->getAlienSpeed();
+				}
+				else if (go->move(0, theMap))
+					go->animationPos.z = dt * go->getAlienSpeed();
 			}
 			else if (distance.x < -abs(distance.y))
 			{
 				if (go->move(0, theMap))
-					go->animationPos.z = 0 + dt / go->getAlienSpeed();
+					go->animationPos.z = 0 + dt * go->getAlienSpeed();
 				else if (distance.y > 0)
+				{
 					if (go->move(3, theMap))
-						go->animationPos.z = 3 + dt / go->getAlienSpeed();
+						go->animationPos.z = 3 + dt * go->getAlienSpeed();
+				}
+				else if (go->move(1, theMap))
+					go->animationPos.z = 1 + dt * go->getAlienSpeed();
 			}
 			else
 			{
 				if (go->move(1, theMap))
-					go->animationPos.z = 1 + dt / go->getAlienSpeed();
+					go->animationPos.z = 1 + dt * go->getAlienSpeed();
 				else if (distance.x > 0)
+				{
 					if (go->move(2, theMap))
-						go->animationPos.z = 2 + dt / go->getAlienSpeed();
+						go->animationPos.z = 2 + dt * go->getAlienSpeed();
+				}
+				else if (go->move(0, theMap))
+					go->animationPos.z = dt * go->getAlienSpeed();
 			}
 		}
 		go->move(4, theMap);
@@ -331,22 +339,30 @@ void SP3::Update(double dt)
 				go->scale.x += doubletime * 1.1f;
 				go->scale.y += doubletime * 1.1f;
 			}
+		}
 
+		//Checks if any m_golist is in the bombfire
+		for (std::vector<GameObject *>::iterator it2 = it + 1; it2 != m_goList.end(); ++it2)
+		{
+			GameObject *go2 = (GameObject *)*it2;
 
-			//Checks if any m_golist is in the bombfire
-			for (unsigned int i = 0; i < m_goList.size(); ++i)
-			{
-				if (m_goList[i]->active == true && m_goList[i]->isDestructible == true)
+			if (!go2->active)
+				continue;
+
+			if (go->type == GameObject::GO_BOMBFIRE && go2->type == GameObject::GO_LOOTCRATE)
+				if (go->pos == go2->pos)
 				{
-					if (go->pos.x == m_goList[i]->pos.x && go->pos.y == m_goList[i]->pos.y)
-					{
-						m_goList[i]->isDestructible = false;
-						m_goList[i]->active = false;
-
-						playerInfo->setPlayerHealth(100);
-					}
+					go2->active = false;
+					playerInfo->setPlayerHealth(100);
 				}
-			}
+
+			if (go->type == GameObject::GO_LOOTCRATE && go2->type == GameObject::GO_BOMBFIRE)
+				if (go->pos == go2->pos)
+				{
+					go->active = false;
+					playerInfo->setPlayerHealth(100);
+				}
+		}
 
 			/*for (std::vector<alienBase *>::iterator it2 = alienManager.begin(); it2 != alienManager.end(); ++it2)
 			{
@@ -366,13 +382,15 @@ void SP3::Update(double dt)
 				}
 			}*/
 
-			for (unsigned int i = 0; i < alienManager.size(); ++i)
+		for (unsigned int i = 0; i < alienManager.size(); ++i)
+		{
+			if (go->type != GameObject::GO_BOMBFIRE)
+				continue;
+
+			if (go->pos == alienManager[i]->pos)
 			{
-				if (go->pos == alienManager[i]->pos)
-				{
-					playerInfo->setPlayerCurrency(playerInfo->getEquipmentCurrency() + alienManager[i]->getAlienCurrencyWorth());
-					alienManager.erase(alienManager.begin() + i);
-				}
+				playerInfo->setPlayerCurrency(playerInfo->getEquipmentCurrency() + alienManager[i]->getAlienCurrencyWorth());
+				alienManager.erase(alienManager.begin() + i);
 			}
 		}
 	}
