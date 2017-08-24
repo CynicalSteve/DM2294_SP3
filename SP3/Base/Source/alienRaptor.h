@@ -1,5 +1,5 @@
-#ifndef ALIEN_GRUB_H
-#define ALIEN_GRUB_H
+#ifndef ALIEN_RAPTOR_H
+#define ALIEN_RAPTOR_H
 
 #include "AlienBase.h"
 using namespace std;

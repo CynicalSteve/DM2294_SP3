@@ -135,8 +135,8 @@ void SceneBase::Init()
 	meshList[GEO_ALIENGHOUL] = MeshBuilder::GenerateQuad("AlienGhoul", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_ALIENGHOUL]->textureID = LoadTGA("Image//ghoul.tga");
 
-	meshList[GEO_ALIENRAPTOR] = MeshBuilder::GenerateQuad("AlienGrub", Color(1.f, 0.f, 0.f), 1.f);
-	meshList[GEO_ALIENRAPTOR]->textureID = LoadTGA("Image//grub.tga");
+	meshList[GEO_ALIENRAPTOR] = MeshBuilder::GenerateQuad("Raptor", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_ALIENRAPTOR]->textureID = LoadTGA("Image//raptor.tga");
 
 	meshList[GEO_ALIENGOLIATH] = MeshBuilder::GenerateQuad("AlienGoliath", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_ALIENGOLIATH]->textureID = LoadTGA("Image//goliath.tga");

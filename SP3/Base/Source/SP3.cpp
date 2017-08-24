@@ -200,7 +200,7 @@ void SP3::Update(double dt)
 
 		if (currentAlien < 3)
 		{
-			alienManager.push_back(new alienGrub("Grub", 100, 4.f, 5, 5, 9, 1));
+			alienManager.push_back(new alienRaptor("Raptor", 100, 4.f, 5, 5, 9, 1));
 
 			++currentAlien;
 		}
@@ -209,6 +209,13 @@ void SP3::Update(double dt)
 	{
 		bRButtonState = false;
 		std::cout << "RBUTTON UP" << std::endl;
+
+		if (currentAlien < 3)
+		{
+			alienManager.push_back(new alienGrub("Grub", 100, 4.f, 5, 5, 9, 1));
+
+			++currentAlien;
+		}
 	}
 
 	//Creation of bomb fire after bomb goes off
@@ -332,10 +339,15 @@ void SP3::Update(double dt)
 	{
 		alienBase *go = (alienBase *)*it;
 
+
+		GameObject::coord distance;
+
 		if (go->move(-1, theMap))
 		{
-			GameObject::coord distance;
+			if (go->alienType == alienBase::TYPE1_GRUB)
 			distance.set(go->pos.x - playerInfo->pos.x, go->pos.y - playerInfo->pos.y);
+			else if (go->alienType == alienBase::TYPE3_RAPTOR)
+				distance.set(go->pos.x - 5, go->pos.y - 5);
 			if (distance.x == 0 && distance.y == 0);
 			else if (distance.x >= abs(distance.y))
 			{
@@ -386,6 +398,7 @@ void SP3::Update(double dt)
 					go->animationPos.z = dt * go->getAlienSpeed();
 			}
 		}
+
 		go->move(4, theMap);
 	}
 
@@ -427,12 +440,12 @@ void SP3::Update(double dt)
 			if (!go2->active)
 				continue;
 
-			/*if (go->type == GameObject::GO_BOMBFIRE && go2->type == GameObject::GO_LOOTCRATE)
+			if (go->type == GameObject::GO_BOMBFIRE && go2->type == GameObject::GO_LOOTCRATE)
 				if (go->pos == go2->pos)
 				{
 					go2->active = false;
 					playerInfo->setPlayerHealth(100);
-				}*/
+				}
 
 			if (go->type == GameObject::GO_LOOTCRATE && go2->type == GameObject::GO_BOMBFIRE)
 				if (go->pos == go2->pos)
@@ -441,11 +454,11 @@ void SP3::Update(double dt)
 					playerInfo->setPlayerHealth(100);
 				}
 
-			/*if (go->type == GameObject::GO_BOMBFIRE && go2->type == GameObject::GO_PLAYER)
+			if (go->type == GameObject::GO_BOMBFIRE && go2->type == GameObject::GO_PLAYER)
 				if (go->pos == go2->pos)
 				{
 					playerInfo->subtractHealth(10);
-				}*/
+				}
 
 			if (go->type == GameObject::GO_PLAYER && go2->type == GameObject::GO_BOMBFIRE)
 				if (go->pos == go2->pos)
@@ -526,14 +539,20 @@ void SP3::renderAliens(alienBase *alien)
 	switch (alien->alienType)
 	{
 	case alienBase::TYPE1_GRUB:
-	{
 		modelStack.PushMatrix(); //AlienGrub
 		{
 			modelStack.Translate(alien->animationPos.x, alien->animationPos.y, 0);
 			RenderMesh(meshList[GEO_ALIENGRUB], true);
 		}
 		modelStack.PopMatrix(); ///AlienGrub
-	}
+		break;
+	case alienBase::TYPE3_RAPTOR:
+		modelStack.PushMatrix(); //AlienRaptor
+		{
+			modelStack.Translate(alien->animationPos.x, alien->animationPos.y, 0);
+			RenderMesh(meshList[GEO_ALIENRAPTOR], true);
+		}
+		modelStack.PopMatrix(); ///AlienRaptor
 		break;
 	default:
 		break;
