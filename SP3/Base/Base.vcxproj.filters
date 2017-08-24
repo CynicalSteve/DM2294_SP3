@@ -126,6 +126,12 @@
     <ClCompile Include="Source\Map.cpp">
       <Filter>Miscellaneous\Map</Filter>
     </ClCompile>
+    <ClCompile Include="Source\alienRaptor.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\alienGhoul.cpp">
+      <Filter>Alien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Vertex.h">
@@ -202,6 +208,12 @@
     </ClInclude>
     <ClInclude Include="Source\Map.h">
       <Filter>Miscellaneous\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\alienRaptor.h">
+      <Filter>Miscellaneous</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\alienGhoul.h">
+      <Filter>Alien</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

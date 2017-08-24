@@ -293,6 +293,7 @@ void SP3::Update(double dt)
 
 	//Mouse Section
 	static bool bLButtonState = false;
+	
 	if (!bLButtonState && Application::IsMousePressed(0))
 	{
 		bLButtonState = true;
