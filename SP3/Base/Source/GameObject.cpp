@@ -99,6 +99,11 @@ bool operator == (GameObject::coord &lhs, GameObject::coord &rhs)
 	return lhs.x == rhs.x && lhs.y == rhs.y;
 }
 
+bool operator != (GameObject::coord &lhs, GameObject::coord &rhs)
+{
+	return lhs.x != rhs.x || lhs.y != rhs.y;
+}
+
 bool operator > (GameObject::coord &lhs, GameObject::coord &rhs)
 {
 	return lhs.x > rhs.x && lhs.y > rhs.y;
