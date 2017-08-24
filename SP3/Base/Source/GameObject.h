@@ -18,7 +18,6 @@ public:
 		GO_ENEMY_BULLET, //enemy bullet
 		GO_MISSILE, //player missile
 		GO_PILLAR,
-		GO_POWERUP, //powerup item
 		GO_WALL,
 
 		//SP3
@@ -33,6 +32,9 @@ public:
 		GO_WALL_LVL4,
 		GO_WALL_LVL5,
 		GO_LOOTCRATE,
+		GO_POWERUP_HEALTH, //powerup item health
+		GO_POWERUP_SPEED, //powerup item speed boost
+		GO_POWERUP_EQUIPMENT, //powerup item currency
 
 		GO_TOTAL, //must be last
 	};
@@ -56,6 +58,7 @@ public:
 	bool lostHealth;
 	float fireBurnTime;
 	float fireScaler;
+	float loseHealthCooldown;
 
 	GameObject();
 	virtual ~GameObject();

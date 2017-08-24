@@ -26,6 +26,7 @@ public:
 	float getAlienHealth(), getAlienSpeed(), getAlienDamage();
 	int getAlienCurrencyWorth();
 	void setAlienName(string newAlienName), setAlienHealth(float newAlienHealth), setAlienSpeed(float newAlienSpeed), setAlienDamage(float newAlienDamage), setAlienCurrencyWorth(int newAlienCurrencyWorth);
+	void addAlienHealth(int alienHealthToAdd), subtractAlienHealth(int alienHealthToSubtract);
 
 	Vector3 scale;
 	alienType alienType;

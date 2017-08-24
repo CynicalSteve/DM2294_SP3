@@ -16,17 +16,22 @@ public:
 	~Player();
 
 	void setPlayerHealth(float newPlayerHealth), setPlayerSpeed(float newPlayerSpeed), setMaxPlayerHealth(float newMaxPlayerHealth), setPlayerCurrency(int newCurrencyAmount);
+	void setSpeedBoostState(bool newSpeedBoostState), setMaxSpeedCooldownTime(float newSpeedBoostTime);
 	void addCurrency(int currencyToAdd), subtractCurrency(int currencyToSubtract), addHealth(int healthToAdd), subtractHealth(int healthToSubtract);
-	float getPlayerHealth(), getPlayerSpeed();
+	float getPlayerHealth(), getPlayerSpeed(), getMaxSpeedBoostCooldownTime();
 	int getEquipmentCurrency(), getMaxPlayerHealth();
+	bool getSpeedBoostState();
 
 	vector<BombBase*> bombManager;
 	int currentBomb;
 	Inventory* playerInventory[5];
+	float speedBoostCooldown;
+	float normalSpeed;
 
 private:
-	float playerHealth, playerSpeed, maxPlayerHealth;
+	float playerHealth, playerSpeed, maxPlayerHealth, maxSpeedBoostCooldownTime;
 	int equipmentCurrency;
+	bool speedBoosted;
 };
 #endif
 

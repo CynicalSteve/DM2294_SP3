@@ -2,7 +2,6 @@
 #define SP3_H
 
 #include "GameObject.h"
-#include <vector>
 #include "SceneBase.h"
 #include "SceneManager.h"
 #include "AlienBase.h"
@@ -11,6 +10,10 @@
 #include "BombNormal.h"
 #include "BombMine.h"
 #include "Player.h"
+
+#include <vector>
+#include <cstdlib>
+#include <ctime>
 
 class SP3 : public SceneBase
 {
@@ -32,6 +35,8 @@ public:
 	void renderAliens(alienBase *alien);
 	void renderBombs(BombBase *bomb, int currentBombIndex);
 	void renderUI();
+
+	int RandomNumberGen(int FirstNumber = 0, int LastNumber = 0);
 
 	GameObject* FetchGO();
 protected:
