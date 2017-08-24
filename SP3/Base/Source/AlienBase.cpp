@@ -57,3 +57,13 @@ void alienBase::setAlienCurrencyWorth(int newAlienCurrencyWorth)
 {
 	 this->alienCurrencyWorth = newAlienCurrencyWorth;
 }
+
+void alienBase::addAlienHealth(int alienHealthToAdd)
+{
+	this->alienHealth += alienHealthToAdd;
+}
+
+void alienBase::subtractAlienHealth(int alienHealthToSubtract)
+{
+	this->alienHealth -= alienHealthToSubtract;
+}

@@ -65,6 +65,26 @@ void SP3::Init()
 	GameObject *lootcrateGO = FetchGO();
 	lootcrateGO->type = GameObject::GO_LOOTCRATE;
 	lootcrateGO->pos.set(5, 5);
+
+	GameObject *lootcrateGO2 = FetchGO();
+	lootcrateGO2->type = GameObject::GO_LOOTCRATE;
+	lootcrateGO2->pos.set(3, 7);
+
+	GameObject *lootcrateGO3 = FetchGO();
+	lootcrateGO3->type = GameObject::GO_LOOTCRATE;
+	lootcrateGO3->pos.set(7, 3);
+}
+
+int SP3::RandomNumberGen(int FirstNumber, int LastNumber)
+{
+	srand(time(0));  //Random Num seeder
+
+	//Note that FirstNumber & LastNumber are included in the generator
+	int RandomNumber = FirstNumber + (rand() % LastNumber);
+
+	cout << RandomNumber << endl;
+
+	return RandomNumber;
 }
 
 GameObject* SP3::FetchGO()
@@ -85,6 +105,98 @@ GameObject* SP3::FetchGO()
 	}
 	return m_goList[m_goList.size() - 1];
 }
+
+void SP3::AlienMovement(double dt)
+{
+	for (std::vector<alienBase *>::iterator it = alienManager.begin(); it != alienManager.end(); ++it)
+	{
+		alienBase *go = (alienBase *)*it;
+
+		if (go->move(-1, theMap))
+		{
+			GameObject::coord distance;
+			distance.set(go->pos.x - playerInfo->pos.x, go->pos.y - playerInfo->pos.y);
+			if (distance.x == 0 && distance.y == 0);
+			else if (distance.x >= abs(distance.y))
+			{
+				if (go->move(2, theMap))
+					go->animationPos.z = 2 + dt * go->getAlienSpeed();
+				else if (distance.y > 0)
+				{
+					if (go->move(3, theMap))
+						go->animationPos.z = 3 + dt * go->getAlienSpeed();
+				}
+				else if (go->move(1, theMap))
+					go->animationPos.z = 1 + dt * go->getAlienSpeed();
+			}
+			else if (distance.y >= abs(distance.x))
+			{
+				if (go->move(3, theMap))
+					go->animationPos.z = 3 + dt * go->getAlienSpeed();
+				else if (distance.x > 0)
+				{
+					if (go->move(2, theMap))
+						go->animationPos.z = 2 + dt * go->getAlienSpeed();
+				}
+				else if (go->move(0, theMap))
+					go->animationPos.z = dt * go->getAlienSpeed();
+			}
+			else if (distance.x < -abs(distance.y))
+			{
+				if (go->move(0, theMap))
+					go->animationPos.z = 0 + dt * go->getAlienSpeed();
+				else if (distance.y > 0)
+				{
+					if (go->move(3, theMap))
+						go->animationPos.z = 3 + dt * go->getAlienSpeed();
+				}
+				else if (go->move(1, theMap))
+					go->animationPos.z = 1 + dt * go->getAlienSpeed();
+			}
+			else
+			{
+				if (go->move(1, theMap))
+					go->animationPos.z = 1 + dt * go->getAlienSpeed();
+				else if (distance.x > 0)
+				{
+					if (go->move(2, theMap))
+						go->animationPos.z = 2 + dt * go->getAlienSpeed();
+				}
+				else if (go->move(0, theMap))
+					go->animationPos.z = dt * go->getAlienSpeed();
+			}
+		}
+		go->move(4, theMap);
+	}
+}
+
+void SP3::PlayerChecks(double dt)
+{
+	if (playerInfo->getPlayerHealth() < 0) //Reset health to 0 if current player health is under 0
+	{
+		playerInfo->setPlayerHealth(0);
+	}
+
+	if (playerInfo->getPlayerHealth() > playerInfo->getMaxPlayerHealth()) //Health cap
+	{
+		playerInfo->setPlayerHealth(playerInfo->getMaxPlayerHealth());
+	}
+
+	if (playerInfo->getSpeedBoostState() == true) //Speed Boost
+	{
+		if (playerInfo->speedBoostCooldown < playerInfo->getMaxSpeedBoostCooldownTime())
+		{
+			playerInfo->speedBoostCooldown += dt;
+		}
+		else
+		{
+			playerInfo->setSpeedBoostState(false);
+			playerInfo->speedBoostCooldown = 0.f;
+			playerInfo->setPlayerSpeed(playerInfo->normalSpeed);
+		}
+	}
+}
+
 
 void SP3::Update(double dt)
 {
@@ -215,7 +327,7 @@ void SP3::Update(double dt)
 			alienManager.push_back(new alienGrub("Grub", 100, 4.f, 5, 5, 9, 1));
 
 			++currentAlien;
-		}
+	}
 	}
 
 	//Creation of bomb fire after bomb goes off
@@ -402,7 +514,7 @@ void SP3::Update(double dt)
 		go->move(4, theMap);
 	}
 
-	//Checking if any destuctible/killable objects are inside bomb fire
+	//Check m_golist against other list for interactions
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
 		GameObject *go = (GameObject *)*it;
@@ -448,12 +560,73 @@ void SP3::Update(double dt)
 				}
 
 			if (go->type == GameObject::GO_LOOTCRATE && go2->type == GameObject::GO_BOMBFIRE)
+			{
 				if (go->pos == go2->pos)
 				{
 					go->active = false;
-					playerInfo->setPlayerHealth(100);
+
+					int RandomDropper = RandomNumberGen(1, 3);
+
+					if (RandomDropper == 1)
+					{
+						GameObject *PowerupGO = FetchGO();
+						PowerupGO->type = GameObject::GO_POWERUP_HEALTH;
+						PowerupGO->pos.set(go->pos.x, go->pos.y);
+						PowerupGO->scale.Set(0.1, 0.1, 1);
+					}
+					else if(RandomDropper == 2)
+					{
+						GameObject *PowerupGO = FetchGO();
+						PowerupGO->type = GameObject::GO_POWERUP_SPEED;
+						PowerupGO->pos.set(go->pos.x, go->pos.y);
+						PowerupGO->scale.Set(1, 1, 1);
+					}
+					else if (RandomDropper == 3)
+					{
+						GameObject *PowerupGO = FetchGO();
+						PowerupGO->type = GameObject::GO_POWERUP_EQUIPMENT;
+						PowerupGO->pos.set(go->pos.x, go->pos.y);
+						PowerupGO->scale.Set(1, 1, 1);
+					}
+				}
+			}
+
+			if (go->type == GameObject::GO_PLAYER && go2->type == GameObject::GO_POWERUP_HEALTH)
+			{
+				if (go->pos == go2->pos && playerInfo->getPlayerHealth() != playerInfo->getMaxPlayerHealth())  //Checks if the player already has full health
+				{
+					playerInfo->addHealth(20); 
+
+					go2->active = false; 
+				}
+			}
+
+			if (go->type == GameObject::GO_PLAYER && go2->type == GameObject::GO_POWERUP_SPEED)
+			{
+				if (go->pos == go2->pos)
+				{
+					if (playerInfo->getSpeedBoostState() == false)  //Checks if the player already has speed boost
+					{
+						playerInfo->setSpeedBoostState(true);
+						playerInfo->setPlayerSpeed(playerInfo->getPlayerSpeed() * 1.5f); //50% more speed
+					}
+					else  //If player has speed boost active, reset the cooldown time
+					{
+						playerInfo->speedBoostCooldown = 0.f;
+					}
+					go2->active = false;
+				}
 				}
 
+			if (go->type == GameObject::GO_PLAYER && go2->type == GameObject::GO_POWERUP_EQUIPMENT)
+			{
+				if (go->pos == go2->pos)
+				{
+					playerInfo->addCurrency(30);
+					go2->active = false;
+				}
+			}
+			
 			if (go->type == GameObject::GO_BOMBFIRE && go2->type == GameObject::GO_PLAYER)
 				if (go->pos == go2->pos)
 				{
@@ -461,9 +634,26 @@ void SP3::Update(double dt)
 				}
 
 			if (go->type == GameObject::GO_PLAYER && go2->type == GameObject::GO_BOMBFIRE)
+			{
 				if (go->pos == go2->pos)
 				{
+					if (playerInfo->loseHealthCooldown == 0.f)
+					{
 					playerInfo->subtractHealth(10);
+
+						playerInfo->loseHealthCooldown += dt;
+					}
+					else
+					{
+						playerInfo->loseHealthCooldown += dt;
+
+						if (playerInfo->loseHealthCooldown > 1.f)
+						{
+							playerInfo->loseHealthCooldown = 0.f;
+						}
+					}
+
+				}
 				}
 		}
 
@@ -482,14 +672,7 @@ void SP3::Update(double dt)
 
 
 	//Player stats checks & adjustments
-	if (playerInfo->getPlayerHealth() < 0) //Reset health to 0 if current player health is under 0
-	{
-		playerInfo->setPlayerHealth(0);
-	}
-	if (playerInfo->getPlayerHealth() > playerInfo->getMaxPlayerHealth()) //Health cap
-	{
-		playerInfo->setMaxPlayerHealth(playerInfo->getMaxPlayerHealth());
-	}
+	PlayerChecks(dt);
 }
 
 void SP3::RenderGO(GameObject *go)
@@ -527,6 +710,40 @@ void SP3::RenderGO(GameObject *go)
 
 		break;
 	}
+	case GameObject::GO_POWERUP_HEALTH:
+	{
+		modelStack.PushMatrix(); //health powerup
+		{
+			modelStack.Translate(go->pos.x, go->pos.y, 0);
+			RenderMesh(meshList[GEO_HEALTH], false);
+		}
+		modelStack.PopMatrix(); ///health powerup
+
+		break;
+	}
+
+	case GameObject::GO_POWERUP_SPEED:
+	{
+		modelStack.PushMatrix(); //speed boost powerup
+		{
+			modelStack.Translate(go->pos.x, go->pos.y, 0);
+			RenderMesh(meshList[GEO_POWERUP_SPEED], false);
+		}
+		modelStack.PopMatrix(); ///speed boost powerup
+
+		break;
+	}
+	case GameObject::GO_POWERUP_EQUIPMENT:
+	{
+		modelStack.PushMatrix(); //speed boost powerup
+		{
+			modelStack.Translate(go->pos.x, go->pos.y, 0);
+			RenderMesh(meshList[GEO_EQUIPMENT], false);
+		}
+		modelStack.PopMatrix(); ///speed boost powerup
+
+		break;
+	}
 	default:
 		break;
 	}
@@ -551,7 +768,7 @@ void SP3::renderAliens(alienBase *alien)
 		{
 			modelStack.Translate(alien->animationPos.x, alien->animationPos.y, 0);
 			RenderMesh(meshList[GEO_ALIENRAPTOR], true);
-		}
+	}
 		modelStack.PopMatrix(); ///AlienRaptor
 		break;
 	default:
@@ -605,7 +822,7 @@ void SP3::renderUI()
 	{
 		modelStack.Translate(25, 95, 0);
 		modelStack.Scale(100 / 3, 5, 1);
-		RenderMesh(meshList[GEO_HEALTH_RED], true);
+		RenderMesh(meshList[GEO_HEALTH_BAR_RED], true);
 	}
 	modelStack.PopMatrix();
 
@@ -613,7 +830,7 @@ void SP3::renderUI()
 	{
 		modelStack.Translate(25, 95, 0);
 		modelStack.Scale(playerInfo->getPlayerHealth() / 3, 5, 1);
-		RenderMesh(meshList[GEO_HEALTH_GREEN], true);
+		RenderMesh(meshList[GEO_HEALTH_BAR_GREEN], true);
 	}
 	modelStack.PopMatrix();
 
@@ -728,7 +945,7 @@ void SP3::Render()
 
 	ss.str("");
 	ss.precision(5);
-	ss << "FPS: " << fps;
+	ss << "Speed: " << playerInfo->speedBoostCooldown << "/" << playerInfo->getMaxSpeedBoostCooldownTime();
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
 
 	ss.str("");

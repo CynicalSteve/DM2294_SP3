@@ -102,8 +102,8 @@ void SceneBase::Init()
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
 
 	//SP3
-	meshList[GEO_HEALTH_GREEN] = MeshBuilder::GenerateQuad("Quad", Color(0.f, 1.f, 0.f), 1.f);
-	meshList[GEO_HEALTH_RED] = MeshBuilder::GenerateQuad("Quad", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_HEALTH_BAR_GREEN] = MeshBuilder::GenerateQuad("Quad", Color(0.f, 1.f, 0.f), 1.f);
+	meshList[GEO_HEALTH_BAR_RED] = MeshBuilder::GenerateQuad("Quad", Color(1.f, 0.f, 0.f), 1.f);
 
 	meshList[GEO_GROUND] = MeshBuilder::GenerateQuad("Ground", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_GROUND]->textureID = LoadTGA("Image//ground.tga");
@@ -179,6 +179,12 @@ void SceneBase::Init()
 
 	meshList[GEO_HEALTH] = MeshBuilder::GenerateQuad("Health", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_HEALTH]->textureID = LoadTGA("Image//Health.tga");
+
+	meshList[GEO_POWERUP_SPEED] = MeshBuilder::GenerateQuad("Speed Powerup", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_POWERUP_SPEED]->textureID = LoadTGA("Image//speedBoost.tga");
+
+	meshList[GEO_EQUIPMENT] = MeshBuilder::GenerateQuad("Equipment Currency", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_EQUIPMENT]->textureID = LoadTGA("Image//equipmentCurrency.tga");
 
 	bLightEnabled = false;
 }
