@@ -5,6 +5,7 @@
 #include "SceneBase.h"
 #include "SceneManager.h"
 #include "alienGrub.h"
+#include "alienGhoul.h"
 #include "alienRaptor.h"
 #include "BombBase.h"
 #include "BombNormal.h"
@@ -17,11 +18,6 @@
 
 class SP3 : public SceneBase
 {
-	static const int MAX_SPEED = 10;
-	static const int BULLET_SPEED = 50;
-	static const int MISSILE_SPEED = 20;
-	static const int MISSILE_POWER = 1;
-
 public:
 	SP3();
 	~SP3();
@@ -40,16 +36,15 @@ public:
 
 	int RandomNumberGen(int FirstNumber = 0, int LastNumber = 0);
 
-	GameObject* FetchGO();
-protected:
+	GameObject * FetchGO();
 
-	//Physics
+protected:
 	std::vector<GameObject *> m_goList;
 	float m_worldWidth;
 	float m_worldHeight;
-	Player* playerInfo;
+	Player * playerInfo;
 	short **theMap;
-	GameObject *myInventory[10];
+	//GameObject *myInventory[10];
 	double doubletime;
 	std::vector<alienBase *> alienManager;
 

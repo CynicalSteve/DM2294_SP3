@@ -25,7 +25,6 @@ public:
 		GO_NORMALBOMB,
 		GO_MINEBOMB,
 		GO_BOMBFIRE,
-		GO_ALIENGRUB,
 		GO_WALL_LVL1,
 		GO_WALL_LVL2,
 		GO_WALL_LVL3,
@@ -65,6 +64,7 @@ public:
 	bool move(char direction, short **map);
 
 	friend bool operator == (coord &lhs, coord &rhs);
+	friend bool operator != (coord &lhs, coord &rhs);
 	friend bool operator > (coord &lhs, coord &rhs);
 	friend bool operator < (coord &lhs, coord &rhs);
 
