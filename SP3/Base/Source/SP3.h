@@ -31,6 +31,7 @@ public:
 	void RenderGO(GameObject *go);
 	void renderAliens(alienBase *alien);
 	void renderBombs(BombBase *bomb, int currentBombIndex);
+	void renderUI();
 
 	GameObject* FetchGO();
 protected:

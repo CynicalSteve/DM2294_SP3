@@ -1,7 +1,6 @@
 #ifndef ALIEN_GRUB_H
 #define ALIEN_GRUB_H
 
-#include <string>
 #include "AlienBase.h"
 using namespace std;
 

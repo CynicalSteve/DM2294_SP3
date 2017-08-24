@@ -53,7 +53,7 @@ public:
 	float angularVelocity; //in radians
 	bool active;
 	float mass;
-
+	bool lostHealth;
 	float fireBurnTime;
 	float fireScaler;
 
