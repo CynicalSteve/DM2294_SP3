@@ -106,6 +106,98 @@ GameObject* SP3::FetchGO()
 	return m_goList[m_goList.size() - 1];
 }
 
+void SP3::AlienMovement(double dt)
+{
+	for (std::vector<alienBase *>::iterator it = alienManager.begin(); it != alienManager.end(); ++it)
+	{
+		alienBase *go = (alienBase *)*it;
+
+		if (go->move(-1, theMap))
+		{
+			GameObject::coord distance;
+			distance.set(go->pos.x - playerInfo->pos.x, go->pos.y - playerInfo->pos.y);
+			if (distance.x == 0 && distance.y == 0);
+			else if (distance.x >= abs(distance.y))
+			{
+				if (go->move(2, theMap))
+					go->animationPos.z = 2 + dt * go->getAlienSpeed();
+				else if (distance.y > 0)
+				{
+					if (go->move(3, theMap))
+						go->animationPos.z = 3 + dt * go->getAlienSpeed();
+				}
+				else if (go->move(1, theMap))
+					go->animationPos.z = 1 + dt * go->getAlienSpeed();
+			}
+			else if (distance.y >= abs(distance.x))
+			{
+				if (go->move(3, theMap))
+					go->animationPos.z = 3 + dt * go->getAlienSpeed();
+				else if (distance.x > 0)
+				{
+					if (go->move(2, theMap))
+						go->animationPos.z = 2 + dt * go->getAlienSpeed();
+				}
+				else if (go->move(0, theMap))
+					go->animationPos.z = dt * go->getAlienSpeed();
+			}
+			else if (distance.x < -abs(distance.y))
+			{
+				if (go->move(0, theMap))
+					go->animationPos.z = 0 + dt * go->getAlienSpeed();
+				else if (distance.y > 0)
+				{
+					if (go->move(3, theMap))
+						go->animationPos.z = 3 + dt * go->getAlienSpeed();
+				}
+				else if (go->move(1, theMap))
+					go->animationPos.z = 1 + dt * go->getAlienSpeed();
+			}
+			else
+			{
+				if (go->move(1, theMap))
+					go->animationPos.z = 1 + dt * go->getAlienSpeed();
+				else if (distance.x > 0)
+				{
+					if (go->move(2, theMap))
+						go->animationPos.z = 2 + dt * go->getAlienSpeed();
+				}
+				else if (go->move(0, theMap))
+					go->animationPos.z = dt * go->getAlienSpeed();
+			}
+		}
+		go->move(4, theMap);
+	}
+}
+
+void SP3::PlayerChecks(double dt)
+{
+	if (playerInfo->getPlayerHealth() < 0) //Reset health to 0 if current player health is under 0
+	{
+		playerInfo->setPlayerHealth(0);
+	}
+
+	if (playerInfo->getPlayerHealth() > playerInfo->getMaxPlayerHealth()) //Health cap
+	{
+		playerInfo->setPlayerHealth(playerInfo->getMaxPlayerHealth());
+	}
+
+	if (playerInfo->getSpeedBoostState() == true) //Speed Boost
+	{
+		if (playerInfo->speedBoostCooldown < playerInfo->getMaxSpeedBoostCooldownTime())
+		{
+			playerInfo->speedBoostCooldown += dt;
+		}
+		else
+		{
+			playerInfo->setSpeedBoostState(false);
+			playerInfo->speedBoostCooldown = 0.f;
+			playerInfo->setPlayerSpeed(playerInfo->normalSpeed);
+		}
+	}
+}
+
+
 void SP3::Update(double dt)
 {
 	SceneBase::Update(dt);
@@ -561,29 +653,7 @@ void SP3::Update(double dt)
 
 
 	//Player stats checks & adjustments
-	if (playerInfo->getPlayerHealth() < 0) //Reset health to 0 if current player health is under 0
-	{
-		playerInfo->setPlayerHealth(0);
-	}
-
-	if (playerInfo->getPlayerHealth() > playerInfo->getMaxPlayerHealth()) //Health cap
-	{
-		playerInfo->setPlayerHealth(playerInfo->getMaxPlayerHealth());
-	}
-
-	if (playerInfo->getSpeedBoostState() == true) //Speed Boost
-	{
-		if (playerInfo->speedBoostCooldown < playerInfo->getMaxSpeedBoostCooldownTime())
-		{
-			playerInfo->speedBoostCooldown += dt;
-		}
-		else
-		{
-			playerInfo->setSpeedBoostState(false);
-			playerInfo->speedBoostCooldown = 0.f;
-			playerInfo->setPlayerSpeed(playerInfo->normalSpeed);
-		}
-	}
+	PlayerChecks(dt);
 }
 
 void SP3::RenderGO(GameObject *go)

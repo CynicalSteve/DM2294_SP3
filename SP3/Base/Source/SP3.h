@@ -35,6 +35,8 @@ public:
 	void renderAliens(alienBase *alien);
 	void renderBombs(BombBase *bomb, int currentBombIndex);
 	void renderUI();
+	void AlienMovement(double dt);
+	void PlayerChecks(double dt);
 
 	int RandomNumberGen(int FirstNumber = 0, int LastNumber = 0);
 
