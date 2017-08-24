@@ -11,11 +11,6 @@ maxPlayerHealth(100), speedBoosted(false), speedBoostCooldown(0.f), maxSpeedBoos
 	{
 		playerInventory[i] = new Inventory(); 
 	}
-
-	playerInventory[0]->inventoryBombType = Inventory::INVENTORY_NORMALBOMB;
-	playerInventory[0]->setDiscoveredState(true);
-
-	playerInventory[1]->inventoryBombType = Inventory::INVENTORY_MINEBOMB;
 }
 
 Player::~Player()

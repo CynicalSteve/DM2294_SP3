@@ -83,6 +83,7 @@ public:
 		GEO_HEALTH,
 		GEO_POWERUP_SPEED,
 		GEO_EQUIPMENT,
+		GEO_BOMBSELECTOR,
 
 		floor,
 		wall,

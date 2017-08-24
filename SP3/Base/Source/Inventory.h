@@ -21,6 +21,9 @@ public:
 
 	void setBombAmount(unsigned int newBombAmount), setMaxAmountOfBombs(unsigned int newMaxBombsAmount), setDiscoveredState(bool newDiscoveredState);
 	unsigned int getBombAmount(), getMaxAmountOfBombs(), getDiscoveredState();
+	std::string getCurrentBombName();
+
+	void addBombAmount(int bombNumberToAdd), subtractBombAmount(int bombNumberToSubtract);
 
 private:
 	unsigned int bombAmount;

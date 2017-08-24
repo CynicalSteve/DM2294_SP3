@@ -55,6 +55,13 @@ void SP3::Init()
 	playerInfo->animationPos.Set(playerInfo->pos.x, playerInfo->pos.y, -1);
 	playerInfo->type = GameObject::GO_PLAYER;
 
+	playerInfo->playerInventory[0]->inventoryBombType = Inventory::INVENTORY_NORMALBOMB;
+	playerInfo->playerInventory[0]->setDiscoveredState(true);
+	playerInfo->playerInventory[0]->setBombAmount(100);
+
+	playerInfo->playerInventory[1]->inventoryBombType = Inventory::INVENTORY_MINEBOMB;
+	playerInfo->playerInventory[1]->setBombAmount(100);
+
 	//Exercise 2a: Construct 100 GameObject with type GO_ASTEROID and add into m_goList
 	m_goList.push_back(playerInfo);
 	for (size_t i = 0; i < 100; ++i)
@@ -81,8 +88,6 @@ int SP3::RandomNumberGen(int FirstNumber, int LastNumber)
 
 	//Note that FirstNumber & LastNumber are included in the generator
 	int RandomNumber = FirstNumber + (rand() % LastNumber);
-
-	cout << RandomNumber << endl;
 
 	return RandomNumber;
 }
@@ -261,6 +266,28 @@ void SP3::Update(double dt)
 	}
 	else KeyBounce['C'] = false;
 
+	if (Application::IsKeyPressed('Q')) //
+	{
+		if (!KeyBounce['Q'])
+			if (playerInfo->currentBomb != 0)
+			{
+				playerInfo->currentBomb--;
+			}
+		KeyBounce['Q'] = true;
+	}
+	else KeyBounce['Q'] = false;
+
+	if (Application::IsKeyPressed('E')) //
+	{
+		if (!KeyBounce['E'])
+			if (playerInfo->currentBomb < sizeof(playerInfo->playerInventory))
+			{
+				playerInfo->currentBomb++;
+			}
+		KeyBounce['E'] = true;
+	}
+	else KeyBounce['E'] = false;
+
 	if (Application::IsKeyPressed('F')) //Temporary button for placing mine
 	{
 		if (!KeyBounce['F'])
@@ -298,7 +325,30 @@ void SP3::Update(double dt)
 	{
 		bLButtonState = true;
 		std::cout << "LBUTTON DOWN" << std::endl;
-		playerInfo->bombManager.push_back(new NormalBomb("Normal Bomb", 30, 3, 2, playerInfo->pos.x, playerInfo->pos.y));
+		
+		if (playerInfo->playerInventory[playerInfo->currentBomb]->getBombAmount() > 0)
+		{
+			switch (playerInfo->playerInventory[playerInfo->currentBomb]->inventoryBombType)
+			{
+			case Inventory::INVENTORY_NORMALBOMB:
+			{
+
+				playerInfo->bombManager.push_back(new NormalBomb("Normal Bomb", 30, 3, 2, playerInfo->pos.x, playerInfo->pos.y));
+				playerInfo->playerInventory[playerInfo->currentBomb]->subtractBombAmount(1);
+
+				break;
+			}
+			case Inventory::INVENTORY_MINEBOMB:
+			{
+				playerInfo->bombManager.push_back(new MineBomb("MineBomb", 100, 2, playerInfo->pos.x, playerInfo->pos.y));
+				playerInfo->playerInventory[playerInfo->currentBomb]->subtractBombAmount(1);
+				break;
+			}
+
+			default:
+				break;
+			}
+		}
 	}
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
@@ -660,13 +710,35 @@ void SP3::Update(double dt)
 
 		for (unsigned int i = 0; i < alienManager.size(); ++i)
 		{
-			if (go->type != GameObject::GO_BOMBFIRE)
+			if (!go->active)
 				continue;
 
 			if (go->pos == alienManager[i]->pos)
 			{
-				playerInfo->addCurrency(alienManager[i]->getAlienCurrencyWorth());
-				alienManager.erase(alienManager.begin() + i);
+				if (go->type == GameObject::GO_BOMBFIRE)
+				{
+					//playerInfo->addCurrency(alienManager[i]->getAlienCurrencyWorth());
+
+					alienManager.erase(alienManager.begin() + i);
+				}
+				else if (go->type == GameObject::GO_PLAYER)
+				{
+					if (playerInfo->loseHealthCooldown == 0.f)
+					{
+						playerInfo->subtractHealth(alienManager[i]->getAlienDamage());
+
+						playerInfo->loseHealthCooldown += dt;
+					}
+					else
+					{
+						playerInfo->loseHealthCooldown += dt;
+
+						if (playerInfo->loseHealthCooldown > 1.f)
+						{
+							playerInfo->loseHealthCooldown = 0.f;
+						}
+					}
+				}
 			}
 		}
 	}
@@ -809,8 +881,6 @@ void SP3::renderBombs(BombBase *bomb, int currentBombIndex)
 
 void SP3::renderUI()
 {
-	
-
 	modelStack.PushMatrix(); //UI background
 	{
 		modelStack.Translate(100, 100, 0);
@@ -835,7 +905,36 @@ void SP3::renderUI()
 	}
 	modelStack.PopMatrix();
 
-	
+	modelStack.PushMatrix(); //Bomb Selector
+	{
+		if (playerInfo->currentBomb == 0)
+		{
+			modelStack.Translate(59, 95, 0);
+		}
+		else
+		{
+			modelStack.Translate(89, 95, 0);
+		}
+		modelStack.Scale(25, 7, 1);
+		RenderMesh(meshList[GEO_BOMBSELECTOR], true);
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix(); //Normal Bomb
+	{
+		modelStack.Translate(50, 95, 0);
+		modelStack.Scale(7, 7, 1);
+		RenderMesh(meshList[GEO_NORMALBOMB], true);
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix(); //Mine Bomb
+	{
+		modelStack.Translate(80, 95, 0);
+		modelStack.Scale(7, 7, 1);
+		RenderMesh(meshList[GEO_MINEBOMB], true);
+	}
+	modelStack.PopMatrix();
 }
 
 void SP3::Render()
@@ -936,8 +1035,13 @@ void SP3::Render()
 	//On screen text
 	ss.str("");
 	ss.precision(5);
-	ss << "EP: " << playerInfo->getEquipmentCurrency();
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 6);
+	ss << "x" << playerInfo->playerInventory[0]->getBombAmount();
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2, 25.f, 41.6f);
+
+	ss.str("");
+	ss.precision(5);
+	ss << "x" << playerInfo->playerInventory[1]->getBombAmount();
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2, 38.f, 41.6f);
 
 	ss.str("");
 	ss.precision(5);
@@ -946,7 +1050,7 @@ void SP3::Render()
 
 	ss.str("");
 	ss.precision(5);
-	ss << "Speed: " << playerInfo->speedBoostCooldown << "/" << playerInfo->getMaxSpeedBoostCooldownTime();
+	ss << "EP:" << playerInfo->getEquipmentCurrency();
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
 
 	ss.str("");

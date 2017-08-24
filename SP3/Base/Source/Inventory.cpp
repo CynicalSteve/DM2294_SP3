@@ -37,3 +37,25 @@ unsigned int Inventory::getDiscoveredState()
 {
 	return this->isDiscovered;
 }
+
+std::string Inventory::getCurrentBombName()
+{
+	if (inventoryBombType == INVENTORY_NORMALBOMB)
+	{
+		return "Normal Bomb";
+	}
+	else if (inventoryBombType == INVENTORY_MINEBOMB)
+	{
+		return "Mine Bomb";
+	}
+}
+
+void Inventory::addBombAmount(int bombNumberToAdd)
+{
+	this->bombAmount += bombNumberToAdd;
+}
+
+void Inventory::subtractBombAmount(int bombNumberToSubtract)
+{
+	this->bombAmount -= bombNumberToSubtract;
+}
