@@ -55,6 +55,9 @@
     <Filter Include="Alien">
       <UniqueIdentifier>{d65d8528-5591-4250-824f-fa88340bd8a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Miscellaneous\Map">
+      <UniqueIdentifier>{4505a3ec-1baf-4635-8e23-af813bfe95e2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -119,6 +122,9 @@
     </ClCompile>
     <ClCompile Include="Source\Inventory.cpp">
       <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Map.cpp">
+      <Filter>Miscellaneous\Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +199,9 @@
     </ClInclude>
     <ClInclude Include="Source\Inventory.h">
       <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Map.h">
+      <Filter>Miscellaneous\Map</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
