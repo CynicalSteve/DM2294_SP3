@@ -33,6 +33,8 @@ public:
 	void renderUI();
 	void AlienMovement(double dt);
 	void PlayerChecks(double dt);
+	void BombFireCreation(double dt);
+	void m_goListInteractions(double dt);
 
 	int RandomNumberGen(int FirstNumber = 0, int LastNumber = 0);
 

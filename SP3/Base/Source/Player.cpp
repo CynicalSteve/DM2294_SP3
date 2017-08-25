@@ -2,7 +2,8 @@
 
 Player::Player(float playerHealth, float playerSpeed) : 
 bombManager(NULL), currentBomb(0), playerHealth(playerHealth), playerSpeed(playerSpeed), normalSpeed(playerSpeed), equipmentCurrency(0),
-maxPlayerHealth(100), speedBoosted(false), speedBoostCooldown(0.f), maxSpeedBoostCooldownTime(5.f)
+maxPlayerHealth(100), speedBoosted(false), speedBoostCooldown(0.f), maxSpeedBoostCooldownTime(5.f), currentBombTimer(0.f), nukeDeployed(false),
+maxBombTimer(0.f)
 
 {
 	active = true;
@@ -95,4 +96,39 @@ int Player::getMaxPlayerHealth()
 bool Player::getSpeedBoostState()
 {
 	return this->speedBoosted;
+}
+
+void Player::addToTimer(double dt)
+{
+	this->currentBombTimer += dt;
+}
+
+void Player::setMaxBombTImer(float newMaxBombTimer)
+{
+	this->maxBombTimer = newMaxBombTimer;
+}
+
+void Player::setNukeDeployedState(bool state)
+{
+	this->nukeDeployed = state;
+}
+
+void Player::setCurrentTimer(float newCurrentTimer)
+{
+	this->currentBombTimer = newCurrentTimer;
+}
+
+float Player::getCurrentTimer()
+{
+	return this->currentBombTimer;
+}
+
+float Player::getMaxBombTimer()
+{
+	return this->maxBombTimer;
+}
+
+bool Player::getNukeDeployedState()
+{
+	return this->nukeDeployed;
 }

@@ -62,6 +62,9 @@ void SP3::Init()
 	playerInfo->playerInventory[1]->inventoryBombType = Inventory::INVENTORY_MINEBOMB;
 	playerInfo->playerInventory[1]->setBombAmount(100);
 
+	playerInfo->playerInventory[2]->inventoryBombType = Inventory::INVENTORY_NUKEBOMB;
+	playerInfo->playerInventory[2]->setBombAmount(100);
+
 	//Exercise 2a: Construct 100 GameObject with type GO_ASTEROID and add into m_goList
 	m_goList.push_back(playerInfo);
 	for (size_t i = 0; i < 100; ++i)
@@ -117,61 +120,69 @@ void SP3::AlienMovement(double dt)
 	{
 		alienBase *go = (alienBase *)*it;
 
-		if (go->move(-1, theMap))
-		{
-			GameObject::coord distance;
+		go->move(4, theMap);
+
+		if (!go->move(-1, theMap))
+			continue;
+
+		GameObject::coord distance;
+
+		if (go->alienType == alienBase::TYPE1_GRUB) //chases player
 			distance.set(go->pos.x - playerInfo->pos.x, go->pos.y - playerInfo->pos.y);
-			if (distance.x == 0 && distance.y == 0);
-			else if (distance.x >= abs(distance.y))
-			{
-				if (go->move(2, theMap))
-					go->animationPos.z = 2 + dt * go->getAlienSpeed();
-				else if (distance.y > 0)
-				{
-					if (go->move(3, theMap))
-						go->animationPos.z = 3 + dt * go->getAlienSpeed();
-				}
-				else if (go->move(1, theMap))
-					go->animationPos.z = 1 + dt * go->getAlienSpeed();
-			}
-			else if (distance.y >= abs(distance.x))
+		else if (go->alienType == alienBase::TYPE2_GHOUL) //random movement
+			distance.set(go->pos.x - RandomNumberGen(0, 10), go->pos.y - RandomNumberGen(0, 10));
+		else if (go->alienType == alienBase::TYPE3_RAPTOR) //goes to objective
+			distance.set(go->pos.x - 5, go->pos.y - 5);
+
+		if (distance.x == 0 && distance.y == 0);
+		else if (distance.x >= abs(distance.y))
+		{
+			if (go->move(2, theMap))
+				go->animationPos.z = 2 + dt * go->getAlienSpeed();
+			else if (distance.y > 0)
 			{
 				if (go->move(3, theMap))
 					go->animationPos.z = 3 + dt * go->getAlienSpeed();
-				else if (distance.x > 0)
-				{
-					if (go->move(2, theMap))
-						go->animationPos.z = 2 + dt * go->getAlienSpeed();
-				}
-				else if (go->move(0, theMap))
-					go->animationPos.z = dt * go->getAlienSpeed();
 			}
-			else if (distance.x < -abs(distance.y))
-			{
-				if (go->move(0, theMap))
-					go->animationPos.z = 0 + dt * go->getAlienSpeed();
-				else if (distance.y > 0)
-				{
-					if (go->move(3, theMap))
-						go->animationPos.z = 3 + dt * go->getAlienSpeed();
-				}
-				else if (go->move(1, theMap))
-					go->animationPos.z = 1 + dt * go->getAlienSpeed();
-			}
-			else
-			{
-				if (go->move(1, theMap))
-					go->animationPos.z = 1 + dt * go->getAlienSpeed();
-				else if (distance.x > 0)
-				{
-					if (go->move(2, theMap))
-						go->animationPos.z = 2 + dt * go->getAlienSpeed();
-				}
-				else if (go->move(0, theMap))
-					go->animationPos.z = dt * go->getAlienSpeed();
-			}
+			else if (go->move(1, theMap))
+				go->animationPos.z = 1 + dt * go->getAlienSpeed();
 		}
-		go->move(4, theMap);
+		else if (distance.y >= abs(distance.x))
+		{
+			if (go->move(3, theMap))
+				go->animationPos.z = 3 + dt * go->getAlienSpeed();
+			else if (distance.x > 0)
+			{
+				if (go->move(2, theMap))
+					go->animationPos.z = 2 + dt * go->getAlienSpeed();
+			}
+			else if (go->move(0, theMap))
+				go->animationPos.z = dt * go->getAlienSpeed();
+		}
+		else if (distance.x < -abs(distance.y))
+		{
+			if (go->move(0, theMap))
+				go->animationPos.z = 0 + dt * go->getAlienSpeed();
+			else if (distance.y > 0)
+			{
+				if (go->move(3, theMap))
+					go->animationPos.z = 3 + dt * go->getAlienSpeed();
+			}
+			else if (go->move(1, theMap))
+				go->animationPos.z = 1 + dt * go->getAlienSpeed();
+		}
+		else
+		{
+			if (go->move(1, theMap))
+				go->animationPos.z = 1 + dt * go->getAlienSpeed();
+			else if (distance.x > 0)
+			{
+				if (go->move(2, theMap))
+					go->animationPos.z = 2 + dt * go->getAlienSpeed();
+			}
+			else if (go->move(0, theMap))
+				go->animationPos.z = dt * go->getAlienSpeed();
+		}
 	}
 }
 
@@ -200,152 +211,24 @@ void SP3::PlayerChecks(double dt)
 			playerInfo->setPlayerSpeed(playerInfo->normalSpeed);
 		}
 	}
+
+	if (playerInfo->getNukeDeployedState() == true)  //Using nuke
+	{
+		if (playerInfo->getCurrentTimer() < playerInfo->getMaxBombTimer())
+		{
+			playerInfo->addToTimer(dt);
+		}
+		else
+		{
+			playerInfo->setCurrentTimer(0.f);
+			alienManager.clear();
+			playerInfo->setNukeDeployedState(false);
+		}
+	}
 }
 
-
-void SP3::Update(double dt)
+void SP3::BombFireCreation(double dt)
 {
-	SceneBase::Update(dt);
-	doubletime = dt;
-
-	if (Application::IsKeyPressed('9'));
-
-	if (Application::IsKeyPressed('0'));
-
-	//Exercise 6: set m_force values based on WASD
-	if (Application::IsKeyPressed('D'))
-		if (playerInfo->move(-1, theMap))
-			//++playerInfo->pos.x;
-			if (playerInfo->move(0, theMap))
-				playerInfo->animationPos.z = dt * playerInfo->getPlayerSpeed();
-
-	if (Application::IsKeyPressed('W'))
-		if (playerInfo->move(-1, theMap))
-			//++playerInfo->pos.y;
-			if (playerInfo->move(1, theMap))
-				playerInfo->animationPos.z = 1 + dt * playerInfo->getPlayerSpeed();
-
-	if (Application::IsKeyPressed('A'))
-		if (playerInfo->move(-1, theMap))
-			//--playerInfo->pos.x;
-			if (playerInfo->move(2, theMap))
-				playerInfo->animationPos.z = 2 + dt * playerInfo->getPlayerSpeed();
-
-	if (Application::IsKeyPressed('S'))
-		if (playerInfo->move(-1, theMap))
-			//--playerInfo->pos.y;
-			if (playerInfo->move(3, theMap))
-				playerInfo->animationPos.z = 3 + dt * playerInfo->getPlayerSpeed();
-
-	playerInfo->move(4, theMap);
-
-	if (Application::IsKeyPressed('F') && !KeyBounce['F']) //Temporary button for placing mine
-		playerInfo->bombManager.push_back(new MineBomb("MineBomb", 100, 2, playerInfo->pos.x, playerInfo->pos.y));
-
-	if (Application::IsKeyPressed('G') && !KeyBounce['G']) //Lower player health
-		playerInfo->setPlayerHealth(playerInfo->getPlayerHealth() - 10);
-
-	if (Application::IsKeyPressed('Q')) //
-	{
-		if (!KeyBounce['Q'])
-			if (playerInfo->currentBomb != 0)
-			{
-				playerInfo->currentBomb--;
-			}
-		KeyBounce['Q'] = true;
-	}
-	else KeyBounce['Q'] = false;
-
-	if (Application::IsKeyPressed('E')) //
-	{
-		if (!KeyBounce['E'])
-			if (playerInfo->currentBomb < sizeof(playerInfo->playerInventory))
-			{
-				playerInfo->currentBomb++;
-			}
-		KeyBounce['E'] = true;
-	}
-	else KeyBounce['E'] = false;
-
-	if (Application::IsKeyPressed('F') && !KeyBounce['F']) //Temporary button for placing mine
-			playerInfo->bombManager.push_back(new MineBomb("MineBomb", 100, 2, playerInfo->pos.x, playerInfo->pos.y));
-	if (Application::IsKeyPressed('Z') && !KeyBounce['Z'])
-		if (currentAlien < 3)
-		{
-			alienManager.push_back(new alienGrub("Grub", 100, 4.f, 5, 5, 9, 1));
-			++currentAlien;
-		}
-
-	if (Application::IsKeyPressed('X') && !KeyBounce['X'])
-		if (currentAlien < 3)
-		{
-			alienManager.push_back(new alienGhoul("Ghoul", 100, 4.f, 5, 5, 9, 1));
-			++currentAlien;
-		}
-
-	if (Application::IsKeyPressed('C') && !KeyBounce['C'])
-		if (currentAlien < 3)
-		{
-			alienManager.push_back(new alienRaptor("Raptor", 100, 4.f, 5, 5, 9, 1));
-			++currentAlien;
-		}
-
-	if (Application::IsKeyPressed(VK_UP));
-
-	if (Application::IsKeyPressed(VK_DOWN)); //use this for hold controls
-
-	if (Application::IsKeyPressed(VK_SPACE) && !KeyBounce[VK_SPACE]); //use this for toggle controls
-
-	//Mouse Section
-	static bool bLButtonState = false;
-	
-	if (!bLButtonState && Application::IsMousePressed(0))
-	{
-		bLButtonState = true;
-		std::cout << "LBUTTON DOWN" << std::endl;
-		
-		if (playerInfo->playerInventory[playerInfo->currentBomb]->getBombAmount() > 0)
-		{
-			switch (playerInfo->playerInventory[playerInfo->currentBomb]->inventoryBombType)
-			{
-			case Inventory::INVENTORY_NORMALBOMB:
-			{
-
-				playerInfo->bombManager.push_back(new NormalBomb("Normal Bomb", 30, 3, 2, playerInfo->pos.x, playerInfo->pos.y));
-				playerInfo->playerInventory[playerInfo->currentBomb]->subtractBombAmount(1);
-
-				break;
-			}
-			case Inventory::INVENTORY_MINEBOMB:
-			{
-				playerInfo->bombManager.push_back(new MineBomb("MineBomb", 100, 2, playerInfo->pos.x, playerInfo->pos.y));
-				playerInfo->playerInventory[playerInfo->currentBomb]->subtractBombAmount(1);
-				break;
-			}
-
-			default:
-				break;
-			}
-		}
-	}
-	else if (bLButtonState && !Application::IsMousePressed(0))
-	{
-		bLButtonState = false;
-		std::cout << "LBUTTON UP" << std::endl;
-	}
-	static bool bRButtonState = false;
-	if (!bRButtonState && Application::IsMousePressed(1))
-	{
-		bRButtonState = true;
-		std::cout << "RBUTTON DOWN" << std::endl;
-	}
-	else if (bRButtonState && !Application::IsMousePressed(1))
-	{
-		bRButtonState = false;
-		std::cout << "RBUTTON UP" << std::endl;
-	}
-
-	//Creation of bomb fire after bomb goes off
 	for (std::vector<BombBase *>::iterator it = playerInfo->bombManager.begin(); it != playerInfo->bombManager.end(); ++it)
 	{
 		BombBase *go = (BombBase *)*it;
@@ -354,7 +237,7 @@ void SP3::Update(double dt)
 		{
 		case GameObject::GO_MINEBOMB:
 		{
-			for (unsigned int x = 0; x < alienManager.size(); ++x)
+			for (unsigned int x = 0; x < alienManager.size(); ++x) //Checks if any alien stepped on the mine
 			{
 				if (go->pos == alienManager[x]->pos)
 				{
@@ -460,78 +343,10 @@ void SP3::Update(double dt)
 		if (it == playerInfo->bombManager.end())
 			break;
 	}
+}
 
-	//Alien Movement
-	for (std::vector<alienBase *>::iterator it = alienManager.begin(); it != alienManager.end(); ++it)
-	{
-		alienBase *go = (alienBase *)*it;
-
-		go->move(4, theMap);
-
-		if (!go->move(-1, theMap))
-			continue;
-
-		GameObject::coord distance;
-
-		if (go->alienType == alienBase::TYPE1_GRUB) //chases player
-		distance.set(go->pos.x - playerInfo->pos.x, go->pos.y - playerInfo->pos.y);
-		else if (go->alienType == alienBase::TYPE2_GHOUL) //random movement
-			distance.set(go->pos.x - RandomNumberGen(0, 10), go->pos.y - RandomNumberGen(0, 10));
-		else if (go->alienType == alienBase::TYPE3_RAPTOR) //goes to objective
-			distance.set(go->pos.x - 5, go->pos.y - 5);
-
-		if (distance.x == 0 && distance.y == 0);
-		else if (distance.x >= abs(distance.y))
-		{
-			if (go->move(2, theMap))
-				go->animationPos.z = 2 + dt * go->getAlienSpeed();
-			else if (distance.y > 0)
-			{
-				if (go->move(3, theMap))
-					go->animationPos.z = 3 + dt * go->getAlienSpeed();
-			}
-			else if (go->move(1, theMap))
-				go->animationPos.z = 1 + dt * go->getAlienSpeed();
-		}
-		else if (distance.y >= abs(distance.x))
-		{
-			if (go->move(3, theMap))
-				go->animationPos.z = 3 + dt * go->getAlienSpeed();
-			else if (distance.x > 0)
-			{
-				if (go->move(2, theMap))
-					go->animationPos.z = 2 + dt * go->getAlienSpeed();
-			}
-			else if (go->move(0, theMap))
-				go->animationPos.z = dt * go->getAlienSpeed();
-		}
-		else if (distance.x < -abs(distance.y))
-		{
-			if (go->move(0, theMap))
-				go->animationPos.z = 0 + dt * go->getAlienSpeed();
-			else if (distance.y > 0)
-			{
-				if (go->move(3, theMap))
-					go->animationPos.z = 3 + dt * go->getAlienSpeed();
-			}
-			else if (go->move(1, theMap))
-				go->animationPos.z = 1 + dt * go->getAlienSpeed();
-		}
-		else
-		{
-			if (go->move(1, theMap))
-				go->animationPos.z = 1 + dt * go->getAlienSpeed();
-			else if (distance.x > 0)
-			{
-				if (go->move(2, theMap))
-					go->animationPos.z = 2 + dt * go->getAlienSpeed();
-			}
-			else if (go->move(0, theMap))
-				go->animationPos.z = dt * go->getAlienSpeed();
-		}
-	}
-
-	//Check m_golist against other list for interactions
+void SP3::m_goListInteractions(double dt)
+{
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
 		GameObject *go = (GameObject *)*it;
@@ -680,6 +495,168 @@ void SP3::Update(double dt)
 			}
 		}
 	}
+}
+
+
+void SP3::Update(double dt)
+{
+	SceneBase::Update(dt);
+	doubletime = dt;
+
+	if (Application::IsKeyPressed('9'));
+
+	if (Application::IsKeyPressed('0'));
+
+	//Exercise 6: set m_force values based on WASD
+	if (Application::IsKeyPressed('D'))
+		if (playerInfo->move(-1, theMap))
+			//++playerInfo->pos.x;
+			if (playerInfo->move(0, theMap))
+				playerInfo->animationPos.z = dt * playerInfo->getPlayerSpeed();
+
+	if (Application::IsKeyPressed('W'))
+		if (playerInfo->move(-1, theMap))
+			//++playerInfo->pos.y;
+			if (playerInfo->move(1, theMap))
+				playerInfo->animationPos.z = 1 + dt * playerInfo->getPlayerSpeed();
+
+	if (Application::IsKeyPressed('A'))
+		if (playerInfo->move(-1, theMap))
+			//--playerInfo->pos.x;
+			if (playerInfo->move(2, theMap))
+				playerInfo->animationPos.z = 2 + dt * playerInfo->getPlayerSpeed();
+
+	if (Application::IsKeyPressed('S'))
+		if (playerInfo->move(-1, theMap))
+			//--playerInfo->pos.y;
+			if (playerInfo->move(3, theMap))
+				playerInfo->animationPos.z = 3 + dt * playerInfo->getPlayerSpeed();
+
+	playerInfo->move(4, theMap);
+
+	if (Application::IsKeyPressed('F') && !KeyBounce['F']) //Temporary button for placing mine
+		playerInfo->bombManager.push_back(new MineBomb("MineBomb", 100, 2, playerInfo->pos.x, playerInfo->pos.y));
+
+	if (Application::IsKeyPressed('G') && !KeyBounce['G']) //Lower player health
+		playerInfo->setPlayerHealth(playerInfo->getPlayerHealth() - 10);
+
+	if (Application::IsKeyPressed('Q')) //
+	{
+		if (!KeyBounce['Q'])
+			if (playerInfo->currentBomb != 0)
+			{
+				playerInfo->currentBomb--;
+			}
+		KeyBounce['Q'] = true;
+	}
+	else KeyBounce['Q'] = false;
+
+	if (Application::IsKeyPressed('E')) //
+	{
+		if (!KeyBounce['E'])
+			if (playerInfo->currentBomb < sizeof(playerInfo->playerInventory))
+			{
+				playerInfo->currentBomb++;
+			}
+		KeyBounce['E'] = true;
+	}
+	else KeyBounce['E'] = false;
+
+	if (Application::IsKeyPressed('F') && !KeyBounce['F']) //Temporary button for placing mine
+			playerInfo->bombManager.push_back(new MineBomb("MineBomb", 100, 2, playerInfo->pos.x, playerInfo->pos.y));
+	if (Application::IsKeyPressed('Z') && !KeyBounce['Z'])
+		if (currentAlien < 3)
+		{
+			alienManager.push_back(new alienGrub("Grub", 100, 4.f, 5, 5, 9, 1));
+			++currentAlien;
+		}
+
+	if (Application::IsKeyPressed('X') && !KeyBounce['X'])
+		if (currentAlien < 3)
+		{
+			alienManager.push_back(new alienGhoul("Ghoul", 100, 4.f, 5, 5, 9, 1));
+			++currentAlien;
+		}
+
+	if (Application::IsKeyPressed('C') && !KeyBounce['C'])
+		if (currentAlien < 3)
+		{
+			alienManager.push_back(new alienRaptor("Raptor", 100, 4.f, 5, 5, 9, 1));
+			++currentAlien;
+		}
+
+	if (Application::IsKeyPressed(VK_UP));
+
+	if (Application::IsKeyPressed(VK_DOWN)); //use this for hold controls
+
+	if (Application::IsKeyPressed(VK_SPACE) && !KeyBounce[VK_SPACE]); //use this for toggle controls
+
+	//Mouse Section
+	static bool bLButtonState = false;
+	
+	if (!bLButtonState && Application::IsMousePressed(0))
+	{
+		bLButtonState = true;
+		std::cout << "LBUTTON DOWN" << std::endl;
+		
+		if (playerInfo->playerInventory[playerInfo->currentBomb]->getBombAmount() > 0)
+		{
+			switch (playerInfo->playerInventory[playerInfo->currentBomb]->inventoryBombType)
+			{
+			case Inventory::INVENTORY_NORMALBOMB:
+			{
+
+				playerInfo->bombManager.push_back(new NormalBomb("Normal Bomb", 30, 3, 2, playerInfo->pos.x, playerInfo->pos.y));
+				playerInfo->playerInventory[playerInfo->currentBomb]->subtractBombAmount(1);
+
+				break;
+			}
+			case Inventory::INVENTORY_MINEBOMB:
+			{
+				playerInfo->bombManager.push_back(new MineBomb("MineBomb", 100, 2, playerInfo->pos.x, playerInfo->pos.y));
+				playerInfo->playerInventory[playerInfo->currentBomb]->subtractBombAmount(1);
+				break;
+			}
+			case Inventory::INVENTORY_NUKEBOMB:
+			{
+				if (playerInfo->getNukeDeployedState() == false)
+				{
+					playerInfo->setNukeDeployedState(true);
+					playerInfo->setMaxBombTImer(10.f);
+					playerInfo->playerInventory[playerInfo->currentBomb]->subtractBombAmount(1);
+				}
+				break;
+			}
+			default:
+				break;
+			}
+		}
+	}
+	else if (bLButtonState && !Application::IsMousePressed(0))
+	{
+		bLButtonState = false;
+		std::cout << "LBUTTON UP" << std::endl;
+	}
+	static bool bRButtonState = false;
+	if (!bRButtonState && Application::IsMousePressed(1))
+	{
+		bRButtonState = true;
+		std::cout << "RBUTTON DOWN" << std::endl;
+	}
+	else if (bRButtonState && !Application::IsMousePressed(1))
+	{
+		bRButtonState = false;
+		std::cout << "RBUTTON UP" << std::endl;
+	}
+
+	//Creation of bomb fire after bomb goes off
+	BombFireCreation(dt);
+
+	//Alien Movement
+	AlienMovement(dt);
+	
+	//Check m_golist against other list for interactions
+	m_goListInteractions(dt);
 
 	//Player stats checks & adjustments
 	PlayerChecks(dt);

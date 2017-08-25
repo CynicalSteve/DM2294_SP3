@@ -48,6 +48,10 @@ std::string Inventory::getCurrentBombName()
 	{
 		return "Mine Bomb";
 	}
+	else if (inventoryBombType == INVENTORY_NUKEBOMB)
+	{
+		return "Nuke Bomb";
+	}
 }
 
 void Inventory::addBombAmount(int bombNumberToAdd)
