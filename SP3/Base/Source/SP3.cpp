@@ -1,6 +1,7 @@
 #include "SP3.h"
 #include "GL\glew.h"
 #include "Application.h"
+#include <Windows.h>
 #include <sstream>
 
 SP3::SP3() : alienManager(NULL),
@@ -220,6 +221,7 @@ void SP3::PlayerChecks(double dt)
 		}
 		else
 		{
+			PlaySound(TEXT("Image//nukeBoom.wav"), NULL, SND_ASYNC);
 			playerInfo->setCurrentTimer(0.f);
 			alienManager.clear();
 			playerInfo->setNukeDeployedState(false);
@@ -285,6 +287,7 @@ void SP3::BombFireCreation(double dt)
 					bombFireGO->scale.Set(0.1, 0.1, 1);
 				}
 
+				PlaySound(TEXT("Image//bombBoom.wav"), NULL, SND_ASYNC);
 				it = playerInfo->bombManager.erase(it);
 			}
 			break;
@@ -296,6 +299,7 @@ void SP3::BombFireCreation(double dt)
 				go->bombTimer += dt;
 				continue;
 			}
+			PlaySound(TEXT("Image//bombBoom.wav"), NULL, SND_ASYNC);
 
 			GameObject *bombFireGO = FetchGO();
 			bombFireGO->type = GameObject::GO_BOMBFIRE;
