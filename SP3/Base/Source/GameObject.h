@@ -35,6 +35,7 @@ public:
 		GO_POWERUP_HEALTH, //powerup item health
 		GO_POWERUP_SPEED, //powerup item speed boost
 		GO_POWERUP_EQUIPMENT, //powerup item currency
+		GO_POWERUP_INVULNERABLE, //powerup item invulnerability
 
 		GO_TOTAL, //must be last
 	};

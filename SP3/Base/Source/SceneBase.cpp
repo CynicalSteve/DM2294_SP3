@@ -186,6 +186,9 @@ void SceneBase::Init()
 	meshList[GEO_EQUIPMENT] = MeshBuilder::GenerateQuad("Equipment Currency", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_EQUIPMENT]->textureID = LoadTGA("Image//equipmentCurrency.tga");
 
+	meshList[GEO_POWERUP_INVULNERABLE] = MeshBuilder::GenerateQuad("Invulnerable powerup", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_POWERUP_INVULNERABLE]->textureID = LoadTGA("Image//invulnerable.tga");
+
 	meshList[GEO_BOMBSELECTOR] = MeshBuilder::GenerateQuad("Bomb Selector", Color(1.f, 0.549f, 0.f), 1.f);
 
 	bLightEnabled = false;

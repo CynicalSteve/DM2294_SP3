@@ -3,8 +3,7 @@
 Player::Player(float playerHealth, float playerSpeed) : 
 bombManager(NULL), currentBomb(0), playerHealth(playerHealth), playerSpeed(playerSpeed), normalSpeed(playerSpeed), equipmentCurrency(0),
 maxPlayerHealth(100), speedBoosted(false), speedBoostCooldown(0.f), maxSpeedBoostCooldownTime(5.f), currentBombTimer(0.f), nukeDeployed(false),
-maxBombTimer(0.f)
-
+maxBombTimer(0.f), invulnerabilityCooldown(0.f), maxInvulnerableTime(7.f), invulnerabilityHealth(0.f), Invulnerability(false)
 {
 	active = true;
 
@@ -43,6 +42,11 @@ void Player::setMaxSpeedCooldownTime(float newSpeedBoostTime)
 	this->maxSpeedBoostCooldownTime = newSpeedBoostTime;
 }
 
+void Player::setMaxInvulnerableTime(float newMaxInvulnerableTime)
+{
+	this->maxInvulnerableTime = newMaxInvulnerableTime;
+}
+
 void Player::setMaxPlayerHealth(float newMaxPlayerHealth)
 {
 	this->maxPlayerHealth = newMaxPlayerHealth;
@@ -68,6 +72,11 @@ void Player::subtractHealth(int healthToSubtract)
 	this->playerHealth -= healthToSubtract;
 }
 
+void Player::setInvulnerabilityState(bool newInvulnerabilityState)
+{
+	this->Invulnerability = newInvulnerabilityState;
+}
+
 float Player::getPlayerHealth()
 {
 	return this->playerHealth;
@@ -76,6 +85,11 @@ float Player::getPlayerHealth()
 float Player::getMaxSpeedBoostCooldownTime()
 {
 	return this->maxSpeedBoostCooldownTime;
+}
+
+float Player::getMaxInvulnerableTime()
+{
+	return this->maxInvulnerableTime;
 }
 
 float Player::getPlayerSpeed()
@@ -96,6 +110,11 @@ int Player::getMaxPlayerHealth()
 bool Player::getSpeedBoostState()
 {
 	return this->speedBoosted;
+}
+
+bool Player::getInvulnerabilityState()
+{
+	return Invulnerability;
 }
 
 void Player::addToTimer(double dt)

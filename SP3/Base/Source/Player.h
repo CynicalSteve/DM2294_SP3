@@ -16,17 +16,20 @@ public:
 	~Player();
 
 	void setPlayerHealth(float newPlayerHealth), setPlayerSpeed(float newPlayerSpeed), setMaxPlayerHealth(float newMaxPlayerHealth), setPlayerCurrency(int newCurrencyAmount);
-	void setSpeedBoostState(bool newSpeedBoostState), setMaxSpeedCooldownTime(float newSpeedBoostTime);
+	void setSpeedBoostState(bool newSpeedBoostState), setMaxSpeedCooldownTime(float newSpeedBoostTime), setMaxInvulnerableTime(float newMaxInvulnerableTime);
 	void addCurrency(int currencyToAdd), subtractCurrency(int currencyToSubtract), addHealth(int healthToAdd), subtractHealth(int healthToSubtract);
-	float getPlayerHealth(), getPlayerSpeed(), getMaxSpeedBoostCooldownTime();
+	void setInvulnerabilityState(bool newInvulnerabilityState);
+	float getPlayerHealth(), getPlayerSpeed(), getMaxSpeedBoostCooldownTime(), getMaxInvulnerableTime();
 	int getEquipmentCurrency(), getMaxPlayerHealth();
-	bool getSpeedBoostState();
+	bool getSpeedBoostState(), getInvulnerabilityState();
 
 	vector<BombBase*> bombManager;
 	int currentBomb;
 	Inventory* playerInventory[5];
 	float speedBoostCooldown;
 	float normalSpeed;
+	float invulnerabilityCooldown;
+	float invulnerabilityHealth;
 
 	//NUKE
 	void addToTimer(double dt), setMaxBombTImer(float newMaxBombTimer), setNukeDeployedState(bool state), setCurrentTimer(float newCurrentTimer);
@@ -34,9 +37,10 @@ public:
 	bool getNukeDeployedState();
 
 private:
-	float playerHealth, playerSpeed, maxPlayerHealth, maxSpeedBoostCooldownTime;
+	float playerHealth, playerSpeed, maxPlayerHealth, maxSpeedBoostCooldownTime, maxInvulnerableTime;
 	int equipmentCurrency;
 	bool speedBoosted;
+	bool Invulnerability;
 
 	//NUKE
 	float currentBombTimer, maxBombTimer;

@@ -213,6 +213,23 @@ void SP3::PlayerChecks(double dt)
 		}
 	}
 
+	if (playerInfo->getInvulnerabilityState() == true) //Invulnerability
+	{
+		if (playerInfo->invulnerabilityCooldown < playerInfo->getMaxInvulnerableTime())
+		{
+			playerInfo->invulnerabilityCooldown += dt;
+
+			if (playerInfo->getPlayerHealth() < playerInfo->invulnerabilityHealth) //Health cap
+			{
+				playerInfo->setPlayerHealth(playerInfo->invulnerabilityHealth);
+			}
+		}
+		else
+		{
+			playerInfo->setInvulnerabilityState(false);
+			playerInfo->invulnerabilityCooldown = 0.f;
+		}
+	}
 	if (playerInfo->getNukeDeployedState() == true)  //Using nuke
 	{
 		if (playerInfo->getCurrentTimer() < playerInfo->getMaxBombTimer())
@@ -393,7 +410,7 @@ void SP3::m_goListInteractions(double dt)
 			{
 				go2->active = false;
 
-				int RandomDropper = RandomNumberGen(1, 3);
+				int RandomDropper = RandomNumberGen(1, 4);
 
 				GameObject *PowerupGO = FetchGO();
 				PowerupGO->pos.set(go->pos.x, go->pos.y);
@@ -411,6 +428,11 @@ void SP3::m_goListInteractions(double dt)
 				else if (RandomDropper == 3)
 				{
 					PowerupGO->type = GameObject::GO_POWERUP_EQUIPMENT;
+					PowerupGO->scale.Set(1, 1, 1);
+				}
+				else if (RandomDropper == 4)
+				{
+					PowerupGO->type = GameObject::GO_POWERUP_INVULNERABLE;
 					PowerupGO->scale.Set(1, 1, 1);
 				}
 			}
@@ -461,6 +483,43 @@ void SP3::m_goListInteractions(double dt)
 					playerInfo->addCurrency(30);
 					go2->active = false;
 				}
+				else if (go2->type == GameObject::GO_POWERUP_INVULNERABLE) //player-invulnerability
+				{
+					if (playerInfo->getInvulnerabilityState() == false)  //Checks if the player already has invulnerability
+					{
+						playerInfo->invulnerabilityHealth = playerInfo->getPlayerHealth();
+						playerInfo->setInvulnerabilityState(true);
+					}
+					else  //If player has invulnerability active, reset the cooldown time
+					{
+						playerInfo->invulnerabilityCooldown = 0.f;
+					}
+					go2->active = false;
+				}
+				else if (go->type == GameObject::GO_PLAYER)
+				{
+					for (unsigned int i = 0; i < alienManager.size(); ++i) //player-alien
+					{
+						if (go->pos == alienManager[i]->pos)
+						{
+							if (playerInfo->loseHealthCooldown == 0.f)
+							{
+								playerInfo->subtractHealth(alienManager[i]->getAlienDamage());
+
+								playerInfo->loseHealthCooldown += dt;
+							}
+							else
+							{
+								playerInfo->loseHealthCooldown += dt;
+
+								if (playerInfo->loseHealthCooldown > 1.f)
+								{
+									playerInfo->loseHealthCooldown = 0.f;
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 
@@ -470,31 +529,12 @@ void SP3::m_goListInteractions(double dt)
 			{
 				if (go->pos == alienManager[i]->pos)
 				{
-					if (go->type == GameObject::GO_BOMBFIRE)
-					{
-						//playerInfo->addCurrency(alienManager[i]->getAlienCurrencyWorth());
+					
 
 						--currentAlien;
 						alienManager.erase(alienManager.begin() + i);
-					}
-					else if (go->type == GameObject::GO_PLAYER)
-					{
-						if (playerInfo->loseHealthCooldown == 0.f)
-						{
-							playerInfo->subtractHealth(alienManager[i]->getAlienDamage());
-
-							playerInfo->loseHealthCooldown += dt;
-						}
-						else
-						{
-							playerInfo->loseHealthCooldown += dt;
-
-							if (playerInfo->loseHealthCooldown > 1.f)
-							{
-								playerInfo->loseHealthCooldown = 0.f;
-							}
-						}
-					}
+					
+					
 				}
 			}
 		}
@@ -742,6 +782,18 @@ void SP3::RenderGO(GameObject *go)
 
 		break;
 	}
+	case GameObject::GO_POWERUP_INVULNERABLE:
+	{
+		modelStack.PushMatrix(); //invulnerability powerup
+		{
+			modelStack.Translate(go->pos.x, go->pos.y, 0);
+			RenderMesh(meshList[GEO_POWERUP_INVULNERABLE], false);
+		}
+		modelStack.PopMatrix(); ///invulnerability powerup
+
+		break;
+	}
+
 	default:
 		break;
 	}
