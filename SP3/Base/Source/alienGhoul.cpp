@@ -5,6 +5,7 @@ alienGhoul::alienGhoul(string alienName, float alienHealth, float alienSpeed, fl
 	this->alienName = alienName;
 	this->alienHealth = alienHealth;
 	this->alienSpeed = alienSpeed;
+	this->originalSpeed = alienSpeed;
 	this->alienDamage = alienDamage;
 	this->alienCurrencyWorth = alienCurrencyWorth;
 

@@ -5,7 +5,7 @@
 #include <sstream>
 
 SP3::SP3() : alienManager(NULL),
-currentAlien(0)
+currentAlien(0), isPaused(false)
 {
 }
 
@@ -19,6 +19,7 @@ void SP3::Init()
 	meshList[floor] = MeshBuilder::GenerateQuad("floor", Color(.2, .6, .2), 1);
 	meshList[wall] = MeshBuilder::GenerateQuad("wall", Color(.6, .3, .3), 1);
 
+	SceneManager::instance()->State(SceneManager::SCENE_MAINGAME);
 	Math::InitRNG();
 
 	//Exercise 2c: Construct m_ship, set active, type, scale and pos
@@ -50,6 +51,9 @@ void SP3::Init()
 				theMap[x][y] = 1;
 		}
 	}
+
+	pauseSelection = CONTINUE;
+	pauseSelectionIterator = 0;
 
 	playerInfo = new Player(100, 5.f);
 	playerInfo->pos.set(1, 1);
@@ -551,159 +555,239 @@ void SP3::Update(double dt)
 
 	if (Application::IsKeyPressed('0'));
 
-	//Exercise 6: set m_force values based on WASD
-	if (Application::IsKeyPressed('D'))
-		if (playerInfo->move(-1, theMap))
-			//++playerInfo->pos.x;
-			if (playerInfo->move(0, theMap))
-				playerInfo->animationPos.z = dt * playerInfo->getPlayerSpeed();
 
-	if (Application::IsKeyPressed('W'))
-		if (playerInfo->move(-1, theMap))
-			//++playerInfo->pos.y;
-			if (playerInfo->move(1, theMap))
-				playerInfo->animationPos.z = 1 + dt * playerInfo->getPlayerSpeed();
-
-	if (Application::IsKeyPressed('A'))
-		if (playerInfo->move(-1, theMap))
-			//--playerInfo->pos.x;
-			if (playerInfo->move(2, theMap))
-				playerInfo->animationPos.z = 2 + dt * playerInfo->getPlayerSpeed();
-
-	if (Application::IsKeyPressed('S'))
-		if (playerInfo->move(-1, theMap))
-			//--playerInfo->pos.y;
-			if (playerInfo->move(3, theMap))
-				playerInfo->animationPos.z = 3 + dt * playerInfo->getPlayerSpeed();
-
-	playerInfo->move(4, theMap);
-
-	if (Application::IsKeyPressed('F') && !KeyBounce['F']) //Temporary button for placing mine
-		playerInfo->bombManager.push_back(new MineBomb("MineBomb", 100, 2, playerInfo->pos.x, playerInfo->pos.y));
-
-	if (Application::IsKeyPressed('G') && !KeyBounce['G']) //Lower player health
-		playerInfo->setPlayerHealth(playerInfo->getPlayerHealth() - 10);
-
-	if (Application::IsKeyPressed('Q')) //
+	if (isPaused == false)
 	{
-		if (!KeyBounce['Q'])
-			if (playerInfo->currentBomb != 0)
-			{
-				playerInfo->currentBomb--;
-			}
-		KeyBounce['Q'] = true;
-	}
-	else KeyBounce['Q'] = false;
+		//Exercise 6: set m_force values based on WASD
+		if (Application::IsKeyPressed('D'))
+			if (playerInfo->move(-1, theMap))
+				//++playerInfo->pos.x;
+				if (playerInfo->move(0, theMap))
+					playerInfo->animationPos.z = dt * playerInfo->getPlayerSpeed();
 
-	if (Application::IsKeyPressed('E')) //
-	{
-		if (!KeyBounce['E'])
-			if (playerInfo->currentBomb < sizeof(playerInfo->playerInventory))
-			{
-				playerInfo->currentBomb++;
-			}
-		KeyBounce['E'] = true;
-	}
-	else KeyBounce['E'] = false;
+		if (Application::IsKeyPressed('W'))
+			if (playerInfo->move(-1, theMap))
+				//++playerInfo->pos.y;
+				if (playerInfo->move(1, theMap))
+					playerInfo->animationPos.z = 1 + dt * playerInfo->getPlayerSpeed();
 
-	if (Application::IsKeyPressed('F') && !KeyBounce['F']) //Temporary button for placing mine
+		if (Application::IsKeyPressed('A'))
+			if (playerInfo->move(-1, theMap))
+				//--playerInfo->pos.x;
+				if (playerInfo->move(2, theMap))
+					playerInfo->animationPos.z = 2 + dt * playerInfo->getPlayerSpeed();
+
+		if (Application::IsKeyPressed('S'))
+			if (playerInfo->move(-1, theMap))
+				//--playerInfo->pos.y;
+				if (playerInfo->move(3, theMap))
+					playerInfo->animationPos.z = 3 + dt * playerInfo->getPlayerSpeed();
+
+		playerInfo->move(4, theMap);
+
+		if (Application::IsKeyPressed('F') && !KeyBounce['F']) //Temporary button for placing mine
 			playerInfo->bombManager.push_back(new MineBomb("MineBomb", 100, 2, playerInfo->pos.x, playerInfo->pos.y));
-	if (Application::IsKeyPressed('Z') && !KeyBounce['Z'])
-		if (currentAlien < 3)
+
+		if (Application::IsKeyPressed('G') && !KeyBounce['G']) //Lower player health
+			playerInfo->setPlayerHealth(playerInfo->getPlayerHealth() - 10);
+
+		if (Application::IsKeyPressed('Q')) //
 		{
-			alienManager.push_back(new alienGrub("Grub", 100, 4.f, 5, 5, 9, 1));
-			++currentAlien;
-		}
-
-	if (Application::IsKeyPressed('X') && !KeyBounce['X'])
-		if (currentAlien < 3)
-		{
-			alienManager.push_back(new alienGhoul("Ghoul", 100, 4.f, 5, 5, 9, 1));
-			++currentAlien;
-		}
-
-	if (Application::IsKeyPressed('C') && !KeyBounce['C'])
-		if (currentAlien < 3)
-		{
-			alienManager.push_back(new alienRaptor("Raptor", 100, 4.f, 5, 5, 9, 1));
-			++currentAlien;
-		}
-
-	if (Application::IsKeyPressed(VK_UP));
-
-	if (Application::IsKeyPressed(VK_DOWN)); //use this for hold controls
-
-	if (Application::IsKeyPressed(VK_SPACE) && !KeyBounce[VK_SPACE]); //use this for toggle controls
-
-	//Mouse Section
-	static bool bLButtonState = false;
-	
-	if (!bLButtonState && Application::IsMousePressed(0))
-	{
-		bLButtonState = true;
-		std::cout << "LBUTTON DOWN" << std::endl;
-		
-		if (playerInfo->playerInventory[playerInfo->currentBomb]->getBombAmount() > 0)
-		{
-			switch (playerInfo->playerInventory[playerInfo->currentBomb]->inventoryBombType)
-			{
-			case Inventory::INVENTORY_NORMALBOMB:
-			{
-
-				playerInfo->bombManager.push_back(new NormalBomb("Normal Bomb", 30, 3, 2, playerInfo->pos.x, playerInfo->pos.y));
-				playerInfo->playerInventory[playerInfo->currentBomb]->subtractBombAmount(1);
-
-				break;
-			}
-			case Inventory::INVENTORY_MINEBOMB:
-			{
-				playerInfo->bombManager.push_back(new MineBomb("MineBomb", 100, 2, playerInfo->pos.x, playerInfo->pos.y));
-				playerInfo->playerInventory[playerInfo->currentBomb]->subtractBombAmount(1);
-				break;
-			}
-			case Inventory::INVENTORY_NUKEBOMB:
-			{
-				if (playerInfo->getNukeDeployedState() == false)
+			if (!KeyBounce['Q'])
+				if (playerInfo->currentBomb != 0)
 				{
-					playerInfo->setNukeDeployedState(true);
-					playerInfo->setMaxBombTImer(10.f);
-					playerInfo->playerInventory[playerInfo->currentBomb]->subtractBombAmount(1);
+					playerInfo->currentBomb--;
 				}
+			KeyBounce['Q'] = true;
+		}
+		else KeyBounce['Q'] = false;
+
+		if (Application::IsKeyPressed('E')) //
+		{
+			if (!KeyBounce['E'])
+				if (playerInfo->currentBomb < sizeof(playerInfo->playerInventory))
+				{
+					playerInfo->currentBomb++;
+				}
+			KeyBounce['E'] = true;
+		}
+		else KeyBounce['E'] = false;
+
+		if (Application::IsKeyPressed('F') && !KeyBounce['F']) //Temporary button for placing mine
+			playerInfo->bombManager.push_back(new MineBomb("MineBomb", 100, 2, playerInfo->pos.x, playerInfo->pos.y));
+		if (Application::IsKeyPressed('Z') && !KeyBounce['Z'])
+			if (currentAlien < 3)
+			{
+				alienManager.push_back(new alienGrub("Grub", 100, 4.f, 5, 5, 9, 1));
+				++currentAlien;
+			}
+
+		if (Application::IsKeyPressed('X') && !KeyBounce['X'])
+			if (currentAlien < 3)
+			{
+				alienManager.push_back(new alienGhoul("Ghoul", 100, 4.f, 5, 5, 9, 1));
+				++currentAlien;
+			}
+
+		if (Application::IsKeyPressed('C') && !KeyBounce['C'])
+			if (currentAlien < 3)
+			{
+				alienManager.push_back(new alienRaptor("Raptor", 100, 4.f, 5, 5, 9, 1));
+				++currentAlien;
+			}
+
+
+
+		if (Application::IsKeyPressed(VK_UP));
+
+		if (Application::IsKeyPressed(VK_DOWN)); //use this for hold controls
+
+		if (Application::IsKeyPressed(VK_SPACE) && !KeyBounce[VK_SPACE]); //use this for toggle controls
+
+		//Mouse Section
+		static bool bLButtonState = false;
+
+		if (!bLButtonState && Application::IsMousePressed(0))
+		{
+			bLButtonState = true;
+			std::cout << "LBUTTON DOWN" << std::endl;
+
+			if (playerInfo->playerInventory[playerInfo->currentBomb]->getBombAmount() > 0)
+			{
+				switch (playerInfo->playerInventory[playerInfo->currentBomb]->inventoryBombType)
+				{
+				case Inventory::INVENTORY_NORMALBOMB:
+				{
+
+					playerInfo->bombManager.push_back(new NormalBomb("Normal Bomb", 30, 3, 2, playerInfo->pos.x, playerInfo->pos.y));
+					playerInfo->playerInventory[playerInfo->currentBomb]->subtractBombAmount(1);
+
+					break;
+				}
+				case Inventory::INVENTORY_MINEBOMB:
+				{
+					playerInfo->bombManager.push_back(new MineBomb("MineBomb", 100, 2, playerInfo->pos.x, playerInfo->pos.y));
+					playerInfo->playerInventory[playerInfo->currentBomb]->subtractBombAmount(1);
+					break;
+				}
+				case Inventory::INVENTORY_NUKEBOMB:
+				{
+					if (playerInfo->getNukeDeployedState() == false)
+					{
+						playerInfo->setNukeDeployedState(true);
+						playerInfo->setMaxBombTImer(10.f);
+						playerInfo->playerInventory[playerInfo->currentBomb]->subtractBombAmount(1);
+					}
+					break;
+				}
+				default:
+					break;
+				}
+			}
+		}
+		else if (bLButtonState && !Application::IsMousePressed(0))
+		{
+			bLButtonState = false;
+			std::cout << "LBUTTON UP" << std::endl;
+		}
+		static bool bRButtonState = false;
+		if (!bRButtonState && Application::IsMousePressed(1))
+		{
+			bRButtonState = true;
+			std::cout << "RBUTTON DOWN" << std::endl;
+		}
+		else if (bRButtonState && !Application::IsMousePressed(1))
+		{
+			bRButtonState = false;
+			std::cout << "RBUTTON UP" << std::endl;
+		}
+
+		//Creation of bomb fire after bomb goes off
+		BombFireCreation(dt);
+
+		//Alien Movement
+		AlienMovement(dt);
+
+		//Check m_golist against other list for interactions
+		m_goListInteractions(dt);
+
+		//Player stats checks & adjustments
+		PlayerChecks(dt);
+	}
+	else
+	{
+		if (Application::IsKeyPressed('W') && !KeyBounce['W'])
+		{
+			if (pauseSelectionIterator != 0)
+			{
+				--pauseSelectionIterator;
+				pauseSelection = static_cast<PauseSelection>(pauseSelectionIterator);
+			}
+			KeyBounce['W'] = true;
+		}
+		else KeyBounce['W'] = false;
+
+		if (Application::IsKeyPressed('S') && !KeyBounce['S'])
+		{
+			if (pauseSelectionIterator + 1 != TOTAL_NUM)
+			{
+				++pauseSelectionIterator;
+				pauseSelection = static_cast<PauseSelection>(pauseSelectionIterator);
+			}
+			KeyBounce['S'] = true;
+		}
+		else KeyBounce['S'] = false;
+
+		if (Application::IsKeyPressed(VK_RETURN) && !KeyBounce[VK_RETURN])
+		{
+			switch (pauseSelection)
+			{
+			case CONTINUE:
+			{
+				isPaused = false;
 				break;
 			}
+			case SETTINGS:
+			{
+
+				break;
+			}
+			case EXIT_MAINMENU:
+			{
+				SceneManager::instance()->SwitchScene(SceneManager::SCENE_STARTMENU);
+				break;
+			}
+			case EXIT_GAME:
+			{
+				SceneManager::instance()->Quit(true);
+				break;
+			}
+
 			default:
 				break;
 			}
+
+
+			KeyBounce[VK_RETURN] = true;
+		}
+		else
+		{
+			KeyBounce[VK_RETURN] = false;
 		}
 	}
-	else if (bLButtonState && !Application::IsMousePressed(0))
-	{
-		bLButtonState = false;
-		std::cout << "LBUTTON UP" << std::endl;
-	}
-	static bool bRButtonState = false;
-	if (!bRButtonState && Application::IsMousePressed(1))
-	{
-		bRButtonState = true;
-		std::cout << "RBUTTON DOWN" << std::endl;
-	}
-	else if (bRButtonState && !Application::IsMousePressed(1))
-	{
-		bRButtonState = false;
-		std::cout << "RBUTTON UP" << std::endl;
-	}
 
-	//Creation of bomb fire after bomb goes off
-	BombFireCreation(dt);
-
-	//Alien Movement
-	AlienMovement(dt);
-	
-	//Check m_golist against other list for interactions
-	m_goListInteractions(dt);
-
-	//Player stats checks & adjustments
-	PlayerChecks(dt);
+	if (Application::IsKeyPressed('P') && !KeyBounce['P'])  //Pause
+	{
+		if (isPaused == false)
+		{
+			isPaused = true;
+		}
+		else
+		{
+			isPaused = false;
+		}
+	}
+	else KeyBounce['P'] = true;
 
 	for (short i = 0; i < 256; ++i)
 	{
@@ -922,6 +1006,68 @@ void SP3::renderUI()
 	modelStack.PopMatrix();
 }
 
+void SP3::RenderPauseUI()
+{
+	modelStack.PushMatrix(); //Pause Screen Background
+	{
+		modelStack.Translate(100, 50, 0);
+		modelStack.Scale(70, 80, 1);
+		RenderMesh(meshList[GEO_QUAD], false);
+	}
+	modelStack.PopMatrix();
+
+	std::ostringstream ss;
+	//On screen text
+	ss.str("");
+	ss.precision(5);
+	ss << "Paused";
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 3, 33.f, 35.6f);
+	
+	float continue_G = 1.f, continueB = 1.f, settings_G = 1.f, settings_B = 1.f, mainMenu_G = 1.f, mainMenu_B = 1.f, exit_G = 1.f, exit_B = 1.f;
+
+	if (pauseSelection == CONTINUE)
+	{
+		continue_G = 0.549f; 
+		continueB = 0.f;
+	}
+	else if (pauseSelection == SETTINGS)
+	{
+		settings_G = 0.549f;
+		settings_B = 0.f;
+	}
+	else if (pauseSelection == EXIT_MAINMENU)
+	{
+		mainMenu_G = 0.549f;
+		mainMenu_B = 0.f;
+	}
+	else if (pauseSelection == EXIT_GAME)
+	{
+		exit_G = 0.549f;
+		exit_B = 0.f;
+	}
+
+	//On screen text
+	ss.str("");
+	ss.precision(5);
+	ss << "Continue";
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, continue_G, continueB), 1.5f, 35.f, 30.6f);
+
+	ss.str("");
+	ss.precision(5);
+	ss << "Settings";
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, settings_G, settings_B), 1.5f, 35.f, 25.6f);
+
+	ss.str("");
+	ss.precision(5);
+	ss << "Exit to Main Menu";
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, mainMenu_G, mainMenu_B), 1.5f, 29.f, 20.6f);
+
+	ss.str("");
+	ss.precision(5);
+	ss << "Exit Game";
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, exit_G, exit_B), 1.5f, 35.f, 15.6f);
+}
+
 void SP3::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -1015,6 +1161,11 @@ void SP3::Render()
 	modelStack.PopMatrix(); ///grid system
 
 	renderUI();  //Main Game UI
+
+	if (isPaused == true)  //Pause Menu
+	{
+		RenderPauseUI();
+	}
 
 	std::ostringstream ss;
 	//On screen text

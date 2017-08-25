@@ -17,6 +17,8 @@ void StartMenu::Init()
 {
 	SceneBase::Init();
 
+	SceneManager::instance()->State(SceneManager::SCENE_STARTMENU);
+
 	for (size_t i = 0; i < 256; ++i)
 	{
 		KeyBounce[i] = false;
@@ -44,7 +46,6 @@ void StartMenu::Update(double dt)
 				currentSelectionState = static_cast<CurrentSelection>(CurrentSelectionIterator);
 				BombPosition += 22;
 			}
-			std::cout << currentSelectionState << std::endl;
 		}
 		KeyBounce['W'] = true;
 	}
@@ -60,7 +61,6 @@ void StartMenu::Update(double dt)
 				currentSelectionState = static_cast<CurrentSelection>(CurrentSelectionIterator);
 				BombPosition -= 22;
 			}
-			std::cout << currentSelectionState << std::endl;
 		}
 		KeyBounce['S'] = true;
 	}

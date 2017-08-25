@@ -51,13 +51,23 @@ bool SceneManager::Quit() { return quit; }
 
 void SceneManager::SwitchScene(unsigned int sceneID)
 {
-	if (state == sceneID || sceneSwitching)
+ 	if (state == sceneID || sceneSwitching)
 		return;
 
 	switch (sceneID)
 	{
-	case SCENE_STARTMENU: nextScene = new StartMenu(); break;
-	case SCENE_MAINGAME: nextScene = new SP3(); break;
+	case SCENE_STARTMENU: 
+	{
+		state = SCENE_STARTMENU;
+		nextScene = new StartMenu();
+		break;
+	}
+	case SCENE_MAINGAME: 
+	{
+		state = SCENE_MAINGAME;
+		nextScene = new SP3();
+		break;
+	}
 	default: return;
 	}
 

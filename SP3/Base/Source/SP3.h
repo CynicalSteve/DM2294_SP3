@@ -31,6 +31,7 @@ public:
 	void renderAliens(alienBase *alien);
 	void renderBombs(BombBase *bomb, int currentBombIndex);
 	void renderUI();
+	void RenderPauseUI();
 	void AlienMovement(double dt);
 	void PlayerChecks(double dt);
 	void BombFireCreation(double dt);
@@ -39,6 +40,26 @@ public:
 	int RandomNumberGen(int FirstNumber = 0, int LastNumber = 0);
 
 	GameObject * FetchGO();
+
+	enum PauseSelection
+	{
+		CONTINUE,
+		SETTINGS,
+		EXIT_MAINMENU,
+		EXIT_GAME,
+		TOTAL_NUM
+	};
+
+	enum GameState
+	{
+		WAVE_STATE,
+		WAVE_END_STATE,
+		TOTAL_STATES
+	};
+
+	PauseSelection pauseSelection;
+	GameState gameState;
+	unsigned int pauseSelectionIterator;
 
 protected:
 	std::vector<GameObject *> m_goList;
@@ -50,6 +71,7 @@ protected:
 	double doubletime;
 	std::vector<alienBase *> alienManager;
 
+	bool isPaused;
 	int currentAlien;
 
 	bool KeyBounce[256];
