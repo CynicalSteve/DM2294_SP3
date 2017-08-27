@@ -3,6 +3,7 @@
 #include "Application.h"
 #include <Windows.h>
 #include <sstream>
+#include <fstream>
 
 SP3::SP3() : alienManager(NULL),
 currentAlien(0), isPaused(false)
@@ -19,8 +20,8 @@ void SP3::Init()
 	meshList[floor] = MeshBuilder::GenerateQuad("floor", Color(.2, .6, .2), 1);
 	meshList[wall] = MeshBuilder::GenerateQuad("wall", Color(.6, .3, .3), 1);
 
-	SceneManager::instance()->State(SceneManager::SCENE_MAINGAME);
 	Math::InitRNG();
+	ReadSettings();
 
 	//Exercise 2c: Construct m_ship, set active, type, scale and pos
 	for (size_t i = 0; i < 256; ++i)
@@ -117,6 +118,113 @@ GameObject* SP3::FetchGO()
 		m_goList.push_back(new GameObject());
 	}
 	return m_goList[m_goList.size() - 1];
+}
+
+void SP3::ReadSettings()
+{
+	std::ifstream settingsFile("Image//settings.txt");
+
+	if (!settingsFile.is_open())
+	{
+		std::cout << "Missing File.\n";
+	}
+	else
+	{
+		while (!settingsFile.eof())
+		{
+			std::string soundSetting;
+
+			std::getline(settingsFile, soundSetting, '\n');
+
+			if (soundSetting == "On")
+			{
+				hasSound = true;
+			}
+			else if (soundSetting == "Off")
+			{
+				hasSound = false;
+			}
+		}
+	}
+
+	settingsFile.close();
+}
+
+void SP3::renderShopScreen()
+{
+	modelStack.PushMatrix(); //Shop Screen Screen Background
+	{
+		modelStack.Translate(100, 50, 0);
+		modelStack.Scale(70, 80, 1);
+		RenderMesh(meshList[GEO_QUAD], false);
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix(); //Normal Bomb
+	{
+		modelStack.Translate(90, 80, 0);
+		modelStack.Scale(10, 10, 1);
+		RenderMesh(meshList[GEO_NORMALBOMB], false);
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix(); //Mine Bomb
+	{
+		modelStack.Translate(90, 65, 0);
+		modelStack.Scale(10, 10, 1);
+		RenderMesh(meshList[GEO_MINEBOMB], false);
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix(); //Nuke Bomb
+	{
+		modelStack.Translate(90, 50, 0);
+		modelStack.Scale(10, 10, 1);
+		RenderMesh(meshList[GEO_NUKEBOMB], false);
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	{
+		modelStack.Translate(110, 80, 0);
+		modelStack.Scale(7, 7, 1);
+		RenderMesh(meshList[GEO_EQUIPMENT], false);
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	{
+		modelStack.Translate(110, 65, 0);
+		modelStack.Scale(7, 7, 1);
+		RenderMesh(meshList[GEO_EQUIPMENT], false);
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	{
+		modelStack.Translate(110, 50, 0);
+		modelStack.Scale(7, 7, 1);
+		RenderMesh(meshList[GEO_EQUIPMENT], false);
+	}
+	modelStack.PopMatrix();
+
+	std::ostringstream ss;
+
+	//On screen text
+	ss.str("");
+	ss.precision(5);
+	ss << "5";
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2, 52.f, 35.f);
+
+	ss.str("");
+	ss.precision(5);
+	ss << "15";
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2, 52.f, 28.5f);
+
+	ss.str("");
+	ss.precision(5);
+	ss << "50";
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2, 52.f, 21.5f);
 }
 
 void SP3::AlienMovement(double dt)
@@ -308,7 +416,10 @@ void SP3::BombFireCreation(double dt)
 					bombFireGO->scale.Set(0.1, 0.1, 1);
 				}
 
-				PlaySound(TEXT("Image//bombBoom.wav"), NULL, SND_ASYNC);
+				if (hasSound == true)
+				{
+					PlaySound(TEXT("Image//bombBoom.wav"), NULL, SND_ASYNC);
+				}
 				it = playerInfo->bombManager.erase(it);
 			}
 			break;
@@ -320,8 +431,10 @@ void SP3::BombFireCreation(double dt)
 				go->bombTimer += dt;
 				continue;
 			}
-			PlaySound(TEXT("Image//bombBoom.wav"), NULL, SND_ASYNC);
-
+			if (hasSound == true)
+			{
+				PlaySound(TEXT("Image//bombBoom.wav"), NULL, SND_ASYNC);
+			}
 			GameObject *bombFireGO = FetchGO();
 			bombFireGO->type = GameObject::GO_BOMBFIRE;
 			bombFireGO->pos.set(go->pos.x, go->pos.y);
@@ -738,35 +851,66 @@ void SP3::Update(double dt)
 		}
 		else KeyBounce['S'] = false;
 
-		if (Application::IsKeyPressed(VK_RETURN) && !KeyBounce[VK_RETURN])
+		if (Application::IsKeyPressed(VK_RETURN))
 		{
-			switch (pauseSelection)
+			if (!KeyBounce[VK_RETURN])
 			{
-			case CONTINUE:
-			{
-				isPaused = false;
-				break;
-			}
-			case SETTINGS:
-			{
+				switch (pauseSelection)
+				{
+				case CONTINUE:
+				{
+					isPaused = false;
+					break;
+				}
+				case SETTINGS:
+				{
+					std::ifstream settingsFile("Image//settings.txt");
 
-				break;
-			}
-			case EXIT_MAINMENU:
-			{
-				SceneManager::instance()->SwitchScene(SceneManager::SCENE_STARTMENU);
-				break;
-			}
-			case EXIT_GAME:
-			{
-				SceneManager::instance()->Quit(true);
-				break;
-			}
+					if (!settingsFile.is_open())
+					{
+						std::cout << "Missing File.\n";
+					}
+					else
+					{
+						settingsFile.close();
 
-			default:
-				break;
-			}
+						if (hasSound == true)  //Mute sound
+						{
+							hasSound = false;
+							settingsFile.open("Image//settings.txt", std::fstream::out | std::fstream::trunc);
+							settingsFile.close();
 
+							std::ofstream settingsFile("Image//settings.txt");
+							settingsFile << "Off\n";
+						}
+						else  //Unmute Sound
+						{
+							hasSound = true;
+
+							settingsFile.open("Image//settings.txt", std::fstream::out | std::fstream::trunc);
+							settingsFile.close();
+
+							std::ofstream settingsFile("Image//settings.txt");
+							settingsFile << "On\n";
+						}
+					}
+					break;
+				}
+				case EXIT_MAINMENU:
+				{
+					SceneManager::instance()->SwitchScene(SceneManager::SCENE_STARTMENU);
+					break;
+				}
+				case EXIT_GAME:
+				{
+					SceneManager::instance()->Quit(true);
+					break;
+				}
+
+				default:
+					break;
+				}
+			}
 
 			KeyBounce[VK_RETURN] = true;
 		}
@@ -1004,6 +1148,7 @@ void SP3::renderUI()
 		RenderMesh(meshList[GEO_MINEBOMB], true);
 	}
 	modelStack.PopMatrix();
+
 }
 
 void SP3::RenderPauseUI()
@@ -1054,7 +1199,14 @@ void SP3::RenderPauseUI()
 
 	ss.str("");
 	ss.precision(5);
-	ss << "Settings";
+	if (hasSound == true)
+	{
+		ss << "Sound: " << "On";
+	}
+	else
+	{
+		ss << "Sound: " << "Off";
+	}
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, settings_G, settings_B), 1.5f, 35.f, 25.6f);
 
 	ss.str("");
@@ -1167,6 +1319,8 @@ void SP3::Render()
 		RenderPauseUI();
 	}
 
+	renderShopScreen();
+
 	std::ostringstream ss;
 	//On screen text
 	ss.str("");
@@ -1195,6 +1349,7 @@ void SP3::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
 	
 	glEnable(GL_DEPTH_TEST);
+	SceneManager::instance()->State(SceneManager::SCENE_MAINGAME);
 }
 
 void SP3::Exit()

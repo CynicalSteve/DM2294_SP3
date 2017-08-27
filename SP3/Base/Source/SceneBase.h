@@ -86,6 +86,8 @@ public:
 		GEO_POWERUP_INVULNERABLE,
 		GEO_EQUIPMENT,
 		GEO_BOMBSELECTOR,
+		GEO_SOUND,
+		GEO_STOP,
 
 		floor,
 		wall,

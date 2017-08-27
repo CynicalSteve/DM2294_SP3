@@ -120,6 +120,9 @@ void SceneBase::Init()
 	meshList[GEO_MINEBOMB] = MeshBuilder::GenerateQuad("MineBomb", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_MINEBOMB]->textureID = LoadTGA("Image//mineBomb.tga");
 
+	meshList[GEO_NUKEBOMB] = MeshBuilder::GenerateQuad("NukeBomb", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_NUKEBOMB]->textureID = LoadTGA("Image//nukeBomb.tga");
+
 	meshList[GEO_BOOM] = MeshBuilder::GenerateQuad("Boom", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_BOOM]->textureID = LoadTGA("Image//boom.tga");
 
@@ -190,6 +193,12 @@ void SceneBase::Init()
 	meshList[GEO_POWERUP_INVULNERABLE]->textureID = LoadTGA("Image//invulnerable.tga");
 
 	meshList[GEO_BOMBSELECTOR] = MeshBuilder::GenerateQuad("Bomb Selector", Color(1.f, 0.549f, 0.f), 1.f);
+
+	meshList[GEO_SOUND] = MeshBuilder::GenerateQuad("Sound", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_SOUND]->textureID = LoadTGA("Image//sound.tga");
+
+	meshList[GEO_STOP] = MeshBuilder::GenerateQuad("Stop", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_STOP]->textureID = LoadTGA("Image//stop.tga");
 
 	bLightEnabled = false;
 }

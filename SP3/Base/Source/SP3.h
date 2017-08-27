@@ -32,6 +32,10 @@ public:
 	void renderBombs(BombBase *bomb, int currentBombIndex);
 	void renderUI();
 	void RenderPauseUI();
+
+	void ReadSettings();
+	void renderShopScreen();
+
 	void AlienMovement(double dt);
 	void PlayerChecks(double dt);
 	void BombFireCreation(double dt);
@@ -74,6 +78,7 @@ protected:
 	bool isPaused;
 	int currentAlien;
 
+	bool hasSound;
 	bool KeyBounce[256];
 };
 
