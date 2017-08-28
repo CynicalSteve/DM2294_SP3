@@ -46,8 +46,6 @@ public:
 	void m_goListInteractions(double dt);
 	void spawnAliens(double dt);
 
-	int RandomNumberGen(int FirstNumber = 0, int LastNumber = 0);
-
 	GameObject * FetchGO();
 
 	enum PauseSelection

@@ -5,6 +5,8 @@
 #include <sstream>
 #include <fstream>
 
+using Math::RandIntMinMax;
+
 std::vector<GameObject::coord> alienBase::spawnPosition;
 
 SP3::SP3() : alienManager(NULL), isPaused(false)
@@ -80,21 +82,11 @@ void SP3::Init()
 
 	GameObject *lootcrateGO2 = FetchGO();
 	lootcrateGO2->type = GameObject::GO_LOOTCRATE;
-	lootcrateGO2->pos.set(3, 7);
+	lootcrateGO2->pos.set(2, 7);
 
 	GameObject *lootcrateGO3 = FetchGO();
 	lootcrateGO3->type = GameObject::GO_LOOTCRATE;
-	lootcrateGO3->pos.set(7, 3);
-}
-
-int SP3::RandomNumberGen(int FirstNumber, int LastNumber)
-{
-	srand(time(0));  //Random Num seeder
-
-	//Note that FirstNumber & LastNumber are included in the generator
-	int RandomNumber = FirstNumber + (rand() % LastNumber);
-
-	return RandomNumber;
+	lootcrateGO3->pos.set(7, 2);
 }
 
 GameObject* SP3::FetchGO()
@@ -271,7 +263,7 @@ void SP3::AlienMovement(double dt)
 		if (go->alienType == alienBase::TYPE1_GRUB) //chases player
 			distance.set(go->pos.x - playerInfo->pos.x, go->pos.y - playerInfo->pos.y);
 		else if (go->alienType == alienBase::TYPE2_GHOUL) //random movement
-			distance.set(go->pos.x - RandomNumberGen(0, 10), go->pos.y - RandomNumberGen(0, 10));
+			distance.set(go->pos.x - RandIntMinMax(0, 10), go->pos.y - RandIntMinMax(0, 10));
 		else if (go->alienType == alienBase::TYPE3_RAPTOR) //goes to objective
 			distance.set(go->pos.x - 5, go->pos.y - 5);
 
@@ -329,6 +321,7 @@ void SP3::AlienMovement(double dt)
 
 void SP3::PlayerChecks(double dt)
 {
+	//std::cout << playerInfo->normalSpeed << "\n";
 	if (playerInfo->getPlayerHealth() <= 0) //Reset health to 0 if current player health is under 0
 	{
 		playerInfo->setPlayerHealth(0);
@@ -568,7 +561,7 @@ void SP3::m_goListInteractions(double dt)
 			{
 				go2->active = false;
 
-				int RandomDropper = RandomNumberGen(1, 4);
+				int RandomDropper = RandIntMinMax(1, 4);
 
 				GameObject *PowerupGO = FetchGO();
 				PowerupGO->pos.set(go->pos.x, go->pos.y);
@@ -747,25 +740,25 @@ void SP3::Update(double dt)
 		if (isPaused == false)
 		{
 			//Exercise 6: set m_force values based on WASD
-			if (Application::IsKeyPressed('D'))
+			if (Application::IsKeyPressed('D') && playerInfo->pos.x < mapSize - 1)
 				if (playerInfo->move(-1, theMap))
 					//++playerInfo->pos.x;
 					if (playerInfo->move(0, theMap))
 						playerInfo->animationPos.z = dt * playerInfo->getPlayerSpeed();
 
-			if (Application::IsKeyPressed('W'))
+			if (Application::IsKeyPressed('W') && playerInfo->pos.y < mapSize - 1)
 				if (playerInfo->move(-1, theMap))
 					//++playerInfo->pos.y;
 					if (playerInfo->move(1, theMap))
 						playerInfo->animationPos.z = 1 + dt * playerInfo->getPlayerSpeed();
 
-			if (Application::IsKeyPressed('A'))
+			if (Application::IsKeyPressed('A') && playerInfo->pos.x > 0)
 				if (playerInfo->move(-1, theMap))
 					//--playerInfo->pos.x;
 					if (playerInfo->move(2, theMap))
 						playerInfo->animationPos.z = 2 + dt * playerInfo->getPlayerSpeed();
 
-			if (Application::IsKeyPressed('S'))
+			if (Application::IsKeyPressed('S') && playerInfo->pos.y > 0)
 				if (playerInfo->move(-1, theMap))
 					//--playerInfo->pos.y;
 					if (playerInfo->move(3, theMap))
