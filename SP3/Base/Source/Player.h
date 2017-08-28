@@ -25,7 +25,7 @@ public:
 
 	vector<BombBase*> bombManager;
 	int currentBomb;
-	Inventory* playerInventory[3];
+	Inventory* playerInventory[5];
 	float speedBoostCooldown;
 	float normalSpeed;
 	float invulnerabilityCooldown;

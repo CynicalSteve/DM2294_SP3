@@ -43,8 +43,6 @@ public:
 	void BombFireCreation(double dt);
 	void m_goListInteractions(double dt);
 
-	int RandomNumberGen(int FirstNumber = 0, int LastNumber = 0);
-
 	GameObject * FetchGO();
 
 	enum PauseSelection
