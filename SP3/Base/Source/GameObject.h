@@ -61,6 +61,8 @@ public:
 	float fireScaler;
 	float loseHealthCooldown;
 
+	float houseHealth;
+
 	GameObject();
 	virtual ~GameObject();
 	bool move(char direction, short **map);

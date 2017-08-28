@@ -42,6 +42,7 @@ public:
 	void PlayerChecks(double dt);
 	void BombFireCreation(double dt);
 	void m_goListInteractions(double dt);
+	void spawnAliens(double dt);
 
 	GameObject * FetchGO();
 
