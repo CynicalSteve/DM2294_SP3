@@ -36,7 +36,16 @@ void SP3::Init()
 	while (theMap[0][mapSize] > 0 && theMap[0][mapSize] < 10)
 		++mapSize;
 	alienBase::createSpawnPosition(theMap, mapSize);
-	alienBase::spawnPosition[0] = GameObject::coord();
+	//alienBase::spawnPosition[0] = GameObject::coord();
+
+	for (short y = mapSize - 1; y > -1; --y)
+	{
+		for (short x = 0; x < mapSize; ++x)
+			std::cout << theMap[x][y] << " ";
+		std::cout << "\n";
+	}
+	for (short i = 0; i < alienBase::spawnPosition.size(); ++i)
+		std::cout << alienBase::spawnPosition[i].x << " " << alienBase::spawnPosition[i].y << "\n";
 
 	pauseSelection = CONTINUE;
 	pauseSelectionIterator = 0;
@@ -67,9 +76,14 @@ void SP3::Init()
 	playerInfo->playerInventory[2]->setBombAmount(100);
 
 	dayNumber = 1;
-	maxAliens = 5;
 
-	//Exercise 2a: Construct 100 GameObject with type GO_ASTEROID and add into m_goList
+	for (short i = 0; i < 3; ++i)
+	{
+		alienManager.push_back(new alienGrub("Grub", 10, 1.f, 3, 2, 0, 0));
+		alienManager.push_back(new alienGhoul("Ghoul", 40, 2.f, 5, 5, 0, 0));
+		alienManager.push_back(new alienRaptor("Raptor", 20, 4.f, 4, 5, 0, 0));
+	}
+
 	m_goList.push_back(playerInfo);
 	for (size_t i = 0; i < 100; ++i)
 	{
@@ -253,6 +267,9 @@ void SP3::AlienMovement(double dt)
 	{
 		alienBase *go = (alienBase *)*it;
 
+		if (!go->active)
+			continue;
+
 		go->move(4, theMap);
 
 		if (!go->move(-1, theMap))
@@ -263,7 +280,7 @@ void SP3::AlienMovement(double dt)
 		if (go->alienType == alienBase::TYPE1_GRUB) //chases player
 			distance.set(go->pos.x - playerInfo->pos.x, go->pos.y - playerInfo->pos.y);
 		else if (go->alienType == alienBase::TYPE2_GHOUL) //random movement
-			distance.set(go->pos.x - RandIntMinMax(0, 10), go->pos.y - RandIntMinMax(0, 10));
+			distance.set(go->pos.x - RandIntMinMax(0, 19), go->pos.y - RandIntMinMax(0, 19));
 		else if (go->alienType == alienBase::TYPE3_RAPTOR) //goes to objective
 			distance.set(go->pos.x - 5, go->pos.y - 5);
 
@@ -678,6 +695,9 @@ void SP3::m_goListInteractions(double dt)
 		{
 			for (unsigned int i = 0; i < alienManager.size(); ++i) //bombfire-alien
 			{
+				if (!alienManager[i]->active)
+					continue;
+
 				if (go->pos == alienManager[i]->pos)
 				{
 
@@ -696,7 +716,8 @@ void SP3::m_goListInteractions(double dt)
 					
 					if (alienManager[i]->getAlienHealth() <= 0)
 					{
-						alienManager.erase(alienManager.begin() + i);
+						alienManager[i]->active = false;
+						//alienManager.erase(alienManager.begin() + i);
 					}
 				}
 			}
@@ -706,19 +727,31 @@ void SP3::m_goListInteractions(double dt)
 
 void SP3::spawnAliens(double dt)
 {
-	int alienType = Math::RandIntMinMax(1, 99);
+	short whichAlien = RandIntMinMax(0, alienManager.size());
+	GameObject::coord spawn = alienBase::spawnPosition[RandIntMinMax(0, 2)];
 
-	if (alienType >= 0 && alienType <= 34) //Grub - 35% 
+	for (short i = 0; i  < alienManager.size(); ++i)
 	{
-		alienManager.push_back(new alienGrub("Grub", 10, 1.f, 3, 2, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
+		if (!alienManager[(whichAlien + i) % alienManager.size()]->active && alienManager[(whichAlien + i) % alienManager.size()]->getAlienHealth() > 0)
+		{
+			alienManager[(whichAlien + i) % alienManager.size()]->active = true;
+			alienManager[(whichAlien + i) % alienManager.size()]->pos = spawn;
+			alienManager[(whichAlien + i) % alienManager.size()]->animationPos.Set(spawn.x, spawn.y, -1);
+			break;
+		}
+	}
+
+	/*if (alienType >= 0 && alienType <= 34) //Grub - 35% 
+	{
+		alienManager.push_back(new alienGrub("Grub", 10, 1.f, 3, 2, alienBase::spawnPosition[RandIntMinMax(0, 2)].x, alienBase::spawnPosition[RandIntMinMax(0, 2)].y));
 	}
 	else if (alienType >= 35 && alienType <= 59) //Ghoul - 25%
 	{
-		alienManager.push_back(new alienGhoul("Ghoul", 40, 2.f, 5, 5, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
+		alienManager.push_back(new alienGhoul("Ghoul", 40, 2.f, 5, 5, alienBase::spawnPosition[RandIntMinMax(0, 2)].x, alienBase::spawnPosition[RandIntMinMax(0, 2)].y));
 	}
 	else if (alienType >= 60 && alienType <= 84) //Raptor - 25%
 	{
-		alienManager.push_back(new alienRaptor("Raptor", 20, 4.f, 4, 5, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
+		alienManager.push_back(new alienRaptor("Raptor", 20, 4.f, 4, 5, alienBase::spawnPosition[RandIntMinMax(0, 2)].x, alienBase::spawnPosition[RandIntMinMax(0, 2)].y));
 	}
 	else if (alienType >= 85 && alienType <= 94) //Goliath - 10%
 	{
@@ -727,7 +760,7 @@ void SP3::spawnAliens(double dt)
 	else if (alienType >= 95 && alienType <= 99) //Leviathan - 5%
 	{
 		//alienManager.push_back(new alienGrub("Leviathan", 10, 1.f, 3, 2, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
-	}
+	}*/
 }
 
 void SP3::Update(double dt)
@@ -1687,7 +1720,8 @@ void SP3::Render()
 		{
 			for (int currentAlien = 0; currentAlien < alienManager.size(); ++currentAlien)
 			{
-				renderAliens(alienManager[currentAlien]);
+				if (alienManager[currentAlien]->active)
+					renderAliens(alienManager[currentAlien]);
 			}
 		}
 
