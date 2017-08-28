@@ -31,8 +31,6 @@ public:
 	Vector3 scale;
 	alienType alienType;
 
-	float originalSpeed;
-
 protected:
 	string alienName;
 	float alienHealth, alienSpeed, alienDamage;

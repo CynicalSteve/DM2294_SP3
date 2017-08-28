@@ -5,7 +5,6 @@ alienGrub::alienGrub(string alienName, float alienHealth, float alienSpeed, floa
 	this->alienName = alienName;
 	this->alienHealth = alienHealth;
 	this->alienSpeed = alienSpeed;
-	this->originalSpeed = alienSpeed;
 	this->alienDamage = alienDamage;
 	this->alienCurrencyWorth = alienCurrencyWorth;
 

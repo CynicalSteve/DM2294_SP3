@@ -32,6 +32,7 @@ public:
 	void renderBombs(BombBase *bomb, int currentBombIndex);
 	void renderUI();
 	void RenderPauseUI();
+	void RenderLoseUI();
 
 	void ReadSettings();
 	void renderShopScreen();
@@ -61,18 +62,31 @@ public:
 		NUKEBOMB,
 		TOTAL_SHOP
 	};
+
+	enum LoseSelection
+	{
+		RESTART,
+		LOSE_EXIT_MAINMENU,
+		LOSE_EXIT_GAME,
+		TOTAL_LOSE
+	};
 	enum GameState
 	{
 		WAVE_STATE,
 		WAVE_END_STATE,
+		LOSE_STATE,
 		TOTAL_STATES
 	};
 
 	PauseSelection pauseSelection;
 	ShopSelection shopselection;
+	LoseSelection loseSelection;
 	GameState gameState;
 	unsigned int pauseSelectionIterator;
 	unsigned int shopSelectionIterator;
+	unsigned int loseSelectionIterator;
+
+	float loseBombPosition;
 
 protected:
 	std::vector<GameObject *> m_goList;

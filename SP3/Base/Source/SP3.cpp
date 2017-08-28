@@ -59,6 +59,11 @@ void SP3::Init()
 	shopselection = NORMALBOMB;
 	shopSelectionIterator = 0;
 
+	loseSelection = RESTART;
+	loseSelectionIterator = 0;
+
+	loseBombPosition = 0.f;
+
 	gameState = WAVE_STATE;
 
 	playerInfo = new Player(100, 5.f);
@@ -684,8 +689,24 @@ void SP3::m_goListInteractions(double dt)
 			{
 				if (go->pos == alienManager[i]->pos)
 				{
-					--currentAlien;
-					alienManager.erase(alienManager.begin() + i);
+
+					if (alienManager[i]->loseHealthCooldown == 0.f)
+					{
+						alienManager[i]->subtractAlienHealth(10);
+						alienManager[i]->loseHealthCooldown += dt;
+					}
+					else
+					{
+						alienManager[i]->loseHealthCooldown += dt;
+
+						if (alienManager[i]->loseHealthCooldown > 1.f)
+							alienManager[i]->loseHealthCooldown = 0.f;
+					}
+					
+					if (alienManager[i]->getAlienHealth() <= 0)
+					{
+						alienManager.erase(alienManager.begin() + i);
+					}
 				}
 			}
 		}
@@ -697,10 +718,6 @@ void SP3::Update(double dt)
 {
 	SceneBase::Update(dt);
 	doubletime = dt;
-
-	if (Application::IsKeyPressed('9'));
-
-	if (Application::IsKeyPressed('0'));
 
 	if (gameState == WAVE_STATE)
 	{
@@ -737,9 +754,9 @@ void SP3::Update(double dt)
 				playerInfo->bombManager.push_back(new MineBomb("MineBomb", 100, 2, playerInfo->pos.x, playerInfo->pos.y));
 
 			if (Application::IsKeyPressed('G') && !KeyBounce['G']) //Lower player health
-				playerInfo->setPlayerHealth(playerInfo->getPlayerHealth() - 10);
+				playerInfo->subtractHealth(10);
 
-			if (Application::IsKeyPressed('Q')) //
+			if (Application::IsKeyPressed('Q')) //Inventory switching
 			{
 				if (!KeyBounce['Q'])
 					if (playerInfo->currentBomb != 0)
@@ -750,7 +767,7 @@ void SP3::Update(double dt)
 			}
 			else KeyBounce['Q'] = false;
 
-			if (Application::IsKeyPressed('E')) //
+			if (Application::IsKeyPressed('E')) //Inventory switching
 			{
 				if (!KeyBounce['E'])
 					if (playerInfo->currentBomb < sizeof(playerInfo->playerInventory))
@@ -763,34 +780,27 @@ void SP3::Update(double dt)
 
 			if (Application::IsKeyPressed('F') && !KeyBounce['F']) //Temporary button for placing mine
 				playerInfo->bombManager.push_back(new MineBomb("MineBomb", 100, 2, playerInfo->pos.x, playerInfo->pos.y));
+
 			if (Application::IsKeyPressed('Z') && !KeyBounce['Z'])
 				if (currentAlien < 3)
 				{
-					alienManager.push_back(new alienGrub("Grub", 100, 4.f, 5, 5, 9, 1));
+					alienManager.push_back(new alienGrub("Grub", 10, 4.f, 5, 5, 9, 1));
 					++currentAlien;
 				}
 
 			if (Application::IsKeyPressed('X') && !KeyBounce['X'])
 				if (currentAlien < 3)
 				{
-					alienManager.push_back(new alienGhoul("Ghoul", 100, 4.f, 5, 5, 9, 1));
+					alienManager.push_back(new alienGhoul("Ghoul", 40, 4.f, 5, 5, 9, 1));
 					++currentAlien;
 				}
 
 			if (Application::IsKeyPressed('C') && !KeyBounce['C'])
 				if (currentAlien < 3)
 				{
-					alienManager.push_back(new alienRaptor("Raptor", 100, 4.f, 5, 5, 9, 1));
+					alienManager.push_back(new alienRaptor("Raptor", 20, 4.f, 5, 5, 9, 1));
 					++currentAlien;
 				}
-
-
-
-			if (Application::IsKeyPressed(VK_UP));
-
-			if (Application::IsKeyPressed(VK_DOWN)); //use this for hold controls
-
-			if (Application::IsKeyPressed(VK_SPACE) && !KeyBounce[VK_SPACE]); //use this for toggle controls
 
 			//Mouse Section
 			static bool bLButtonState = false;
@@ -838,17 +848,6 @@ void SP3::Update(double dt)
 				bLButtonState = false;
 				std::cout << "LBUTTON UP" << std::endl;
 			}
-			static bool bRButtonState = false;
-			if (!bRButtonState && Application::IsMousePressed(1))
-			{
-				bRButtonState = true;
-				std::cout << "RBUTTON DOWN" << std::endl;
-			}
-			else if (bRButtonState && !Application::IsMousePressed(1))
-			{
-				bRButtonState = false;
-				std::cout << "RBUTTON UP" << std::endl;
-			}
 
 			//Creation of bomb fire after bomb goes off
 			BombFireCreation(dt);
@@ -863,15 +862,21 @@ void SP3::Update(double dt)
 			PlayerChecks(dt);
 
 
-			if (Application::IsKeyPressed('K')) //
+			if (Application::IsKeyPressed('K')) //Wave end
 			{
 				if (!KeyBounce['K'])
-					gameState = WAVE_END_STATE;
+					gameState = WAVE_END_STATE;  
 				KeyBounce['K'] = true;
 			}
 			else KeyBounce['K'] = false;
 
-
+			if (Application::IsKeyPressed('L')) //Lose
+			{
+				if (!KeyBounce['L'])
+					gameState = LOSE_STATE;
+				KeyBounce['L'] = true;
+			}
+			else KeyBounce['L'] = false;
 		}
 		else
 		{
@@ -966,6 +971,7 @@ void SP3::Update(double dt)
 			}
 		}
 	}
+	//End of wave (shop screen)
 	else if (gameState == WAVE_END_STATE)
 	{
 		if (isPaused == false)
@@ -1148,6 +1154,72 @@ void SP3::Update(double dt)
 			{
 				KeyBounce[VK_RETURN] = false;
 			}
+		}
+	} 
+	else if(gameState == LOSE_STATE)
+	{
+		if (Application::IsKeyPressed('W'))
+		{
+			if (!KeyBounce['W'])
+			{
+				if (loseSelectionIterator != 0)
+				{
+					--loseSelectionIterator;
+					loseSelection = static_cast<LoseSelection>(loseSelectionIterator);
+					loseBombPosition += 25;
+				}
+			}
+			KeyBounce['W'] = true;
+		}
+		else KeyBounce['W'] = false;
+
+		if (Application::IsKeyPressed('S'))
+		{
+			if (!KeyBounce['S'])
+			{
+				if (loseSelectionIterator + 1 != TOTAL_LOSE)
+				{
+					++loseSelectionIterator;
+					loseSelection = static_cast<LoseSelection>(loseSelectionIterator);
+					loseBombPosition -= 25;
+				}
+			}
+			KeyBounce['S'] = true;
+		}
+		else KeyBounce['S'] = false;
+
+		if (Application::IsKeyPressed(VK_RETURN))
+		{
+			if (!KeyBounce[VK_RETURN])
+			{
+				switch (loseSelection)
+				{
+				case RESTART:
+				{
+					
+					break;
+				}
+				case LOSE_EXIT_MAINMENU:
+				{
+					SceneManager::instance()->SwitchScene(SceneManager::SCENE_STARTMENU);
+					break;
+				}
+				case LOSE_EXIT_GAME:
+				{
+					SceneManager::instance()->Quit(true);
+					break;
+				}
+
+				default:
+					break;
+				}
+			}
+
+			KeyBounce[VK_RETURN] = true;
+		}
+		else
+		{
+			KeyBounce[VK_RETURN] = false;
 		}
 	}
 
@@ -1451,6 +1523,58 @@ void SP3::RenderPauseUI()
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, exit_G, exit_B), 1.5f, 35.f, 15.6f);
 }
 
+void SP3::RenderLoseUI()
+{
+	modelStack.PushMatrix();  //Start Menu Background
+	{
+		modelStack.Translate(100, 45, 0);
+		modelStack.Scale(100, 90, 0);
+		RenderMesh(meshList[GEO_STARTMENU_BACKGROUND], false);
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();  //Restart Button
+	{
+		modelStack.Translate(100, 75, 1);
+		modelStack.Scale(43, 32, 0);
+		RenderMesh(meshList[GEO_RESTART], false);
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();  //Exit to Main Menu Button
+	{
+		modelStack.Translate(100, 50, 1);
+		modelStack.Scale(43, 32, 0);
+		RenderMesh(meshList[GEO_EXIT_MAINMENU], false);
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();  //Exit Game Button
+	{
+		modelStack.Translate(100, 25, 1);
+		modelStack.Scale(43, 32, 0);
+		RenderMesh(meshList[GEO_STARTMENU_EXIT], false);
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	{
+		modelStack.Translate(126, 68 + loseBombPosition, 1);
+		modelStack.Scale(10, 10, 0);
+		RenderMesh(meshList[GEO_NORMALBOMB], false);
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	{
+		modelStack.Translate(75, 68 + loseBombPosition, 1);
+		modelStack.Scale(10, 10, 0);
+		modelStack.Rotate(180, 0, 1, 0);
+		RenderMesh(meshList[GEO_NORMALBOMB], false);
+	}
+	modelStack.PopMatrix();
+}
+
 void SP3::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -1547,6 +1671,10 @@ void SP3::Render()
 	if (gameState == WAVE_END_STATE)
 	{
 		renderShopScreen();
+	}
+	else if (gameState == LOSE_STATE)
+	{
+		RenderLoseUI();
 	}
 
 	if (isPaused == true)  //Pause Menu
