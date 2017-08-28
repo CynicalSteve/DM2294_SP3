@@ -5,8 +5,7 @@
 #include <sstream>
 #include <fstream>
 
-SP3::SP3() : alienManager(NULL),
-currentAlien(0), isPaused(false)
+SP3::SP3() : alienManager(NULL), isPaused(false)
 {
 }
 
@@ -794,25 +793,19 @@ void SP3::Update(double dt)
 				playerInfo->bombManager.push_back(new MineBomb("MineBomb", 100, 2, playerInfo->pos.x, playerInfo->pos.y));
 
 			if (Application::IsKeyPressed('Z') && !KeyBounce['Z'])
-				if (currentAlien < 3)
-				{
-					alienManager.push_back(new alienGrub("Grub", 10, 4.f, 5, 5, 9, 1));
-					++currentAlien;
-				}
+			{
+				alienManager.push_back(new alienGrub("Grub", 10, 1.f, 3, 2, 9, 1));
+			}
 
 			if (Application::IsKeyPressed('X') && !KeyBounce['X'])
-				if (currentAlien < 3)
-				{
-					alienManager.push_back(new alienGhoul("Ghoul", 40, 4.f, 5, 5, 9, 1));
-					++currentAlien;
-				}
+			{
+				alienManager.push_back(new alienGhoul("Ghoul", 40, 2.f, 5, 5, 9, 1));
+			}
 
 			if (Application::IsKeyPressed('C') && !KeyBounce['C'])
-				if (currentAlien < 3)
-				{
-					alienManager.push_back(new alienRaptor("Raptor", 20, 4.f, 5, 5, 9, 1));
-					++currentAlien;
-				}
+			{
+				alienManager.push_back(new alienRaptor("Raptor", 20, 4.f, 4 , 5, 9, 1));
+			}
 
 			//Mouse Section
 			static bool bLButtonState = false;

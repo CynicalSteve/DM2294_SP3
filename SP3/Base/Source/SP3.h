@@ -99,7 +99,8 @@ protected:
 	std::vector<alienBase *> alienManager;
 
 	bool isPaused;
-	int currentAlien;
+	unsigned long int maxAliens;
+	unsigned long int dayNumber;
 
 	bool hasSound;
 	bool KeyBounce[256];
