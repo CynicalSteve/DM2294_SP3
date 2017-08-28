@@ -2,6 +2,7 @@
 
 alienBase::alienBase() : alienName(""), alienHealth(0), alienDamage(0), alienSpeed(0)
 {
+	active = false;
 }
 
 alienBase::~alienBase()
