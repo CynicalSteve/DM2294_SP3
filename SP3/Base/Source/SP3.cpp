@@ -91,6 +91,10 @@ void SP3::Init()
 	GameObject *lootcrateGO3 = FetchGO();
 	lootcrateGO3->type = GameObject::GO_LOOTCRATE;
 	lootcrateGO3->pos.set(7, 2);
+
+	/*GameObject *houseGO = FetchGO();
+	lootcrateGO3->type = GameObject::GO_HOUSE;
+	lootcrateGO3->pos.set(7, 2);*/
 }
 
 GameObject* SP3::FetchGO()
@@ -701,6 +705,54 @@ void SP3::m_goListInteractions(double dt)
 					if (alienManager[i]->getAlienHealth() <= 0)
 					{
 						alienManager.erase(alienManager.begin() + i);
+					}
+				}
+			}
+
+			if (go->type == GameObject::GO_HOUSE)
+			{
+				for (unsigned int i = 0; i < alienManager.size(); ++i) //bombfire-alien
+				{
+					if (go->pos == alienManager[i]->pos)
+					{
+
+						/*if (alienManager[i]->loseHealthCooldown == 0.f)
+						{
+							alienManager[i]->subtractAlienHealth(10);
+							alienManager[i]->loseHealthCooldown += dt;
+						}
+						else
+						{
+							alienManager[i]->loseHealthCooldown += dt;
+
+							if (alienManager[i]->loseHealthCooldown > 1.f)
+								alienManager[i]->loseHealthCooldown = 0.f;
+						}
+
+						if (alienManager[i]->getAlienHealth() <= 0)
+						{
+							alienManager.erase(alienManager.begin() + i);
+						}*/
+
+						if (go->loseHealthCooldown == 0.f)
+						{
+						go->houseHealth -= alienManager[i]->getAlienDamage();
+						go->loseHealthCooldown+= dt;
+						}
+						else
+						{
+							go->loseHealthCooldown += dt;
+
+							if (go->loseHealthCooldown > 1.f)
+							{
+								go->loseHealthCooldown = 0.f;
+							}
+
+							/*if (go->houseHealth <= 0.f)
+							{
+							gameState = LOSE_STATE;
+							}*/
+						}
 					}
 				}
 			}
@@ -1394,6 +1446,25 @@ void SP3::renderAliens(alienBase *alien)
 		}
 		modelStack.PopMatrix(); ///AlienRaptor
 		break;
+
+	case alienBase::TYPE4_GOLIATH:
+		modelStack.PushMatrix(); //AlienGoliath
+		{
+			modelStack.Translate(alien->animationPos.x, alien->animationPos.y, 0);
+			RenderMesh(meshList[GEO_ALIENGOLIATH], false);
+		}
+		modelStack.PopMatrix(); ///AlienGoliath
+		break;
+
+	case alienBase::TYPE5_LEVIATHAN:
+		modelStack.PushMatrix(); //AlienLeviathan
+		{
+			modelStack.Translate(alien->animationPos.x, alien->animationPos.y, 0);
+			RenderMesh(meshList[GEO_ALIENLEVIATHAN], false);
+		}
+		modelStack.PopMatrix(); ///AlienLeviathan
+		break;
+
 	default:
 		break;
 	}
@@ -1669,17 +1740,6 @@ void SP3::Render()
 	RenderMesh(meshList[GEO_GROUND], false);
 	modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 0);
-	modelStack.Scale(10, 10, 10);
-	RenderMesh(meshList[GEO_MAZEWALL], false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(15, 40, 0);
-	modelStack.Scale(50, 50, 0);
-	//RenderMesh(meshList[GEO_HOUSE], false);
-	modelStack.PopMatrix();
 
 	modelStack.PushMatrix(); //grid system
 	{
@@ -1730,6 +1790,12 @@ void SP3::Render()
 		}
 	}
 	modelStack.PopMatrix(); ///grid system
+
+	modelStack.PushMatrix();
+	modelStack.Translate(38, 75, 0);
+	modelStack.Scale(25, 25, 0);
+	RenderMesh(meshList[GEO_HOUSE], false);
+	modelStack.PopMatrix();
 
 	renderUI();  //Main Game UI
 	if (gameState == WAVE_END_STATE)
