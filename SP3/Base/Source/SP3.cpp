@@ -34,7 +34,7 @@ void SP3::Init()
 	while (theMap[0][mapSize] > 0 && theMap[0][mapSize] < 10)
 		++mapSize;
 	alienBase::createSpawnPosition(theMap, mapSize);
-	alienBase::spawnPosition[0] = playerInfo->pos;
+	//alienBase::spawnPosition[0] = GameObject::coord();
 
 	pauseSelection = CONTINUE;
 	pauseSelectionIterator = 0;
