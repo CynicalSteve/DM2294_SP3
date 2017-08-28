@@ -67,6 +67,16 @@ void StartMenu::Update(double dt)
 		}
 		else KeyBounce['S'] = false;
 
+		if (Application::IsKeyPressed('D'))
+		{
+			if (!KeyBounce['D'])
+			{
+				currentSelectionScreen = INSTRUCTIONS_SCREEN;
+			}
+			KeyBounce['D'] = true;
+		}
+		else KeyBounce['D'] = false;
+
 		if (Application::IsKeyPressed(VK_RETURN))
 		{
 			if (!KeyBounce[VK_RETURN])
@@ -159,6 +169,18 @@ void StartMenu::Update(double dt)
 			KeyBounce[VK_RETURN] = false;
 		}
 	}
+	else if (currentSelectionScreen == INSTRUCTIONS_SCREEN)
+	{
+		if (Application::IsKeyPressed('A'))
+		{
+			if (!KeyBounce['A'])
+			{
+				currentSelectionScreen = MAINMENU_SCREEN;
+			}
+			KeyBounce['A'] = true;
+		}
+		else KeyBounce['A'] = false;
+	}
 }
 
 void StartMenu::Render()
@@ -247,6 +269,14 @@ void StartMenu::Render()
 				RenderMesh(meshList[GEO_NORMALBOMB], false);
 			}
 			modelStack.PopMatrix();
+
+			modelStack.PushMatrix();  //Right Arrow
+			{
+				modelStack.Translate(175, 10, 0);
+				modelStack.Scale(20, 20, 1);
+				RenderMesh(meshList[GEO_RIGHTARROW], false);
+			}
+			modelStack.PopMatrix();
 		}
 		modelStack.PopMatrix();
 	}
@@ -281,6 +311,24 @@ void StartMenu::Render()
 		ss.precision(2);
 		ss << "[Enter] Accept & Apply";
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549f, 0), 2.f, 20.f, 5.1f);
+	}
+	else if (currentSelectionScreen == INSTRUCTIONS_SCREEN)
+	{
+		modelStack.PushMatrix();  //INSTRUCTIONS
+		{
+			modelStack.Translate(100, 55, 0);
+			modelStack.Scale(150, 75, 1);
+			RenderMesh(meshList[GEO_STARTMENU_INSTRUCTIONS], false);
+		}
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();  //INSTRUCTIONS
+		{
+			modelStack.Translate(15, 10, 0);
+			modelStack.Scale(20, 20, 1);
+			RenderMesh(meshList[GEO_LEFTARROW], false);
+		}
+		modelStack.PopMatrix();
 	}
 
 	glEnable(GL_DEPTH_TEST);

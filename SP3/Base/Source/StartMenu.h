@@ -20,6 +20,7 @@ class StartMenu : public SceneBase
 	{
 		MAINMENU_SCREEN,
 		SETTINGS_SCREEN,
+		INSTRUCTIONS_SCREEN,
 		TOTALNUM
 	};
 
