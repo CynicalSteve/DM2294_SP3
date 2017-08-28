@@ -7,6 +7,8 @@
 #include "alienGrub.h"
 #include "alienGhoul.h"
 #include "alienRaptor.h"
+#include "alienGoliath.h"
+#include "alienLeviathan.h"
 #include "BombBase.h"
 #include "BombNormal.h"
 #include "BombMine.h"

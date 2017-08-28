@@ -717,23 +717,23 @@ void SP3::spawnAliens(double dt)
 
 	if (alienType >= 0 && alienType <= 34) //Grub - 35% 
 	{
-		alienManager.push_back(new alienGrub("Grub", 10, 1.f, 3, 2, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
+		alienManager.push_back(new alienGrub("Grub", 10, 1.5f, 5, 2, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
 	}
 	else if (alienType >= 35 && alienType <= 59) //Ghoul - 25%
 	{
-		alienManager.push_back(new alienGhoul("Ghoul", 40, 2.f, 5, 5, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
+		alienManager.push_back(new alienGhoul("Ghoul", 40, 2.f, 10, 5, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
 	}
 	else if (alienType >= 60 && alienType <= 84) //Raptor - 25%
 	{
-		alienManager.push_back(new alienRaptor("Raptor", 20, 4.f, 4, 5, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
+		alienManager.push_back(new alienRaptor("Raptor", 20, 4.f, 10, 5, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
 	}
 	else if (alienType >= 85 && alienType <= 94) //Goliath - 10%
 	{
-		//alienManager.push_back(new alienGrub("Goliath", 10, 1.f, 3, 2, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
+		alienManager.push_back(new alienGoliath("Goliath", 50, 1.f, 15, 10, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
 	}
 	else if (alienType >= 95 && alienType <= 99) //Leviathan - 5%
 	{
-		//alienManager.push_back(new alienGrub("Leviathan", 10, 1.f, 3, 2, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
+		alienManager.push_back(new alienLeviathan("Leviathan", 100, .6f, 25, 30, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
 	}
 }
 
