@@ -11,6 +11,7 @@
 #include "BombNormal.h"
 #include "BombMine.h"
 #include "Player.h"
+#include "Map.h"
 
 #include <vector>
 #include <cstdlib>
@@ -40,10 +41,9 @@ public:
 
 protected:
 	std::vector<GameObject *> m_goList;
-	float m_worldWidth;
-	float m_worldHeight;
 	Player * playerInfo;
 	short **theMap;
+	short mapSize;
 	//GameObject *myInventory[10];
 	double doubletime;
 	std::vector<alienBase *> alienManager;

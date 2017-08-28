@@ -26,29 +26,11 @@ void SP3::Init()
 		KeyBounce[i] = false;
 	}
 
-	theMap = new short *[11];
-	for (short x = 0; x < 11; ++x)
-		theMap[x] = new short[11];
+	theMap = parse(".//map.csv");
 
-	for (short y = 0; y < 11; ++y)
-		for (short x = 0; x < 11; ++x)
-			theMap[x][y] = 0;
-
-	for (short y = 0; y < 11; ++y)
-	{
-		for (short x = 0; x < 11; ++x)
-		{
-			if (y == 0 || y == 10)
-				theMap[x][y] = 1;
-			else if (y % 2)
-			{
-				theMap[0][y] = 1;
-				theMap[10][y] = 1;
-			}
-			else if (!(x % 2))
-				theMap[x][y] = 1;
-		}
-	}
+	mapSize = 0;
+	while (theMap[0][mapSize] > 0 && theMap[0][mapSize] < 10)
+		++mapSize;
 
 	playerInfo = new Player(100, 5.f);
 	playerInfo->pos.set(1, 1);
@@ -832,7 +814,8 @@ void SP3::Render()
 
 	modelStack.PushMatrix(); //grid system
 	{
-		modelStack.Scale(9, 9, 1);
+		theMap[11];
+		modelStack.Scale(100. / mapSize, 100. / mapSize, 1);
 		modelStack.Translate(.5, .5, 0);
 
 		modelStack.PushMatrix(); //map

@@ -109,6 +109,8 @@ protected:
 	Mesh* meshList[NUM_GEOMETRY];
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
+	float m_worldWidth;
+	float m_worldHeight;
 
 	Camera camera;
 
