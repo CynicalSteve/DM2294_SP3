@@ -51,7 +51,7 @@ bool SceneManager::Quit() { return quit; }
 
 void SceneManager::SwitchScene(unsigned int sceneID)
 {
- 	if (state == sceneID || sceneSwitching)
+ 	if (sceneSwitching)
 		return;
 
 	switch (sceneID)

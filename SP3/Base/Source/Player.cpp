@@ -2,8 +2,8 @@
 
 Player::Player(float playerHealth, float playerSpeed) : 
 bombManager(NULL), currentBomb(0), playerHealth(playerHealth), playerSpeed(playerSpeed), normalSpeed(playerSpeed), equipmentCurrency(0),
-maxPlayerHealth(100), speedBoosted(false), speedBoostCooldown(0.f), maxSpeedBoostCooldownTime(5.f), currentBombTimer(0.f), nukeDeployed(false),
-maxBombTimer(0.f), invulnerabilityCooldown(0.f), maxInvulnerableTime(7.f), invulnerabilityHealth(0.f), Invulnerability(false)
+maxPlayerHealth(100), speedBoosted(false), speedBoostCooldown(0.f), maxSpeedBoostCooldownTime(10.f), currentBombTimer(0.f), nukeDeployed(false),
+maxBombTimer(0.f), invulnerabilityCooldown(0.f), maxInvulnerableTime(10.f), invulnerabilityHealth(0.f), Invulnerability(false)
 {
 	active = true;
 

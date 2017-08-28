@@ -62,6 +62,9 @@ void SP3::Init()
 	playerInfo->playerInventory[2]->inventoryBombType = Inventory::INVENTORY_NUKEBOMB;
 	playerInfo->playerInventory[2]->setBombAmount(100);
 
+	dayNumber = 1;
+	maxAliens = 5;
+
 	//Exercise 2a: Construct 100 GameObject with type GO_ASTEROID and add into m_goList
 	m_goList.push_back(playerInfo);
 	for (size_t i = 0; i < 100; ++i)
@@ -988,6 +991,9 @@ void SP3::Update(double dt)
 
 			if (Application::IsKeyPressed('N') && !KeyBounce['N'])
 			{
+				++dayNumber;
+				maxAliens *= 1.5f;
+
 				gameState = WAVE_STATE;
 
 				KeyBounce['N'] = true;
@@ -1184,7 +1190,7 @@ void SP3::Update(double dt)
 				{
 				case RESTART:
 				{
-					
+					SceneManager::instance()->SwitchScene(SceneManager::SCENE_MAINGAME);
 					break;
 				}
 				case LOSE_EXIT_MAINMENU:
