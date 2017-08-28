@@ -1395,7 +1395,7 @@ void SP3::renderUI()
 	{
 		modelStack.Translate(100, 100, 0);
 		modelStack.Scale(200, 20, 1);
-		RenderMesh(meshList[GEO_QUAD], false);
+		//RenderMesh(meshList[GEO_QUAD], false);
 	}
 	modelStack.PopMatrix();
 
@@ -1643,15 +1643,14 @@ void SP3::Render()
 
 	modelStack.PushMatrix(); //grid system
 	{
-		theMap[11];
 		modelStack.Scale(100. / mapSize, 100. / mapSize, 1);
 		modelStack.Translate(.5, .5, 0);
 
 		modelStack.PushMatrix(); //map
 		{
-			for (short y = 0; y < 11; ++y)
+			for (short y = 0; y < mapSize; ++y)
 			{
-				for (short x = 0; x < 11; ++x)
+				for (short x = 0; x < mapSize; ++x)
 				{
 					if (theMap[x][y])
 						RenderMesh(meshList[GEO_MAZEWALL], false);
@@ -1660,7 +1659,7 @@ void SP3::Render()
 					//if (playerInfo->pos.x == x && playerInfo->pos.y == y)
 						//RenderMesh(meshList[GEO_PLAYER], false);
 				}
-				modelStack.Translate(-11, 1, 0);
+				modelStack.Translate(-mapSize, 1, 0);
 			}
 		}
 		modelStack.PopMatrix(); ///map
