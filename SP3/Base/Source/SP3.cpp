@@ -34,7 +34,7 @@ void SP3::Init()
 	while (theMap[0][mapSize] > 0 && theMap[0][mapSize] < 10)
 		++mapSize;
 	alienBase::createSpawnPosition(theMap, mapSize);
-	//alienBase::spawnPosition[0] = GameObject::coord();
+	alienBase::spawnPosition[0] = GameObject::coord();
 
 	pauseSelection = CONTINUE;
 	pauseSelectionIterator = 0;
@@ -711,6 +711,31 @@ void SP3::m_goListInteractions(double dt)
 	}
 }
 
+void SP3::spawnAliens(double dt)
+{
+	int alienType = Math::RandIntMinMax(1, 99);
+
+	if (alienType >= 0 && alienType <= 34) //Grub - 35% 
+	{
+		alienManager.push_back(new alienGrub("Grub", 10, 1.f, 3, 2, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
+	}
+	else if (alienType >= 35 && alienType <= 59) //Ghoul - 25%
+	{
+		alienManager.push_back(new alienGhoul("Ghoul", 40, 2.f, 5, 5, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
+	}
+	else if (alienType >= 60 && alienType <= 84) //Raptor - 25%
+	{
+		alienManager.push_back(new alienRaptor("Raptor", 20, 4.f, 4, 5, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
+	}
+	else if (alienType >= 85 && alienType <= 94) //Goliath - 10%
+	{
+		//alienManager.push_back(new alienGrub("Goliath", 10, 1.f, 3, 2, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
+	}
+	else if (alienType >= 95 && alienType <= 99) //Leviathan - 5%
+	{
+		//alienManager.push_back(new alienGrub("Leviathan", 10, 1.f, 3, 2, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
+	}
+}
 
 void SP3::Update(double dt)
 {
@@ -748,9 +773,6 @@ void SP3::Update(double dt)
 
 			playerInfo->move(4, theMap);
 
-			if (Application::IsKeyPressed('F') && !KeyBounce['F']) //Temporary button for placing mine
-				playerInfo->bombManager.push_back(new MineBomb("MineBomb", 100, 2, playerInfo->pos.x, playerInfo->pos.y));
-
 			if (Application::IsKeyPressed('G') && !KeyBounce['G']) //Lower player health
 				playerInfo->subtractHealth(10);
 
@@ -776,8 +798,6 @@ void SP3::Update(double dt)
 			}
 			else KeyBounce['E'] = false;
 
-			if (Application::IsKeyPressed('F') && !KeyBounce['F']) //Temporary button for placing mine
-				playerInfo->bombManager.push_back(new MineBomb("MineBomb", 100, 2, playerInfo->pos.x, playerInfo->pos.y));
 
 			if (Application::IsKeyPressed('Z') && !KeyBounce['Z'])
 			{
@@ -844,6 +864,9 @@ void SP3::Update(double dt)
 
 			//Creation of bomb fire after bomb goes off
 			BombFireCreation(dt);
+
+			//Spawn ALiens
+			spawnAliens(dt);
 
 			//Alien Movement
 			AlienMovement(dt);
