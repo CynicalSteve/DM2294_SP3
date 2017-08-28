@@ -196,7 +196,7 @@ void StartMenu::Render()
 	if (currentSelectionScreen == MAINMENU_SCREEN)
 	{
 		modelStack.PushMatrix();  //All UI items in start menu
-		modelStack.Translate(-5, 0, 0);
+		modelStack.Translate(0, 0, 0);
 		{
 			modelStack.PushMatrix();  //Start Menu Title
 			{
@@ -270,6 +270,17 @@ void StartMenu::Render()
 			}
 			modelStack.PopMatrix();
 		}
+
+		std::ostringstream ss;
+		ss.str("");
+		ss.precision(2);
+		ss << "[Q] Toggle On/Off";
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549, 0), 2.f, 25.f, 7.1f);
+
+		ss.str("");
+		ss.precision(2);
+		ss << "[Enter] Accept & Apply";
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549f, 0), 2.f, 20.f, 5.1f);
 	}
 
 	glEnable(GL_DEPTH_TEST);

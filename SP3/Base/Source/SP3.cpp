@@ -170,6 +170,9 @@ void SP3::renderShopScreen()
 	}
 	modelStack.PopMatrix();
 
+	modelStack.PushMatrix();
+	modelStack.Translate(-5, 0, 0);
+
 	modelStack.PushMatrix(); //Normal Bomb
 	{
 		modelStack.Translate(90, 80, 0);
@@ -217,7 +220,7 @@ void SP3::renderShopScreen()
 		RenderMesh(meshList[GEO_EQUIPMENT], false);
 	}
 	modelStack.PopMatrix();
-
+	modelStack.PopMatrix();
 	float normal_G = 1.f, normal_B = 1.f, mine_G = 1.f, mine_B = 1.f, nuke_G = 1.f, nuke_B = 1.f;
 
 	if (shopselection == NORMALBOMB)
@@ -242,27 +245,28 @@ void SP3::renderShopScreen()
 	ss.str("");
 	ss.precision(5);
 	ss << "5";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, normal_G, normal_B), 2, 52.f, 35.f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, normal_G, normal_B), 2, 47.f, 35.f);
 
 	ss.str("");
 	ss.precision(5);
 	ss << "15";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, mine_G, mine_B), 2, 52.f, 28.5f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, mine_G, mine_B), 2, 47.f, 28.5f);
 
 	ss.str("");
 	ss.precision(5);
 	ss << "50";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, nuke_G, nuke_B), 2, 52.f, 21.5f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, nuke_G, nuke_B), 2, 47.f, 21.5f);
 
 	ss.str("");
 	ss.precision(5);
 	ss << "Press 'N' to start";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549f, 0), 1.5F, 32.f, 14.5f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549f, 0), 1.5f, 28.f, 14.5f);
 	
 	ss.str("");
 	ss.precision(5);
 	ss << "the next day";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549f, 0), 1.5F, 36.f, 11.5f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549f, 0), 1.5f, 32.f, 11.5f);
+	
 }
 
 void SP3::AlienMovement(double dt)
@@ -339,9 +343,11 @@ void SP3::AlienMovement(double dt)
 
 void SP3::PlayerChecks(double dt)
 {
-	if (playerInfo->getPlayerHealth() < 0) //Reset health to 0 if current player health is under 0
+	if (playerInfo->getPlayerHealth() <= 0) //Reset health to 0 if current player health is under 0
 	{
 		playerInfo->setPlayerHealth(0);
+
+		//gameState = LOSE_STATE; //Player loses game when health is 0
 	}
 
 	if (playerInfo->getEquipmentCurrency() < 0) //Reset currency to 0 if current player currency is under 0
@@ -390,13 +396,19 @@ void SP3::PlayerChecks(double dt)
 		if (playerInfo->getCurrentTimer() < playerInfo->getMaxBombTimer())
 		{
 			playerInfo->addToTimer(dt);
+
+			playerInfo->countdown -= dt;
 		}
 		else
 		{
-			PlaySound(TEXT("Image//nukeBoom.wav"), NULL, SND_ASYNC);
 			playerInfo->setCurrentTimer(0.f);
 			alienManager.clear();
 			playerInfo->setNukeDeployedState(false);
+
+			if (hasSound == true)
+			{
+				PlaySound(TEXT("Image//nukeBoom.wav"), NULL, SND_ASYNC);
+			}
 		}
 	}
 }
@@ -834,6 +846,7 @@ void SP3::Update(double dt)
 						{
 							playerInfo->setNukeDeployedState(true);
 							playerInfo->setMaxBombTImer(10.f);
+							playerInfo->countdown = 10.f;
 							playerInfo->playerInventory[playerInfo->currentBomb]->subtractBombAmount(1);
 						}
 						break;
@@ -1427,9 +1440,13 @@ void SP3::renderUI()
 		{
 			modelStack.Translate(59, 95, 0);
 		}
-		else
+		else if (playerInfo->currentBomb == 1)
 		{
 			modelStack.Translate(89, 95, 0);
+		}
+		else
+		{
+			modelStack.Translate(119, 95, 0);
 		}
 		modelStack.Scale(25, 7, 1);
 		RenderMesh(meshList[GEO_BOMBSELECTOR], true);
@@ -1452,6 +1469,32 @@ void SP3::renderUI()
 	}
 	modelStack.PopMatrix();
 
+	modelStack.PushMatrix(); //Nuke Bomb
+	{
+		modelStack.Translate(110, 95, 0);
+		modelStack.Scale(7, 7, 1);
+		RenderMesh(meshList[GEO_NUKEBOMB], true);
+	}
+	modelStack.PopMatrix();
+
+	if (playerInfo->getNukeDeployedState() == true)
+	{
+		modelStack.PushMatrix(); //Nuke Bomb Timer Symbol
+		{
+			modelStack.Translate(130, 5, 0);
+			modelStack.Scale(7, 7, 1);
+			RenderMesh(meshList[GEO_NUKEBOMB], true);
+		}
+		modelStack.PopMatrix();
+
+		int countdown = playerInfo->countdown;
+
+		std::ostringstream ss;
+		ss.str("");
+		ss.precision(2);
+		ss << countdown;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 0), 3, 60.5f, 1.1f);
+	}
 }
 
 void SP3::RenderPauseUI()
@@ -1629,8 +1672,8 @@ void SP3::Render()
 				for (short x = 0; x < 11; ++x)
 				{
 					if (theMap[x][y])
-						RenderMesh(meshList[wall], false);
-					else RenderMesh(meshList[floor], false);
+						RenderMesh(meshList[GEO_MAZEWALL], false);
+					//else RenderMesh(meshList[floor], false);
 					modelStack.Translate(1, 0, 0);
 					//if (playerInfo->pos.x == x && playerInfo->pos.y == y)
 						//RenderMesh(meshList[GEO_PLAYER], false);

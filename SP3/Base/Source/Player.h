@@ -35,6 +35,7 @@ public:
 	void addToTimer(double dt), setMaxBombTImer(float newMaxBombTimer), setNukeDeployedState(bool state), setCurrentTimer(float newCurrentTimer);
 	float getCurrentTimer(), getMaxBombTimer();
 	bool getNukeDeployedState();
+	float countdown;
 
 private:
 	float playerHealth, playerSpeed, maxPlayerHealth, maxSpeedBoostCooldownTime, maxInvulnerableTime;
