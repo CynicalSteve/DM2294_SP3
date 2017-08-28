@@ -67,3 +67,39 @@ void alienBase::subtractAlienHealth(int alienHealthToSubtract)
 {
 	this->alienHealth -= alienHealthToSubtract;
 }
+
+void alienBase::createSpawnPosition(short **map, short size)
+{
+	std::vector<coord> perimeter;
+	coord target;
+	for (; target.x < size - 1; ++target.x)
+	{
+		perimeter.push_back(target);
+	}
+	for (; target.y < size - 1; ++target.y)
+	{
+		perimeter.push_back(target);
+	}
+	for (; target.x > 0; --target.x)
+	{
+		perimeter.push_back(target);
+	}
+	for (; target.y > 0; --target.y)
+	{
+		perimeter.push_back(target);
+	}
+	for (; target.x < perimeter.size(); ++target.x)
+	{
+		if (!map[perimeter[target.x].x][perimeter[target.x].y])
+			spawnPosition.push_back(perimeter[target.x]);
+	}
+	while (spawnPosition.size() < 6)
+	{
+		target.x = Math::RandIntMinMax(0, perimeter.size());
+		if (map[perimeter[target.x].x][perimeter[target.x].y])
+		{
+			map[perimeter[target.x].x][perimeter[target.x].y] = 0;
+			spawnPosition.push_back(perimeter[target.x]);
+		}
+	}
+}

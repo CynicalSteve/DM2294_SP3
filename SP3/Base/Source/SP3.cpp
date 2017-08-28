@@ -5,6 +5,8 @@
 #include <sstream>
 #include <fstream>
 
+std::vector<GameObject::coord> alienBase::spawnPosition;
+
 SP3::SP3() : alienManager(NULL), isPaused(false)
 {
 }
@@ -22,17 +24,17 @@ void SP3::Init()
 	Math::InitRNG();
 	ReadSettings();
 
-	//Exercise 2c: Construct m_ship, set active, type, scale and pos
 	for (size_t i = 0; i < 256; ++i)
 	{
 		KeyBounce[i] = false;
 	}
 
 	theMap = parse(".//map.csv");
-
 	mapSize = 0;
 	while (theMap[0][mapSize] > 0 && theMap[0][mapSize] < 10)
 		++mapSize;
+	alienBase::createSpawnPosition(theMap, mapSize);
+	alienBase::spawnPosition[0] = playerInfo->pos;
 
 	pauseSelection = CONTINUE;
 	pauseSelectionIterator = 0;

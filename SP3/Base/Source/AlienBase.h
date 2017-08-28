@@ -2,6 +2,7 @@
 #define ALIEN_BASE_H
 
 #include <string>
+#include <vector>
 #include "Vector3.h"
 #include "GameObject.h"
 
@@ -27,9 +28,11 @@ public:
 	int getAlienCurrencyWorth();
 	void setAlienName(string newAlienName), setAlienHealth(float newAlienHealth), setAlienSpeed(float newAlienSpeed), setAlienDamage(float newAlienDamage), setAlienCurrencyWorth(int newAlienCurrencyWorth);
 	void addAlienHealth(int alienHealthToAdd), subtractAlienHealth(int alienHealthToSubtract);
+	static void createSpawnPosition(short **map, short size);
 
 	Vector3 scale;
 	alienType alienType;
+	static std::vector<coord> spawnPosition;
 
 protected:
 	string alienName;

@@ -94,7 +94,7 @@ protected:
 	Player * playerInfo;
 	short **theMap;
 	short mapSize;
-	//GameObject *myInventory[10];
+	std::vector<GameObject::coord> spawnPosition;
 	double doubletime;
 	std::vector<alienBase *> alienManager;
 
