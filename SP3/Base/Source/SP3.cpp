@@ -49,6 +49,10 @@ void SP3::Init()
 
 	loseBombPosition = 0.f;
 
+	spawnAlienTimer = 0.f;
+	spawnAlienAmount = 0;
+	alienSpawned = 0;
+
 	gameState = WAVE_STATE;
 
 	playerInfo = new Player(100, 5.f);
@@ -859,8 +863,26 @@ void SP3::Update(double dt)
 			BombFireCreation(dt);
 
 			//Spawn ALiens
-			spawnAliens(dt);
+			if (alienSpawned <= maxAliens)
+			{
+				if (spawnAlienAmount <= 5)
+				{
+					spawnAliens(dt);
 
+					++spawnAlienAmount;
+					++alienSpawned;
+				}
+				else
+				{
+					spawnAlienTimer += dt;
+
+					if (spawnAlienTimer > 5.f)
+					{
+						spawnAlienAmount = 0;
+						spawnAlienTimer = 0.f;
+					}
+				}
+			}
 			//Alien Movement
 			AlienMovement(dt);
 

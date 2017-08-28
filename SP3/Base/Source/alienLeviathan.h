@@ -1,13 +1,13 @@
-#ifndef ALIEN_GHOUL_H
-#define ALIEN_GHOUL_H
+#ifndef ALIEN_LEVIATHAN_H
+#define ALIEN_LEVIATHAN_H
 
 #include "AlienBase.h"
 using namespace std;
 
-class alienGhoul : public alienBase
+class alienLeviathan : public alienBase
 {
 public:
-	alienGhoul(string alienName, float alienHealth, float alienSpeed, float alienDamage, int alienCurrencyWorth, short posX, short posY);
-	virtual ~alienGhoul();
+	alienLeviathan(string alienName, float alienHealth, float alienSpeed, float alienDamage, int alienCurrencyWorth, short posX, short posY);
+	virtual ~alienLeviathan();
 };
 #endif

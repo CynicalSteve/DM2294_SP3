@@ -45,6 +45,8 @@ public:
 	void BombFireCreation(double dt);
 	void m_goListInteractions(double dt);
 	void spawnAliens(double dt);
+	float spawnAlienTimer;
+	unsigned int spawnAlienAmount, alienSpawned;
 
 	GameObject * FetchGO();
 
