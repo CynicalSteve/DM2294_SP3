@@ -48,6 +48,8 @@ void SP3::Init()
 	loseSelectionIterator = 0;
 
 	loseBombPosition = 0.f;
+	dayNumber = 1;
+	maxAliens = 5;
 
 	spawnAlienTimer = 0.f;
 	spawnAlienAmount = 0;
@@ -70,8 +72,7 @@ void SP3::Init()
 	playerInfo->playerInventory[2]->inventoryBombType = Inventory::INVENTORY_NUKEBOMB;
 	playerInfo->playerInventory[2]->setBombAmount(100);
 
-	dayNumber = 1;
-	maxAliens = 5;
+	
 
 	//Exercise 2a: Construct 100 GameObject with type GO_ASTEROID and add into m_goList
 	m_goList.push_back(playerInfo);
@@ -91,10 +92,6 @@ void SP3::Init()
 	GameObject *lootcrateGO3 = FetchGO();
 	lootcrateGO3->type = GameObject::GO_LOOTCRATE;
 	lootcrateGO3->pos.set(7, 2);
-
-	/*GameObject *houseGO = FetchGO();
-	lootcrateGO3->type = GameObject::GO_HOUSE;
-	lootcrateGO3->pos.set(7, 2);*/
 }
 
 GameObject* SP3::FetchGO()
@@ -150,7 +147,7 @@ void SP3::renderShopScreen()
 {
 	modelStack.PushMatrix(); //Shop Screen Screen Background
 	{
-		modelStack.Translate(100, 50, 0);
+		modelStack.Translate(50, 50, 0);
 		modelStack.Scale(70, 80, 1);
 		RenderMesh(meshList[GEO_QUAD], false);
 	}
@@ -161,7 +158,7 @@ void SP3::renderShopScreen()
 
 	modelStack.PushMatrix(); //Normal Bomb
 	{
-		modelStack.Translate(90, 80, 0);
+		modelStack.Translate(40, 80, 0);
 		modelStack.Scale(10, 10, 1);
 		RenderMesh(meshList[GEO_NORMALBOMB], false);
 	}
@@ -169,7 +166,7 @@ void SP3::renderShopScreen()
 
 	modelStack.PushMatrix(); //Mine Bomb
 	{
-		modelStack.Translate(90, 65, 0);
+		modelStack.Translate(40, 65, 0);
 		modelStack.Scale(10, 10, 1);
 		RenderMesh(meshList[GEO_MINEBOMB], false);
 	}
@@ -177,7 +174,7 @@ void SP3::renderShopScreen()
 
 	modelStack.PushMatrix(); //Nuke Bomb
 	{
-		modelStack.Translate(90, 50, 0);
+		modelStack.Translate(40, 50, 0);
 		modelStack.Scale(10, 10, 1);
 		RenderMesh(meshList[GEO_NUKEBOMB], false);
 	}
@@ -185,7 +182,7 @@ void SP3::renderShopScreen()
 
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(110, 80, 0);
+		modelStack.Translate(70, 80, 0);
 		modelStack.Scale(7, 7, 1);
 		RenderMesh(meshList[GEO_EQUIPMENT], false);
 	}
@@ -193,7 +190,7 @@ void SP3::renderShopScreen()
 
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(110, 65, 0);
+		modelStack.Translate(70, 65, 0);
 		modelStack.Scale(7, 7, 1);
 		RenderMesh(meshList[GEO_EQUIPMENT], false);
 	}
@@ -201,7 +198,7 @@ void SP3::renderShopScreen()
 
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(110, 50, 0);
+		modelStack.Translate(70, 50, 0);
 		modelStack.Scale(7, 7, 1);
 		RenderMesh(meshList[GEO_EQUIPMENT], false);
 	}
@@ -231,27 +228,27 @@ void SP3::renderShopScreen()
 	ss.str("");
 	ss.precision(5);
 	ss << "5";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, normal_G, normal_B), 2, 47.f, 35.f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, normal_G, normal_B), 5, 73.f, 77.5f);
 
 	ss.str("");
 	ss.precision(5);
 	ss << "15";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, mine_G, mine_B), 2, 47.f, 28.5f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, mine_G, mine_B), 5, 73.f, 62.5f);
 
 	ss.str("");
 	ss.precision(5);
 	ss << "50";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, nuke_G, nuke_B), 2, 47.f, 21.5f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, nuke_G, nuke_B), 5, 73.f, 47.5f);
 
 	ss.str("");
 	ss.precision(5);
 	ss << "Press 'N' to start";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549f, 0), 1.5f, 28.f, 14.5f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549f, 0), 3.5f, 20.f, 20.5f);
 	
 	ss.str("");
 	ss.precision(5);
 	ss << "the next day";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549f, 0), 1.5f, 32.f, 11.5f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549f, 0), 3.5f, 30.f, 17.5f);
 	
 }
 
@@ -711,28 +708,10 @@ void SP3::m_goListInteractions(double dt)
 
 			if (go->type == GameObject::GO_HOUSE)
 			{
-				for (unsigned int i = 0; i < alienManager.size(); ++i) //bombfire-alien
+				for (unsigned int i = 0; i < alienManager.size(); ++i) //house-alien
 				{
 					if (go->pos == alienManager[i]->pos)
 					{
-
-						/*if (alienManager[i]->loseHealthCooldown == 0.f)
-						{
-							alienManager[i]->subtractAlienHealth(10);
-							alienManager[i]->loseHealthCooldown += dt;
-						}
-						else
-						{
-							alienManager[i]->loseHealthCooldown += dt;
-
-							if (alienManager[i]->loseHealthCooldown > 1.f)
-								alienManager[i]->loseHealthCooldown = 0.f;
-						}
-
-						if (alienManager[i]->getAlienHealth() <= 0)
-						{
-							alienManager.erase(alienManager.begin() + i);
-						}*/
 
 						if (go->loseHealthCooldown == 0.f)
 						{
@@ -1504,15 +1483,23 @@ void SP3::renderUI()
 {
 	modelStack.PushMatrix(); //UI background
 	{
-		modelStack.Translate(100, 100, 0);
-		modelStack.Scale(200, 20, 1);
-		//RenderMesh(meshList[GEO_QUAD], false);
+		modelStack.Translate(145, 50, 0);
+		modelStack.Scale(90, 100 , 1);
+		RenderMesh(meshList[GEO_QUAD], false);
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix(); //Player icon for health
+	{
+		modelStack.Translate(120, 75, 0);
+		modelStack.Scale(10, 10, 1);
+		RenderMesh(meshList[GEO_PLAYER], false);
 	}
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix(); //Health Bar (Red)
 	{
-		modelStack.Translate(25, 95, 0);
+		modelStack.Translate(145, 75, 0);
 		modelStack.Scale(100 / 3, 5, 1);
 		RenderMesh(meshList[GEO_HEALTH_BAR_RED], false);
 	}
@@ -1520,7 +1507,7 @@ void SP3::renderUI()
 
 	modelStack.PushMatrix(); //Health Bar (Green)
 	{
-		modelStack.Translate(25, 95, 0);
+		modelStack.Translate(145, 75, 0);
 		modelStack.Scale(playerInfo->getPlayerHealth() / 3, 5, 1);
 		RenderMesh(meshList[GEO_HEALTH_BAR_GREEN], false);
 	}
@@ -1530,41 +1517,49 @@ void SP3::renderUI()
 	{
 		if (playerInfo->currentBomb == 0)
 		{
-			modelStack.Translate(59, 95, 0);
+			modelStack.Translate(145, 50, 0);
 		}
 		else if (playerInfo->currentBomb == 1)
 		{
-			modelStack.Translate(89, 95, 0);
+			modelStack.Translate(145, 35, 0);
 		}
 		else
 		{
-			modelStack.Translate(119, 95, 0);
+			modelStack.Translate(145, 20, 0);
 		}
-		modelStack.Scale(25, 7, 1);
+		modelStack.Scale(29, 10, 1);
 		RenderMesh(meshList[GEO_BOMBSELECTOR], true);
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix(); //Equipment
+	{
+		modelStack.Translate(135, 65, 0);
+		modelStack.Scale(10, 10, 1);
+		RenderMesh(meshList[GEO_EQUIPMENT], true);
 	}
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix(); //Normal Bomb
 	{
-		modelStack.Translate(50, 95, 0);
-		modelStack.Scale(7, 7, 1);
+		modelStack.Translate(135, 50, 0);
+		modelStack.Scale(10, 10, 1);
 		RenderMesh(meshList[GEO_NORMALBOMB], true);
 	}
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix(); //Mine Bomb
 	{
-		modelStack.Translate(80, 95, 0);
-		modelStack.Scale(7, 7, 1);
+		modelStack.Translate(135, 35, 0);
+		modelStack.Scale(10, 10, 1);
 		RenderMesh(meshList[GEO_MINEBOMB], true);
 	}
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix(); //Nuke Bomb
 	{
-		modelStack.Translate(110, 95, 0);
-		modelStack.Scale(7, 7, 1);
+		modelStack.Translate(135, 20, 0);
+		modelStack.Scale(10, 10, 1);
 		RenderMesh(meshList[GEO_NUKEBOMB], true);
 	}
 	modelStack.PopMatrix();
@@ -1573,7 +1568,7 @@ void SP3::renderUI()
 	{
 		modelStack.PushMatrix(); //Nuke Bomb Timer Symbol
 		{
-			modelStack.Translate(130, 5, 0);
+			modelStack.Translate(140, 5, 0);
 			modelStack.Scale(7, 7, 1);
 			RenderMesh(meshList[GEO_NUKEBOMB], true);
 		}
@@ -1585,7 +1580,7 @@ void SP3::renderUI()
 		ss.str("");
 		ss.precision(2);
 		ss << countdown;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 0), 3, 60.5f, 1.1f);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 0), 5, 145.f, 2.5f);
 	}
 }
 
@@ -1593,7 +1588,7 @@ void SP3::RenderPauseUI()
 {
 	modelStack.PushMatrix(); //Pause Screen Background
 	{
-		modelStack.Translate(100, 50, 0);
+		modelStack.Translate(50, 50, 0);
 		modelStack.Scale(70, 80, 1);
 		RenderMesh(meshList[GEO_QUAD], false);
 	}
@@ -1604,7 +1599,7 @@ void SP3::RenderPauseUI()
 	ss.str("");
 	ss.precision(5);
 	ss << "Paused";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 3, 33.f, 35.6f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 8, 27.f, 80.f);
 	
 	float continue_G = 1.f, continueB = 1.f, settings_G = 1.f, settings_B = 1.f, mainMenu_G = 1.f, mainMenu_B = 1.f, exit_G = 1.f, exit_B = 1.f;
 
@@ -1633,7 +1628,7 @@ void SP3::RenderPauseUI()
 	ss.str("");
 	ss.precision(5);
 	ss << "Continue";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, continue_G, continueB), 1.5f, 35.f, 30.6f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, continue_G, continueB), 4.f, 35.f, 60.6f);
 
 	ss.str("");
 	ss.precision(5);
@@ -1645,32 +1640,32 @@ void SP3::RenderPauseUI()
 	{
 		ss << "Sound: " << "Off";
 	}
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, settings_G, settings_B), 1.5f, 35.f, 25.6f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, settings_G, settings_B), 4.f, 32.f, 45.6f);
 
 	ss.str("");
 	ss.precision(5);
 	ss << "Exit to Main Menu";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, mainMenu_G, mainMenu_B), 1.5f, 29.f, 20.6f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, mainMenu_G, mainMenu_B), 4.f, 17.f, 30.6f);
 
 	ss.str("");
 	ss.precision(5);
 	ss << "Exit Game";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, exit_G, exit_B), 1.5f, 35.f, 15.6f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, exit_G, exit_B), 4.f, 32.f, 15.6f);
 }
 
 void SP3::RenderLoseUI()
 {
 	modelStack.PushMatrix();  //Start Menu Background
 	{
-		modelStack.Translate(100, 45, 0);
-		modelStack.Scale(100, 90, 0);
+		modelStack.Translate(50, 50, 0);
+		modelStack.Scale(100, 110, 0);
 		RenderMesh(meshList[GEO_STARTMENU_BACKGROUND], false);
 	}
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();  //Restart Button
 	{
-		modelStack.Translate(100, 75, 1);
+		modelStack.Translate(50, 75, 1);
 		modelStack.Scale(43, 32, 0);
 		RenderMesh(meshList[GEO_RESTART], false);
 	}
@@ -1678,7 +1673,7 @@ void SP3::RenderLoseUI()
 
 	modelStack.PushMatrix();  //Exit to Main Menu Button
 	{
-		modelStack.Translate(100, 50, 1);
+		modelStack.Translate(50, 50, 1);
 		modelStack.Scale(43, 32, 0);
 		RenderMesh(meshList[GEO_EXIT_MAINMENU], false);
 	}
@@ -1686,7 +1681,7 @@ void SP3::RenderLoseUI()
 
 	modelStack.PushMatrix();  //Exit Game Button
 	{
-		modelStack.Translate(100, 25, 1);
+		modelStack.Translate(50, 25, 1);
 		modelStack.Scale(43, 32, 0);
 		RenderMesh(meshList[GEO_STARTMENU_EXIT], false);
 	}
@@ -1694,7 +1689,7 @@ void SP3::RenderLoseUI()
 
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(126, 68 + loseBombPosition, 1);
+		modelStack.Translate(76, 68 + loseBombPosition, 1);
 		modelStack.Scale(10, 10, 0);
 		RenderMesh(meshList[GEO_NORMALBOMB], false);
 	}
@@ -1702,7 +1697,7 @@ void SP3::RenderLoseUI()
 
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(75, 68 + loseBombPosition, 1);
+		modelStack.Translate(25, 68 + loseBombPosition, 1);
 		modelStack.Scale(10, 10, 0);
 		modelStack.Rotate(180, 0, 1, 0);
 		RenderMesh(meshList[GEO_NORMALBOMB], false);
@@ -1812,34 +1807,37 @@ void SP3::Render()
 		RenderPauseUI();
 	}
 
-	
-
 	std::ostringstream ss;
 	//On screen text
 	ss.str("");
 	ss.precision(5);
 	ss << "x" << playerInfo->playerInventory[0]->getBombAmount();
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2, 25.f, 41.6f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 5, 142.f, 47.5f);
 
 	ss.str("");
 	ss.precision(5);
 	ss << "x" << playerInfo->playerInventory[1]->getBombAmount();
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2, 38.f, 41.6f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 5, 142.f, 32.5f);
+
+	ss.str("");
+	ss.precision(5);
+	ss << "x" << playerInfo->playerInventory[2]->getBombAmount();
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 5, 142.f, 17.5f);
 
 	ss.str("");
 	ss.precision(5);
 	ss << playerInfo->getPlayerHealth() << "/" << playerInfo->getMaxPlayerHealth();
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2, 4.5f, 41.6f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 5, 129.f, 72.5f);
 
 	ss.str("");
 	ss.precision(5);
-	ss << "EP:" << playerInfo->getEquipmentCurrency();
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
+	ss << playerInfo->getEquipmentCurrency();
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 5, 145.f, 63.f);
 
 	ss.str("");
 	ss.precision(5);
 	ss << "Player - X: " << playerInfo->pos.x << " Y:" <<playerInfo->pos.y;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 5, 0, 0);
 	
 	glEnable(GL_DEPTH_TEST);
 	SceneManager::instance()->State(SceneManager::SCENE_MAINGAME);
