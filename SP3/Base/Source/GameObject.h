@@ -26,6 +26,7 @@ public:
 		GO_MINEBOMB,
 		GO_NUKEBOMB,
 		GO_BOMBFIRE,
+		GO_HOUSE,
 		GO_WALL_LVL1,
 		GO_WALL_LVL2,
 		GO_WALL_LVL3,
@@ -62,6 +63,7 @@ public:
 	float loseHealthCooldown;
 
 	float houseHealth;
+	float houseLoseHealthCooldown;
 
 	GameObject();
 	virtual ~GameObject();

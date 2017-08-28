@@ -132,6 +132,12 @@
     <ClCompile Include="Source\alienGhoul.cpp">
       <Filter>Alien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\alienGoliath.cpp">
+      <Filter>Alien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\alienLeviathan.cpp">
+      <Filter>Alien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Vertex.h">
@@ -213,6 +219,12 @@
       <Filter>Miscellaneous</Filter>
     </ClInclude>
     <ClInclude Include="Source\alienGhoul.h">
+      <Filter>Alien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\alienGoliath.h">
+      <Filter>Alien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\alienLeviathan.h">
       <Filter>Alien</Filter>
     </ClInclude>
   </ItemGroup>
