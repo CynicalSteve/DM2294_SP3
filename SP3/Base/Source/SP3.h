@@ -54,6 +54,13 @@ public:
 		TOTAL_NUM
 	};
 
+	enum ShopSelection
+	{
+		NORMALBOMB,
+		MINEBOMB,
+		NUKEBOMB,
+		TOTAL_SHOP
+	};
 	enum GameState
 	{
 		WAVE_STATE,
@@ -62,8 +69,10 @@ public:
 	};
 
 	PauseSelection pauseSelection;
+	ShopSelection shopselection;
 	GameState gameState;
 	unsigned int pauseSelectionIterator;
+	unsigned int shopSelectionIterator;
 
 protected:
 	std::vector<GameObject *> m_goList;
