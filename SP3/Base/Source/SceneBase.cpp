@@ -120,6 +120,9 @@ void SceneBase::Init()
 	meshList[GEO_MINEBOMB] = MeshBuilder::GenerateQuad("MineBomb", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_MINEBOMB]->textureID = LoadTGA("Image//mineBomb.tga");
 
+	meshList[GEO_NUKEBOMB] = MeshBuilder::GenerateQuad("NukeBomb", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_NUKEBOMB]->textureID = LoadTGA("Image//nukeBomb.tga");
+
 	meshList[GEO_BOOM] = MeshBuilder::GenerateQuad("Boom", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_BOOM]->textureID = LoadTGA("Image//boom.tga");
 
@@ -174,6 +177,15 @@ void SceneBase::Init()
 	meshList[GEO_STARTMENU_EXIT] = MeshBuilder::GenerateQuad("StartMenu_Exit", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_STARTMENU_EXIT]->textureID = LoadTGA("Image//StartMenu_Exit.tga");
 
+	meshList[GEO_STARTMENU_INSTRUCTIONS] = MeshBuilder::GenerateQuad("StartMenu_Instructions", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_STARTMENU_INSTRUCTIONS]->textureID = LoadTGA("Image//instructions.tga");
+
+	meshList[GEO_LEFTARROW] = MeshBuilder::GenerateQuad("StartMenu_LeftArrow", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_LEFTARROW]->textureID = LoadTGA("Image//StartMenu_LeftArrow.tga");
+
+	meshList[GEO_RIGHTARROW] = MeshBuilder::GenerateQuad("StartMenu_RightArrow", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_RIGHTARROW]->textureID = LoadTGA("Image//StartMenu_RightArrow.tga");
+
 	meshList[GEO_LOOTCRATE] = MeshBuilder::GenerateQuad("LootCrate", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_LOOTCRATE]->textureID = LoadTGA("Image//LootCrate.tga");
 
@@ -185,6 +197,23 @@ void SceneBase::Init()
 
 	meshList[GEO_EQUIPMENT] = MeshBuilder::GenerateQuad("Equipment Currency", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_EQUIPMENT]->textureID = LoadTGA("Image//equipmentCurrency.tga");
+
+	meshList[GEO_POWERUP_INVULNERABLE] = MeshBuilder::GenerateQuad("Invulnerable powerup", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_POWERUP_INVULNERABLE]->textureID = LoadTGA("Image//invulnerable.tga");
+
+	meshList[GEO_BOMBSELECTOR] = MeshBuilder::GenerateQuad("Bomb Selector", Color(1.f, 0.549f, 0.f), 1.f);
+
+	meshList[GEO_SOUND] = MeshBuilder::GenerateQuad("Sound", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_SOUND]->textureID = LoadTGA("Image//sound.tga");
+
+	meshList[GEO_STOP] = MeshBuilder::GenerateQuad("Stop", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_STOP]->textureID = LoadTGA("Image//stop.tga");
+
+	meshList[GEO_RESTART] = MeshBuilder::GenerateQuad("Restart", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_RESTART]->textureID = LoadTGA("Image//restart.tga");
+
+	meshList[GEO_EXIT_MAINMENU] = MeshBuilder::GenerateQuad("ExitMainMenu", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_EXIT_MAINMENU]->textureID = LoadTGA("Image//MainMenuButton.tga");
 
 	bLightEnabled = false;
 }

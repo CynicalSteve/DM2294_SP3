@@ -16,6 +16,14 @@ class StartMenu : public SceneBase
 		TOTAL_NUM
 	};
 
+	enum selectionScreen
+	{
+		MAINMENU_SCREEN,
+		SETTINGS_SCREEN,
+		INSTRUCTIONS_SCREEN,
+		TOTALNUM
+	};
+
 public:
 	StartMenu();
 	~StartMenu();
@@ -24,8 +32,10 @@ public:
 	virtual void Update(double dt);
 	virtual void Render();
 	virtual void Exit();
-	
+	void ReadSettings();
+
 	CurrentSelection currentSelectionState;
+	selectionScreen currentSelectionScreen;
 	unsigned int CurrentSelectionIterator;
 
 private:
@@ -34,6 +44,7 @@ private:
 	float m_worldHeight;
 	float m_worldWidth;
 
+	bool hasSound;
 	bool KeyBounce[256];
 };
 

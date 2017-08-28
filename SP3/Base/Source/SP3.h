@@ -32,12 +32,62 @@ public:
 	void renderAliens(alienBase *alien);
 	void renderBombs(BombBase *bomb, int currentBombIndex);
 	void renderUI();
+	void RenderPauseUI();
+	void RenderLoseUI();
+
+	void ReadSettings();
+	void renderShopScreen();
+
 	void AlienMovement(double dt);
 	void PlayerChecks(double dt);
+	void BombFireCreation(double dt);
+	void m_goListInteractions(double dt);
 
 	int RandomNumberGen(int FirstNumber = 0, int LastNumber = 0);
 
 	GameObject * FetchGO();
+
+	enum PauseSelection
+	{
+		CONTINUE,
+		SETTINGS,
+		EXIT_MAINMENU,
+		EXIT_GAME,
+		TOTAL_NUM
+	};
+
+	enum ShopSelection
+	{
+		NORMALBOMB,
+		MINEBOMB,
+		NUKEBOMB,
+		TOTAL_SHOP
+	};
+
+	enum LoseSelection
+	{
+		RESTART,
+		LOSE_EXIT_MAINMENU,
+		LOSE_EXIT_GAME,
+		TOTAL_LOSE
+	};
+	enum GameState
+	{
+		WAVE_STATE,
+		WAVE_END_STATE,
+		LOSE_STATE,
+		TOTAL_STATES
+	};
+
+	PauseSelection pauseSelection;
+	ShopSelection shopselection;
+	LoseSelection loseSelection;
+	GameState gameState;
+	unsigned int pauseSelectionIterator;
+	unsigned int shopSelectionIterator;
+	unsigned int loseSelectionIterator;
+
+	float loseBombPosition;
 
 protected:
 	std::vector<GameObject *> m_goList;
@@ -48,8 +98,11 @@ protected:
 	double doubletime;
 	std::vector<alienBase *> alienManager;
 
-	int currentAlien;
+	bool isPaused;
+	unsigned long int maxAliens;
+	unsigned long int dayNumber;
 
+	bool hasSound;
 	bool KeyBounce[256];
 };
 

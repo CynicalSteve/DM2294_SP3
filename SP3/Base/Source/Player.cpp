@@ -2,8 +2,8 @@
 
 Player::Player(float playerHealth, float playerSpeed) : 
 bombManager(NULL), currentBomb(0), playerHealth(playerHealth), playerSpeed(playerSpeed), normalSpeed(playerSpeed), equipmentCurrency(0),
-maxPlayerHealth(100), speedBoosted(false), speedBoostCooldown(0.f), maxSpeedBoostCooldownTime(5.f)
-
+maxPlayerHealth(100), speedBoosted(false), speedBoostCooldown(0.f), maxSpeedBoostCooldownTime(5.f), currentBombTimer(0.f), nukeDeployed(false),
+maxBombTimer(0.f), invulnerabilityCooldown(0.f), maxInvulnerableTime(7.f), invulnerabilityHealth(0.f), Invulnerability(false)
 {
 	active = true;
 
@@ -11,11 +11,6 @@ maxPlayerHealth(100), speedBoosted(false), speedBoostCooldown(0.f), maxSpeedBoos
 	{
 		playerInventory[i] = new Inventory(); 
 	}
-
-	playerInventory[0]->inventoryBombType = Inventory::INVENTORY_NORMALBOMB;
-	playerInventory[0]->setDiscoveredState(true);
-
-	playerInventory[1]->inventoryBombType = Inventory::INVENTORY_MINEBOMB;
 }
 
 Player::~Player()
@@ -47,6 +42,11 @@ void Player::setMaxSpeedCooldownTime(float newSpeedBoostTime)
 	this->maxSpeedBoostCooldownTime = newSpeedBoostTime;
 }
 
+void Player::setMaxInvulnerableTime(float newMaxInvulnerableTime)
+{
+	this->maxInvulnerableTime = newMaxInvulnerableTime;
+}
+
 void Player::setMaxPlayerHealth(float newMaxPlayerHealth)
 {
 	this->maxPlayerHealth = newMaxPlayerHealth;
@@ -72,6 +72,11 @@ void Player::subtractHealth(int healthToSubtract)
 	this->playerHealth -= healthToSubtract;
 }
 
+void Player::setInvulnerabilityState(bool newInvulnerabilityState)
+{
+	this->Invulnerability = newInvulnerabilityState;
+}
+
 float Player::getPlayerHealth()
 {
 	return this->playerHealth;
@@ -80,6 +85,11 @@ float Player::getPlayerHealth()
 float Player::getMaxSpeedBoostCooldownTime()
 {
 	return this->maxSpeedBoostCooldownTime;
+}
+
+float Player::getMaxInvulnerableTime()
+{
+	return this->maxInvulnerableTime;
 }
 
 float Player::getPlayerSpeed()
@@ -100,4 +110,44 @@ int Player::getMaxPlayerHealth()
 bool Player::getSpeedBoostState()
 {
 	return this->speedBoosted;
+}
+
+bool Player::getInvulnerabilityState()
+{
+	return Invulnerability;
+}
+
+void Player::addToTimer(double dt)
+{
+	this->currentBombTimer += dt;
+}
+
+void Player::setMaxBombTImer(float newMaxBombTimer)
+{
+	this->maxBombTimer = newMaxBombTimer;
+}
+
+void Player::setNukeDeployedState(bool state)
+{
+	this->nukeDeployed = state;
+}
+
+void Player::setCurrentTimer(float newCurrentTimer)
+{
+	this->currentBombTimer = newCurrentTimer;
+}
+
+float Player::getCurrentTimer()
+{
+	return this->currentBombTimer;
+}
+
+float Player::getMaxBombTimer()
+{
+	return this->maxBombTimer;
+}
+
+bool Player::getNukeDeployedState()
+{
+	return this->nukeDeployed;
 }
