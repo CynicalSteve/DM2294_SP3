@@ -37,16 +37,15 @@ void SP3::Init()
 	while (theMap[0][mapSize] > 0 && theMap[0][mapSize] < 10)
 		++mapSize;
 	alienBase::createSpawnPosition(theMap, mapSize);
-	//alienBase::spawnPosition[0] = GameObject::coord();
 
-	for (short y = mapSize - 1; y > -1; --y)
+	/*for (short y = mapSize - 1; y > -1; --y)
 	{
 		for (short x = 0; x < mapSize; ++x)
 			std::cout << theMap[x][y] << " ";
 		std::cout << "\n";
 	}
 	for (short i = 0; i < alienBase::spawnPosition.size(); ++i)
-		std::cout << alienBase::spawnPosition[i].x << " " << alienBase::spawnPosition[i].y << "\n";
+	std::cout << alienBase::spawnPosition[i].x << " " << alienBase::spawnPosition[i].y << "\n";*/
 
 	pauseSelection = CONTINUE;
 	pauseSelectionIterator = 0;
@@ -59,11 +58,11 @@ void SP3::Init()
 
 	loseBombPosition = 0.f;
 	dayNumber = 1;
-	maxAliens = 5;
 
-	spawnAlienTimer = 0.f;
-	spawnAlienAmount = 0;
 	alienSpawned = 0;
+	alienSpawned;
+	spawnAlienAmount = 0;
+	spawnAlienTimer = 0.f;
 
 	gameState = WAVE_STATE;
 
@@ -299,9 +298,12 @@ void SP3::renderShopScreen()
 
 void SP3::AlienMovement(double dt)
 {
+	int totalHealth = 0;
 	for (std::vector<alienBase *>::iterator it = alienManager.begin(); it != alienManager.end(); ++it)
 	{
 		alienBase *go = (alienBase *)*it;
+
+		totalHealth += go->getAlienHealth();
 
 		if (!go->active)
 			continue;
@@ -370,6 +372,8 @@ void SP3::AlienMovement(double dt)
 				go->animationPos.z = dt * go->getAlienSpeed();
 		}
 	}
+	if (!totalHealth)
+		gameState = WAVE_END_STATE;
 }
 
 void SP3::PlayerChecks(double dt)
@@ -379,7 +383,7 @@ void SP3::PlayerChecks(double dt)
 	{
 		playerInfo->setPlayerHealth(0);
 
-		//gameState = LOSE_STATE; //Player loses game when health is 0
+		gameState = LOSE_STATE; //Player loses game when health is 0
 	}
 
 	if (playerInfo->getEquipmentCurrency() < 0) //Reset currency to 0 if current player currency is under 0
@@ -777,8 +781,10 @@ void SP3::m_goListInteractions(double dt)
 					{
 						if (go->loseHealthCooldown == 0.f)
 						{
+
 							houseHealth->houseHealth -= alienManager[i]->getAlienDamage();
 							houseHealth->loseHealthCooldown+= dt;
+
 }
 						else
 						{
@@ -789,10 +795,9 @@ void SP3::m_goListInteractions(double dt)
 								houseHealth->loseHealthCooldown = 0.f;
 							}
 
-							/*if (go->houseHealth <= 0.f)
+							if (go->houseHealth <= 0.f)
 							{
 							gameState = LOSE_STATE;
-							}*/
 						}
 					}
 				}
@@ -800,13 +805,16 @@ void SP3::m_goListInteractions(double dt)
 		}
 	}
 }
+}
 
 void SP3::spawnAliens(double dt)
 {
-	short whichAlien = RandIntMinMax(0, alienManager.size());
+	short whichAlien = RandIntMinMax(0, alienManager.size() * 60);
+	if (whichAlien >= alienManager.size())
+		return;
 	GameObject::coord spawn = alienBase::spawnPosition[RandIntMinMax(0, 2)];
 
-	for (short i = 0; i  < alienManager.size(); ++i)
+	for (short i = 0; i < alienManager.size(); ++i)
 	{
 		if (!alienManager[(whichAlien + i) % alienManager.size()]->active && alienManager[(whichAlien + i) % alienManager.size()]->getAlienHealth() > 0)
 		{
@@ -878,28 +886,21 @@ void SP3::Update(double dt)
 			if (Application::IsKeyPressed('G') && !KeyBounce['G']) //Lower player health
 				playerInfo->subtractHealth(10);
 
-			if (Application::IsKeyPressed('Q')) //Inventory switching
+			if (Application::IsKeyPressed('Q') && !KeyBounce['Q']) //Inventory switching
 			{
-				if (!KeyBounce['Q'])
 					if (playerInfo->currentBomb != 0)
 					{
 						playerInfo->currentBomb--;
 					}
-				KeyBounce['Q'] = true;
 			}
-			else KeyBounce['Q'] = false;
 
-			if (Application::IsKeyPressed('E')) //Inventory switching
+			if (Application::IsKeyPressed('E') && !KeyBounce['E']) //Inventory switching
 			{
-				if (!KeyBounce['E'])
 					if (playerInfo->currentBomb < sizeof(playerInfo->playerInventory))
 					{
 						playerInfo->currentBomb++;
 					}
-				KeyBounce['E'] = true;
 			}
-			else KeyBounce['E'] = false;
-
 
 			if (Application::IsKeyPressed('Z') && !KeyBounce['Z'])
 			{
@@ -913,7 +914,7 @@ void SP3::Update(double dt)
 
 			if (Application::IsKeyPressed('C') && !KeyBounce['C'])
 			{
-				alienManager.push_back(new alienRaptor("Raptor", 20, 4.f, 4 , 5, 9, 1));
+				alienManager.push_back(new alienRaptor("Raptor", 20, 4.f, 4, 5, 9, 1));
 			}
 
 			//Mouse Section
@@ -968,26 +969,8 @@ void SP3::Update(double dt)
 			BombFireCreation(dt);
 
 			//Spawn ALiens
-			if (alienSpawned <= maxAliens)
-			{
-				if (spawnAlienAmount <= 5)
-				{
 			spawnAliens(dt);
 
-					++spawnAlienAmount;
-					++alienSpawned;
-				}
-				else
-				{
-					spawnAlienTimer += dt;
-
-					if (spawnAlienTimer > 5.f)
-					{
-						spawnAlienAmount = 0;
-						spawnAlienTimer = 0.f;
-					}
-				}
-			}
 			//Alien Movement
 			AlienMovement(dt);
 
@@ -998,22 +981,12 @@ void SP3::Update(double dt)
 			PlayerChecks(dt);
 
 
-			if (Application::IsKeyPressed('K')) //Wave end
-			{
-				if (!KeyBounce['K'])
+			if (Application::IsKeyPressed('K') && !KeyBounce['K']) //Wave end
 					gameState = WAVE_END_STATE;  
-				KeyBounce['K'] = true;
-			}
-			else KeyBounce['K'] = false;
 
-			if (Application::IsKeyPressed('L')) //Lose
-			{
-				if (!KeyBounce['L'])
+			if (Application::IsKeyPressed('L') && !KeyBounce['L']) //Lose
 					gameState = LOSE_STATE;
-				KeyBounce['L'] = true;
 			}
-			else KeyBounce['L'] = false;
-		}
 		else
 		{
 			if (Application::IsKeyPressed('W') && !KeyBounce['W'])
@@ -1023,9 +996,7 @@ void SP3::Update(double dt)
 					--pauseSelectionIterator;
 					pauseSelection = static_cast<PauseSelection>(pauseSelectionIterator);
 				}
-				KeyBounce['W'] = true;
 			}
-			else KeyBounce['W'] = false;
 
 			if (Application::IsKeyPressed('S') && !KeyBounce['S'])
 			{
@@ -1034,13 +1005,9 @@ void SP3::Update(double dt)
 					++pauseSelectionIterator;
 					pauseSelection = static_cast<PauseSelection>(pauseSelectionIterator);
 				}
-				KeyBounce['S'] = true;
 			}
-			else KeyBounce['S'] = false;
 
-			if (Application::IsKeyPressed(VK_RETURN))
-			{
-				if (!KeyBounce[VK_RETURN])
+			if (Application::IsKeyPressed(VK_RETURN) && !KeyBounce[VK_RETURN])
 				{
 					switch (pauseSelection)
 					{
@@ -1097,13 +1064,6 @@ void SP3::Update(double dt)
 					default:
 						break;
 					}
-				}
-
-				KeyBounce[VK_RETURN] = true;
-			}
-			else
-			{
-				KeyBounce[VK_RETURN] = false;
 			}
 		}
 	}
@@ -1119,9 +1079,7 @@ void SP3::Update(double dt)
 					--shopSelectionIterator;
 					shopselection = static_cast<ShopSelection>(shopSelectionIterator);
 				}
-				KeyBounce['W'] = true;
 			}
-			else KeyBounce['W'] = false;
 
 			if (Application::IsKeyPressed('S') && !KeyBounce['S'])
 			{
@@ -1130,14 +1088,11 @@ void SP3::Update(double dt)
 					++shopSelectionIterator;
 					shopselection = static_cast<ShopSelection>(shopSelectionIterator);
 				}
-				KeyBounce['S'] = true;
 			}
-			else KeyBounce['S'] = false;
 
 			if (Application::IsKeyPressed('N') && !KeyBounce['N'])
 			{
 				++dayNumber;
-				maxAliens *= 1.5f;
 
 				alienSpawned = 0;
 				spawnAlienAmount = 0;
@@ -1145,14 +1100,9 @@ void SP3::Update(double dt)
 				playerInfo->setPlayerHealth(playerInfo->getMaxPlayerHealth());
 
 				gameState = WAVE_STATE;
-
-				KeyBounce['N'] = true;
 			}
-			else KeyBounce['N'] = false;
 
-			if (Application::IsKeyPressed(VK_RETURN))
-			{
-				if (!KeyBounce[VK_RETURN])
+			if (Application::IsKeyPressed(VK_RETURN) && !KeyBounce[VK_RETURN])
 				{
 					switch (shopselection)
 					{
@@ -1207,13 +1157,6 @@ void SP3::Update(double dt)
 					default:
 						break;
 					}
-				}
-
-				KeyBounce[VK_RETURN] = true;
-			}
-			else
-			{
-				KeyBounce[VK_RETURN] = false;
 			}
 		}
 
@@ -1226,9 +1169,7 @@ void SP3::Update(double dt)
 					--pauseSelectionIterator;
 					pauseSelection = static_cast<PauseSelection>(pauseSelectionIterator);
 				}
-				KeyBounce['W'] = true;
 			}
-			else KeyBounce['W'] = false;
 
 			if (Application::IsKeyPressed('S') && !KeyBounce['S'])
 			{
@@ -1237,13 +1178,9 @@ void SP3::Update(double dt)
 					++pauseSelectionIterator;
 					pauseSelection = static_cast<PauseSelection>(pauseSelectionIterator);
 				}
-				KeyBounce['S'] = true;
 			}
-			else KeyBounce['S'] = false;
 
-			if (Application::IsKeyPressed(VK_RETURN))
-			{
-				if (!KeyBounce[VK_RETURN])
+			if (Application::IsKeyPressed(VK_RETURN) && !KeyBounce[VK_RETURN])
 				{
 					switch (pauseSelection)
 					{
@@ -1300,21 +1237,12 @@ void SP3::Update(double dt)
 					default:
 						break;
 					}
-				}
-
-				KeyBounce[VK_RETURN] = true;
-			}
-			else
-			{
-				KeyBounce[VK_RETURN] = false;
 			}
 		}
 	} 
-	else if(gameState == LOSE_STATE)
-	{
-		if (Application::IsKeyPressed('W'))
+	else if (gameState == LOSE_STATE)
 		{
-			if (!KeyBounce['W'])
+		if (Application::IsKeyPressed('W') && !KeyBounce['W'])
 			{
 				if (loseSelectionIterator != 0)
 				{
@@ -1322,14 +1250,9 @@ void SP3::Update(double dt)
 					loseSelection = static_cast<LoseSelection>(loseSelectionIterator);
 					loseBombPosition += 25;
 				}
-			}
-			KeyBounce['W'] = true;
 		}
-		else KeyBounce['W'] = false;
 
-		if (Application::IsKeyPressed('S'))
-		{
-			if (!KeyBounce['S'])
+		if (Application::IsKeyPressed('S') && !KeyBounce['S'])
 			{
 				if (loseSelectionIterator + 1 != TOTAL_LOSE)
 				{
@@ -1337,14 +1260,9 @@ void SP3::Update(double dt)
 					loseSelection = static_cast<LoseSelection>(loseSelectionIterator);
 					loseBombPosition -= 25;
 				}
-			}
-			KeyBounce['S'] = true;
 		}
-		else KeyBounce['S'] = false;
 
-		if (Application::IsKeyPressed(VK_RETURN))
-		{
-			if (!KeyBounce[VK_RETURN])
+		if (Application::IsKeyPressed(VK_RETURN) && !KeyBounce[VK_RETURN])
 			{
 				switch (loseSelection)
 				{
@@ -1367,13 +1285,6 @@ void SP3::Update(double dt)
 				default:
 					break;
 				}
-			}
-
-			KeyBounce[VK_RETURN] = true;
-		}
-		else
-		{
-			KeyBounce[VK_RETURN] = false;
 		}
 	}
 
@@ -1388,7 +1299,6 @@ void SP3::Update(double dt)
 			isPaused = false;
 		}
 	}
-	else KeyBounce['P'] = true;
 
 	for (short i = 0; i < 256; ++i)
 	{
