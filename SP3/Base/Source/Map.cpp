@@ -30,9 +30,9 @@ short ** parse(const char *fileName)
 
 	index[1] = 0;
 	for (short x = 0; x < input.size(); x += 2)
-		result[index[1]++][0] = input[x] - 48;
+		result[index[1]++][index[0] - 1] = input[x] - 48;
 
-	for (short y = 1; file.good() && y < index[0]; ++y)
+	for (short y = index[0] - 2; y > -1; --y)
 	{
 		getline(file, input);
 		index[1] = 0;
