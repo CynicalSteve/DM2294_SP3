@@ -313,7 +313,7 @@ void SP3::AlienMovement(double dt)
 		if (go->alienType == alienBase::TYPE1_GRUB || go->alienType == alienBase::TYPE4_GOLIATH) //chases player
 			distance.set(go->pos.x - playerInfo->pos.x, go->pos.y - playerInfo->pos.y);
 		else if (go->alienType == alienBase::TYPE2_GHOUL) //random movement
-			distance.set(go->pos.x - RandIntMinMax(0, mapSize - 1), go->pos.y - RandIntMinMax(0, mapSize - 1));
+			distance.set(go->pos.x - RandIntMinMax(1, mapSize - 2), go->pos.y - RandIntMinMax(1, mapSize - 2));
 		else if (go->alienType == alienBase::TYPE3_RAPTOR || go->alienType == alienBase::TYPE5_LEVIATHAN) //goes to objective
 			distance.set(go->pos.x - houseHealth->pos.x, go->pos.y - houseHealth->pos.y);
 
