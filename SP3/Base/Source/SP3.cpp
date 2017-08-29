@@ -59,11 +59,6 @@ void SP3::Init()
 	loseBombPosition = 0.f;
 	dayNumber = 1;
 
-	alienSpawned = 0;
-	alienSpawned;
-	spawnAlienAmount = 0;
-	spawnAlienTimer = 0.f;
-
 	gameState = WAVE_STATE;
 
 	playerInfo = new Player(100, 5.f);
@@ -1094,9 +1089,6 @@ void SP3::Update(double dt)
 			{
 				++dayNumber;
 
-				alienSpawned = 0;
-				spawnAlienAmount = 0;
-				spawnAlienTimer = 0.f;
 				playerInfo->setPlayerHealth(playerInfo->getMaxPlayerHealth());
 
 				gameState = WAVE_STATE;
@@ -1604,6 +1596,11 @@ void SP3::renderUI()
 		ss.precision(2);
 		ss << countdown;
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 0), 5, 145.f, 2.5f);
+
+		ss.str("");
+		ss.precision(2);
+		ss << "Day:" << dayNumber;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549f, 0), 5, 0.f, 2.5f);
 	}
 }
 
