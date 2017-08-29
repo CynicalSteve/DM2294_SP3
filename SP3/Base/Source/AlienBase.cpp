@@ -96,13 +96,9 @@ void alienBase::createSpawnPosition(short **map, short size)
 	}
 	while (spawnPosition.size() < 6)
 	{
-<<<<<<< HEAD
-		target.x = Math::RandIntMinMax(0, perimeter.size());
- 		if (map[perimeter[target.x].x][perimeter[target.x].y])
-=======
+
 		target.x = Math::RandIntMinMax(0, perimeter.size() - 1);
 		if (map[perimeter[target.x].x][perimeter[target.x].y])
->>>>>>> 1106b14b08521a525a197afe45a0344b25c9b255
 		{
 			map[perimeter[target.x].x][perimeter[target.x].y] = 0;
 			spawnPosition.push_back(perimeter[target.x]);
