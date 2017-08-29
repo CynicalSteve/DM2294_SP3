@@ -444,7 +444,16 @@ void SP3::PlayerChecks(double dt)
 		else
 		{
 			playerInfo->setCurrentTimer(0.f);
-			alienManager.clear();
+			
+			for (unsigned short i = 0; i < alienManager.size(); ++i)
+			{
+				if (alienManager[i]->active)
+				{
+					alienManager[i]->active = false;
+					alienManager[i]->setAlienHealth(0);
+				}
+			}
+
 			playerInfo->setNukeDeployedState(false);
 
 			if (hasSound == true)
@@ -763,7 +772,7 @@ void SP3::m_goListInteractions(double dt)
 					if (alienManager[i]->getAlienHealth() <= 0)
 					{
 						alienManager[i]->active = false;
-						//alienManager.erase(alienManager.begin() + i);
+						playerInfo->addCurrency(alienManager[i]->getAlienCurrencyWorth());
 					}
 				}
 			}
@@ -1599,8 +1608,8 @@ void SP3::renderUI()
 
 		ss.str("");
 		ss.precision(2);
-		ss << "Day:" << dayNumber;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549f, 0), 5, 0.f, 2.5f);
+		ss << "Day:";
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549f, 0), 10, 50.f, 20.5f);
 	}
 }
 
@@ -1809,7 +1818,7 @@ void SP3::Render()
 
 	modelStack.PushMatrix();
 	modelStack.Translate(38, 75, 0);
-	modelStack.Scale(25, 25, 0);
+	modelStack.Scale(7, 9, 0);
 	RenderMesh(meshList[GEO_HOUSE], false);
 	modelStack.PopMatrix();
 
@@ -1859,11 +1868,6 @@ void SP3::Render()
 	ss.precision(5);
 	ss << playerInfo->getEquipmentCurrency();
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 5, 145.f, 63.f);
-
-	ss.str("");
-	ss.precision(5);
-	ss << "Player - X: " << playerInfo->pos.x << " Y:" <<playerInfo->pos.y;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 5, 0, 0);
 	
 	glEnable(GL_DEPTH_TEST);
 	SceneManager::instance()->State(SceneManager::SCENE_MAINGAME);
