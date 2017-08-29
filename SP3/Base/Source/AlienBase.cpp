@@ -29,6 +29,11 @@ float alienBase::getAlienDamage()
 	return this->alienDamage;
 }
 
+float alienBase::getOriginalHealth()
+{
+	return this->originalHealth;
+}
+
 int alienBase::getAlienCurrencyWorth()
 {
 	return this->alienCurrencyWorth;

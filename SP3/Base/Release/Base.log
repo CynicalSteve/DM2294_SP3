@@ -1,8 +1,74 @@
-﻿Build started 29/08/2017 23:01:10.
+﻿Build started 29/08/2017 23:46:39.
      1>Project "C:\Users\rickc\Documents\SP3\SP3\Base\Base.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\rickc\Documents\SP3\SP3\/Common/Source /IC:\Users\rickc\Documents\SP3\SP3\/glew/include /IC:\Users\rickc\Documents\SP3\SP3\/glfw/include /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D _VARIADIC_MAX=10 /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Source\Application.cpp
-         Application.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\rickc\Documents\SP3\SP3\/Common/Source /IC:\Users\rickc\Documents\SP3\SP3\/glew/include /IC:\Users\rickc\Documents\SP3\SP3\/glfw/include /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D _VARIADIC_MAX=10 /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Source\AlienBase.cpp Source\SP3.cpp Source\SceneManager.cpp Source\alienGhoul.cpp Source\alienGoliath.cpp Source\alienGrub.cpp Source\alienLeviathan.cpp Source\alienRaptor.cpp
+         AlienBase.cpp
+     1>Source\AlienBase.cpp(97): warning C4018: '<' : signed/unsigned mismatch
+         SP3.cpp
+     1>Source\SP3.cpp(322): warning C4244: '+=' : conversion from 'float' to 'int', possible loss of data
+     1>Source\SP3.cpp(331): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>Source\SP3.cpp(333): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(337): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(357): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(362): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(389): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(393): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(396): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(401): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(405): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(408): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(413): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(417): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(420): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(425): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(429): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(432): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(455): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>Source\SP3.cpp(472): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(486): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(506): warning C4244: '-=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(545): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>Source\SP3.cpp(553): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>Source\SP3.cpp(561): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>Source\SP3.cpp(569): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>Source\SP3.cpp(577): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>Source\SP3.cpp(592): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(602): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>Source\SP3.cpp(610): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>Source\SP3.cpp(618): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>Source\SP3.cpp(626): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>Source\SP3.cpp(634): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>Source\SP3.cpp(660): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(671): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(672): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(686): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(690): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(728): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>Source\SP3.cpp(754): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(758): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(814): warning C4018: '>=' : signed/unsigned mismatch
+     1>Source\SP3.cpp(818): warning C4018: '<' : signed/unsigned mismatch
+     1>Source\SP3.cpp(865): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(871): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(877): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(883): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(1098): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>Source\SP3.cpp(1101): warning C4018: '<' : signed/unsigned mismatch
+     1>Source\SP3.cpp(1523): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>Source\SP3.cpp(1593): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>Source\SP3.cpp(1762): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(1777): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>Source\SP3.cpp(1785): warning C4018: '<' : signed/unsigned mismatch
+     1>Source\SP3.cpp(1795): warning C4018: '<' : signed/unsigned mismatch
+     1>Source\SP3.cpp(1809): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>Source\SP3.cpp(1874): warning C4018: '<' : signed/unsigned mismatch
+     1>Source\SP3.cpp(1882): warning C4018: '<' : signed/unsigned mismatch
+         SceneManager.cpp
+         alienGhoul.cpp
+         alienGoliath.cpp
+         alienGrub.cpp
+         alienLeviathan.cpp
+         alienRaptor.cpp
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\rickc\Documents\SP3\SP3\Release\Base.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\Users\rickc\Documents\SP3\SP3\Release /LIBPATH:"C:\Users\rickc\Documents\SP3\SP3\/glfw/lib-msvc100" /LIBPATH:C:\Users\rickc\Documents\SP3\SP3\/glew/lib Common.lib winmm.lib opengl32.lib glu32.lib glew32.lib glfw3.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\rickc\Documents\SP3\SP3\Release\Base.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\rickc\Documents\SP3\SP3\Release\Base.lib" /MACHINE:X86 /SAFESEH Release\AlienBase.obj
          Release\alienGhoul.obj
@@ -37,4 +103,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.44
+Time Elapsed 00:00:04.86

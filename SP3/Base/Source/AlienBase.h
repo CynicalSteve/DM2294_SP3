@@ -24,7 +24,7 @@ public:
 	~alienBase();
 
 	string getAlienName();
-	float getAlienHealth(), getAlienSpeed(), getAlienDamage();
+	float getAlienHealth(), getAlienSpeed(), getAlienDamage(), getOriginalHealth();
 	int getAlienCurrencyWorth();
 	void setAlienName(string newAlienName), setAlienHealth(float newAlienHealth), setAlienSpeed(float newAlienSpeed), setAlienDamage(float newAlienDamage), setAlienCurrencyWorth(int newAlienCurrencyWorth);
 	void addAlienHealth(int alienHealthToAdd), subtractAlienHealth(int alienHealthToSubtract);
@@ -36,7 +36,7 @@ public:
 
 protected:
 	string alienName;
-	float alienHealth, alienSpeed, alienDamage;
+	float alienHealth, alienSpeed, alienDamage, originalHealth;
 	int alienCurrencyWorth;
 };
 #endif

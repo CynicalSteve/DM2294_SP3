@@ -4,6 +4,7 @@ alienRaptor::alienRaptor(string alienName, float alienHealth, float alienSpeed, 
 {
 	this->alienName = alienName;
 	this->alienHealth = alienHealth;
+	originalHealth = alienHealth;
 	this->alienSpeed = alienSpeed;
 	this->alienDamage = alienDamage;
 	this->alienCurrencyWorth = alienCurrencyWorth;
