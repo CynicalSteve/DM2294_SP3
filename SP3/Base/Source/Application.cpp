@@ -89,8 +89,8 @@ void Application::Init()
 
 
 	//Create a window and create its OpenGL context
-	m_width =  2560 /*GetSystemMetrics(SM_CXFULLSCREEN)*/;
-	m_height = 1440 /*GetSystemMetrics(SM_CYSCREEN)*/;
+	m_width =  1280 /*GetSystemMetrics(SM_CXFULLSCREEN)*/;
+	m_height = 720 /*GetSystemMetrics(SM_CYSCREEN)*/;
 	m_window = glfwCreateWindow(m_width, m_height, "Freedom Bomber", NULL /*glfwGetPrimaryMonitor()*/, NULL);
 
 	//If the window couldn't be created

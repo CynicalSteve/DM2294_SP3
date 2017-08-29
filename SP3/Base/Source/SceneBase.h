@@ -15,6 +15,8 @@
 #include "Utility.h"
 #include "LoadTGA.h"
 #include <sstream>
+#include <fstream>
+#include <string>
 
 class SceneBase : public Scene
 {
@@ -95,9 +97,6 @@ public:
 		GEO_STOP,
 		GEO_REPAIR,
 
-		floor,
-		wall,
-		ship,
 		NUM_GEOMETRY,
 	};
 public:
@@ -111,6 +110,7 @@ public:
 
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
+	bool ReadCharacterWidth(char* csvFilePath);
 	void RenderMesh(Mesh *mesh, bool enableLight);
 	void RenderGO(GameObject *go);
 
@@ -122,6 +122,7 @@ protected:
 	unsigned m_parameters[U_TOTAL];
 	float m_worldWidth;
 	float m_worldHeight;
+	int iChWidth[256];
 
 	Camera camera;
 

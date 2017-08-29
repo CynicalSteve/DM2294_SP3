@@ -18,6 +18,7 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
+#include <algorithm>
 
 class SP3 : public SceneBase
 {
@@ -94,10 +95,11 @@ public:
 protected:
 	std::vector<GameObject *> m_goList;
 	Player * playerInfo;
-	GameObject *houseHealth;
+	GameObject *theHouse;
 	short **theMap;
 	short mapSize;
 	std::vector<GameObject::coord> spawnPosition;
+	GameObject::coord hitbox[8];
 	double doubletime;
 	std::vector<alienBase *> alienManager;
 

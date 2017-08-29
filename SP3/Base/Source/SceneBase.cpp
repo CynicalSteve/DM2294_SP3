@@ -98,7 +98,7 @@ void SceneBase::Init()
 	meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(1, 1, 1), 10, 10, 1.f);
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 1, 1), 2.f);
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
-	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
+	meshList[GEO_TEXT]->textureID = LoadTGA("Image//DIN.tga");
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
 
 	//SP3
@@ -219,21 +219,11 @@ void SceneBase::Init()
 	meshList[GEO_REPAIR]->textureID = LoadTGA("Image//repair.tga");
 
 	bLightEnabled = false;
+	ReadCharacterWidth("Image//FontData.csv");
 }
 
 void SceneBase::Update(double dt)
 {
-	//Keyboard Section
-	if(Application::IsKeyPressed('1'))
-		glEnable(GL_CULL_FACE);
-	if(Application::IsKeyPressed('2'))
-		glDisable(GL_CULL_FACE);
-	if(Application::IsKeyPressed('3'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	if(Application::IsKeyPressed('4'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	
-	fps = (float)(1.f / dt);
 }
 
 void SceneBase::RenderText(Mesh* mesh, std::string text, Color color)
@@ -286,10 +276,12 @@ void SceneBase::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, fl
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mesh->textureID);
 	glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
+	Mtx44 characterSpacing;
+	float width = 0.f;
 	for(unsigned i = 0; i < text.length(); ++i)
 	{
-		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(i * 1.0f + 0.5f, 0.5f, 0); //1.0f is the spacing of each character, you may change this value
+		characterSpacing.SetToTranslation(width / 64.f, 0.5f, 0.f); //1.0f is the spacing of each character, you may change this value
+		width += iChWidth[text[i]];
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 
@@ -301,6 +293,25 @@ void SceneBase::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, fl
 	viewStack.PopMatrix();
 	projectionStack.PopMatrix();
 	glEnable(GL_DEPTH_TEST);
+}
+
+bool SceneBase::ReadCharacterWidth(char* csvFilePath)
+{
+	std::ifstream file(csvFilePath);
+	std::string data[256];
+
+	if (file.good())
+	{
+		for (int a = 0; a < 256; a++)
+		{
+			getline(file, data[a]);
+			iChWidth[a] = std::stoi(data[a]);
+		}
+		file.close();
+
+		return true;
+	}
+	return false;
 }
 
 void SceneBase::RenderMesh(Mesh *mesh, bool enableLight)
