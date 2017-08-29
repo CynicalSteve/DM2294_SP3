@@ -68,20 +68,26 @@ void SP3::Init()
 
 	playerInfo->playerInventory[0]->inventoryBombType = Inventory::INVENTORY_NORMALBOMB;
 	playerInfo->playerInventory[0]->setDiscoveredState(true);
-	playerInfo->playerInventory[0]->setBombAmount(100);
+	playerInfo->playerInventory[0]->setBombAmount(20);
 
 	playerInfo->playerInventory[1]->inventoryBombType = Inventory::INVENTORY_MINEBOMB;
-	playerInfo->playerInventory[1]->setBombAmount(100);
+	playerInfo->playerInventory[1]->setBombAmount(20);
 
 	playerInfo->playerInventory[2]->inventoryBombType = Inventory::INVENTORY_NUKEBOMB;
-	playerInfo->playerInventory[2]->setBombAmount(100);
+	playerInfo->playerInventory[2]->setBombAmount(5);
 
-	for (short i = 0; i < 3; ++i)
+	playerInfo->setPlayerCurrency(50);
+
+	for (short i = 0; i < 5; ++i)
 	{
-		alienManager.push_back(new alienGrub("Grub", 10, 1.f, 3, 2, 0, 0));
-		alienManager.push_back(new alienGhoul("Ghoul", 40, 2.f, 5, 5, 0, 0));
-		alienManager.push_back(new alienRaptor("Raptor", 20, 4.f, 4, 5, 0, 0));
+		alienManager.push_back(new alienGrub("Grub", 10, 1.5f, 3, 2, 0, 0));
 	}
+
+	grubSpawnAmount = 5;
+	ghoulSpawnAmount = 3; 
+	raptorSpawnAmount = 4;
+	goliathSpawnAmount = 2;
+    leviathanSpawnAmount = 1.f;
 
 	m_goList.push_back(playerInfo);
 	for (size_t i = 0; i < 100; ++i)
@@ -476,7 +482,7 @@ void SP3::BombFireCreation(double dt)
 		{
 			for (unsigned int x = 0; x < alienManager.size(); ++x) //Checks if any alien stepped on the mine
 			{
-				if (go->pos == alienManager[x]->pos)
+				if (go->pos == alienManager[x]->pos && alienManager[x]->active)
 				{
 					go->setTriggeredState(true);
 				}
@@ -723,7 +729,7 @@ void SP3::m_goListInteractions(double dt)
 				{
 					for (unsigned int i = 0; i < alienManager.size(); ++i) //player-alien
 					{
-						if (go->pos == alienManager[i]->pos)
+						if (go->pos == alienManager[i]->pos && alienManager[i]->active)
 						{
 							if (playerInfo->loseHealthCooldown == 0.f)
 							{
@@ -781,7 +787,7 @@ void SP3::m_goListInteractions(double dt)
 			{
 				for (unsigned int i = 0; i < alienManager.size(); ++i) //house-alien
 				{
-					if (go->pos == alienManager[i]->pos)
+					if (go->pos == alienManager[i]->pos && alienManager[i]->active)
 					{
 						if (go->loseHealthCooldown == 0.f)
 						{
@@ -828,27 +834,6 @@ void SP3::spawnAliens(double dt)
 			break;
 		}
 	}
-
-	/*if (alienType >= 0 && alienType <= 34) //Grub - 35% 
-	{
-		alienManager.push_back(new alienGrub("Grub", 10, 1.f, 3, 2, alienBase::spawnPosition[RandIntMinMax(0, 2)].x, alienBase::spawnPosition[RandIntMinMax(0, 2)].y));
-	}
-	else if (alienType >= 35 && alienType <= 59) //Ghoul - 25%
-	{
-		alienManager.push_back(new alienGhoul("Ghoul", 40, 2.f, 5, 5, alienBase::spawnPosition[RandIntMinMax(0, 2)].x, alienBase::spawnPosition[RandIntMinMax(0, 2)].y));
-	}
-	else if (alienType >= 60 && alienType <= 84) //Raptor - 25%
-	{
-		alienManager.push_back(new alienRaptor("Raptor", 20, 4.f, 4, 5, alienBase::spawnPosition[RandIntMinMax(0, 2)].x, alienBase::spawnPosition[RandIntMinMax(0, 2)].y));
-	}
-	else if (alienType >= 85 && alienType <= 94) //Goliath - 10%
-	{
-		alienManager.push_back(new alienGoliath("Goliath", 50, 1.f, 15, 10, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
-	}
-	else if (alienType >= 95 && alienType <= 99) //Leviathan - 5%
-	{
-		alienManager.push_back(new alienLeviathan("Leviathan", 100, .6f, 25, 30, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
-	}*/
 }
 
 void SP3::Update(double dt)
@@ -1096,7 +1081,115 @@ void SP3::Update(double dt)
 
 			if (Application::IsKeyPressed('N') && !KeyBounce['N'])
 			{
-				++dayNumber;
+               ++dayNumber;
+
+			   if (dayNumber == 2)
+			   {
+				   for (short i = 0; i < 5; ++i)
+				   {
+					   alienManager.push_back(new alienGrub("Grub", 10, 1.5f, 3, 2, 0, 0));
+				   }
+
+				   for (short i = 0; i < 3; ++i)
+				   {
+					   alienManager.push_back(new alienGhoul("Ghoul", 20, 2.f, 7, 5, 0, 0));
+				   }
+			   }
+			   else if (dayNumber == 3)
+			   {
+				   for (short i = 0; i < 5; ++i)
+				   {
+					   alienManager.push_back(new alienGrub("Grub", 10, 1.5f, 3, 2, 0, 0));
+				   }
+
+				   for (short i = 0; i < 3; ++i)
+				   {
+					   alienManager.push_back(new alienGhoul("Ghoul", 20, 2.f, 7, 5, 0, 0));
+				   }
+
+				   for (short i = 0; i < 4; ++i)
+				   {
+					   alienManager.push_back(new alienRaptor("Raptor", 15, 4.f, 5, 5, 0, 0));
+				   }
+			   }
+			   else if (dayNumber == 4)
+			   {
+				   for (short i = 0; i < 5; ++i)
+				   {
+					   alienManager.push_back(new alienGrub("Grub", 10, 1.5f, 3, 2, 0, 0));
+				   }
+
+				   for (short i = 0; i < 3; ++i)
+				   {
+					   alienManager.push_back(new alienGhoul("Ghoul", 20, 2.f, 7, 5, 0, 0));
+				   }
+
+				   for (short i = 0; i < 4; ++i)
+				   {
+					   alienManager.push_back(new alienRaptor("Raptor", 15, 4.f, 5, 5, 0, 0));
+				   }
+				   for (short i = 0; i < 2; ++i)
+				   {
+					   alienManager.push_back(new alienGoliath("Goliath", 30, 1.8f, 10, 10, 0, 0));
+				   }
+			   }
+			   else if (dayNumber == 5)
+			   {
+				   for (short i = 0; i < 5; ++i)
+				   {
+					   alienManager.push_back(new alienGrub("Grub", 10, 1.5f, 3, 2, 0, 0));
+				   }
+
+				   for (short i = 0; i < 3; ++i)
+				   {
+					   alienManager.push_back(new alienGhoul("Ghoul", 20, 2.f, 7, 5, 0, 0));
+				   }
+
+				   for (short i = 0; i < 4; ++i)
+				   {
+					   alienManager.push_back(new alienRaptor("Raptor", 15, 4.f, 5, 5, 0, 0));
+				   }
+				   for (short i = 0; i < 2; ++i)
+				   {
+					   alienManager.push_back(new alienGoliath("Goliath", 30, 1.8f, 10, 10, 0, 0));
+				   }
+
+				   alienManager.push_back(new alienLeviathan("Leviathan", 50, 1.2f, 15, 30, 0, 0));
+			   }
+			   else
+			   {
+				   grubSpawnAmount += 3;
+				   ghoulSpawnAmount += 3;
+				   raptorSpawnAmount += 2;
+				   goliathSpawnAmount += 1;
+				   leviathanSpawnAmount += 0.5f;
+
+				   unsigned long int leviathan = leviathanSpawnAmount;
+
+				   for (unsigned long int i = 0; i < grubSpawnAmount; ++i)
+				   {
+					   alienManager.push_back(new alienGrub("Grub", 10, 1.5f, 3, 2, 0, 0));
+				   }
+
+				   for (unsigned long int i = 0; i < ghoulSpawnAmount; ++i)
+				   {
+					   alienManager.push_back(new alienGhoul("Ghoul", 20, 2.f, 7, 5, 0, 0));
+				   }
+
+				   for (unsigned long int i = 0; i < raptorSpawnAmount; ++i)
+				   {
+					   alienManager.push_back(new alienRaptor("Raptor", 15, 4.f, 5, 5, 0, 0));
+				   }
+				   for (unsigned long int i = 0; i < goliathSpawnAmount; ++i)
+				   {
+					   alienManager.push_back(new alienGoliath("Goliath", 30, 1.8f, 10, 10, 0, 0));
+				   }
+
+				   for (unsigned long int i = 0; i < leviathan; ++i)
+				   {
+					   alienManager.push_back(new alienLeviathan("Leviathan", 50, 1.2f, 15, 30, 0, 0));
+				   }
+			   }
 
 				playerInfo->setPlayerHealth(playerInfo->getMaxPlayerHealth());
 
@@ -1543,11 +1636,11 @@ void SP3::renderUI()
 		{
 			modelStack.Translate(145, 50, 0);
 		}
-		else if (playerInfo->currentBomb == 1)
+		else if (playerInfo->currentBomb == 1 && playerInfo->playerInventory[1]->getDiscoveredState() == true)
 		{
 			modelStack.Translate(145, 35, 0);
 		}
-		else
+		else if (playerInfo->currentBomb == 2 && playerInfo->playerInventory[2]->getDiscoveredState() == true)
 		{
 			modelStack.Translate(145, 20, 0);
 		}
@@ -1572,21 +1665,29 @@ void SP3::renderUI()
 	}
 	modelStack.PopMatrix();
 
-	modelStack.PushMatrix(); //Mine Bomb
+	if (playerInfo->playerInventory[1]->getDiscoveredState() == true)
 	{
-		modelStack.Translate(135, 35, 0);
-		modelStack.Scale(10, 10, 1);
-		RenderMesh(meshList[GEO_MINEBOMB], true);
+		modelStack.PushMatrix(); //Mine Bomb
+		{
+			modelStack.Translate(135, 35, 0);
+			modelStack.Scale(10, 10, 1);
+			RenderMesh(meshList[GEO_MINEBOMB], true);
+		}
+		modelStack.PopMatrix();
 	}
-	modelStack.PopMatrix();
 
-	modelStack.PushMatrix(); //Nuke Bomb
+	if (playerInfo->playerInventory[2]->getDiscoveredState() == true)
 	{
-		modelStack.Translate(135, 20, 0);
-		modelStack.Scale(10, 10, 1);
-		RenderMesh(meshList[GEO_NUKEBOMB], true);
+		modelStack.PushMatrix(); //Nuke Bomb
+		{
+			modelStack.Translate(135, 20, 0);
+			modelStack.Scale(10, 10, 1);
+			RenderMesh(meshList[GEO_NUKEBOMB], true);
+		}
+		modelStack.PopMatrix();
 	}
-	modelStack.PopMatrix();
+
+	std::ostringstream ss;
 
 	if (playerInfo->getNukeDeployedState() == true)
 	{
@@ -1600,16 +1701,10 @@ void SP3::renderUI()
 
 		int countdown = playerInfo->countdown;
 
-		std::ostringstream ss;
 		ss.str("");
 		ss.precision(2);
 		ss << countdown;
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 0), 5, 145.f, 2.5f);
-
-		ss.str("");
-		ss.precision(2);
-		ss << "Day:";
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549f, 0), 10, 50.f, 20.5f);
 	}
 }
 
@@ -1844,16 +1939,20 @@ void SP3::Render()
 	ss << "x" << playerInfo->playerInventory[0]->getBombAmount();
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 5, 142.f, 47.5f);
 
-	ss.str("");
-	ss.precision(5);
-	ss << "x" << playerInfo->playerInventory[1]->getBombAmount();
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 5, 142.f, 32.5f);
-
-	ss.str("");
-	ss.precision(5);
-	ss << "x" << playerInfo->playerInventory[2]->getBombAmount();
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 5, 142.f, 17.5f);
-
+	if (playerInfo->playerInventory[1]->getDiscoveredState() == true)
+	{
+		ss.str("");
+		ss.precision(5);
+		ss << "x" << playerInfo->playerInventory[1]->getBombAmount();
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 5, 142.f, 32.5f);
+	}
+	if (playerInfo->playerInventory[2]->getDiscoveredState() == true)
+	{
+		ss.str("");
+		ss.precision(5);
+		ss << "x" << playerInfo->playerInventory[2]->getBombAmount();
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 5, 142.f, 17.5f);
+	}
 	ss.str("");
 	ss.precision(5);
 	ss << playerInfo->getPlayerHealth() << "/" << playerInfo->getMaxPlayerHealth();
@@ -1863,6 +1962,11 @@ void SP3::Render()
 	ss.precision(5);
 	ss << houseHealth->houseHealth << "/" << 250;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 5, 129.f, 87.5f);
+
+	ss.str("");
+	ss.precision(2);
+	ss << "Day:" << dayNumber;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549f, 0), 5, 105.f, 2.5f);
 	
 	ss.str("");
 	ss.precision(5);

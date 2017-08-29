@@ -104,6 +104,9 @@ protected:
 	bool isPaused;
 	unsigned long int dayNumber;
 
+	unsigned long int grubSpawnAmount, ghoulSpawnAmount, raptorSpawnAmount, goliathSpawnAmount;
+	float leviathanSpawnAmount;
+
 	bool hasSound;
 	bool KeyBounce[256];
 };
