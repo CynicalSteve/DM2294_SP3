@@ -93,6 +93,7 @@ public:
 		GEO_BOMBSELECTOR,
 		GEO_SOUND,
 		GEO_STOP,
+		GEO_REPAIR,
 
 		floor,
 		wall,

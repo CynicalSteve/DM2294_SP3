@@ -62,6 +62,7 @@ public:
 		NORMALBOMB,
 		MINEBOMB,
 		NUKEBOMB,
+		REPAIR,
 		TOTAL_SHOP
 	};
 
@@ -93,6 +94,7 @@ public:
 protected:
 	std::vector<GameObject *> m_goList;
 	Player * playerInfo;
+	GameObject *houseHealth;
 	short **theMap;
 	short mapSize;
 	std::vector<GameObject::coord> spawnPosition;

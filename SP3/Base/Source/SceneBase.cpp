@@ -215,6 +215,9 @@ void SceneBase::Init()
 	meshList[GEO_EXIT_MAINMENU] = MeshBuilder::GenerateQuad("ExitMainMenu", Color(1.f, 0.f, 0.f), 1.f);
 	meshList[GEO_EXIT_MAINMENU]->textureID = LoadTGA("Image//MainMenuButton.tga");
 
+	meshList[GEO_REPAIR] = MeshBuilder::GenerateQuad("Repair", Color(1.f, 0.f, 0.f), 1.f);
+	meshList[GEO_REPAIR]->textureID = LoadTGA("Image//repair.tga");
+
 	bLightEnabled = false;
 }
 

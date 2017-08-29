@@ -63,7 +63,6 @@ public:
 	float loseHealthCooldown;
 
 	float houseHealth;
-	float houseLoseHealthCooldown;
 
 	GameObject();
 	virtual ~GameObject();
