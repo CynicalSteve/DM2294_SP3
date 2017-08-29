@@ -39,9 +39,9 @@ void SP3::Init()
 
 	/*for (short y = mapSize - 1; y > -1; --y)
 	{
-	for (short x = 0; x < mapSize; ++x)
-	std::cout << theMap[x][y] << " ";
-	std::cout << "\n";
+		for (short x = 0; x < mapSize; ++x)
+			std::cout << theMap[x][y] << " ";
+		std::cout << "\n";
 	}
 	for (short i = 0; i < alienBase::spawnPosition.size(); ++i)
 	std::cout << alienBase::spawnPosition[i].x << " " << alienBase::spawnPosition[i].y << "\n";*/
@@ -56,6 +56,8 @@ void SP3::Init()
 	loseSelectionIterator = 0;
 
 	loseBombPosition = 0.f;
+	dayNumber = 1;
+	maxAliens = 5;
 
 	gameState = WAVE_STATE;
 
@@ -73,8 +75,6 @@ void SP3::Init()
 
 	playerInfo->playerInventory[2]->inventoryBombType = Inventory::INVENTORY_NUKEBOMB;
 	playerInfo->playerInventory[2]->setBombAmount(100);
-
-	dayNumber = 1;
 
 	for (short i = 0; i < 3; ++i)
 	{
@@ -100,10 +100,6 @@ void SP3::Init()
 	GameObject *lootcrateGO3 = FetchGO();
 	lootcrateGO3->type = GameObject::GO_LOOTCRATE;
 	lootcrateGO3->pos.set(7, 2);
-
-	/*GameObject *houseGO = FetchGO();
-	lootcrateGO3->type = GameObject::GO_HOUSE;
-	lootcrateGO3->pos.set(7, 2);*/
 }
 
 GameObject* SP3::FetchGO()
@@ -159,7 +155,7 @@ void SP3::renderShopScreen()
 {
 	modelStack.PushMatrix(); //Shop Screen Screen Background
 	{
-		modelStack.Translate(100, 50, 0);
+		modelStack.Translate(50, 50, 0);
 		modelStack.Scale(70, 80, 1);
 		RenderMesh(meshList[GEO_QUAD], false);
 	}
@@ -170,7 +166,7 @@ void SP3::renderShopScreen()
 
 	modelStack.PushMatrix(); //Normal Bomb
 	{
-		modelStack.Translate(90, 80, 0);
+		modelStack.Translate(40, 80, 0);
 		modelStack.Scale(10, 10, 1);
 		RenderMesh(meshList[GEO_NORMALBOMB], false);
 	}
@@ -178,7 +174,7 @@ void SP3::renderShopScreen()
 
 	modelStack.PushMatrix(); //Mine Bomb
 	{
-		modelStack.Translate(90, 65, 0);
+		modelStack.Translate(40, 65, 0);
 		modelStack.Scale(10, 10, 1);
 		RenderMesh(meshList[GEO_MINEBOMB], false);
 	}
@@ -186,7 +182,7 @@ void SP3::renderShopScreen()
 
 	modelStack.PushMatrix(); //Nuke Bomb
 	{
-		modelStack.Translate(90, 50, 0);
+		modelStack.Translate(40, 50, 0);
 		modelStack.Scale(10, 10, 1);
 		RenderMesh(meshList[GEO_NUKEBOMB], false);
 	}
@@ -194,7 +190,7 @@ void SP3::renderShopScreen()
 
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(110, 80, 0);
+		modelStack.Translate(70, 80, 0);
 		modelStack.Scale(7, 7, 1);
 		RenderMesh(meshList[GEO_EQUIPMENT], false);
 	}
@@ -202,7 +198,7 @@ void SP3::renderShopScreen()
 
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(110, 65, 0);
+		modelStack.Translate(70, 65, 0);
 		modelStack.Scale(7, 7, 1);
 		RenderMesh(meshList[GEO_EQUIPMENT], false);
 	}
@@ -210,7 +206,7 @@ void SP3::renderShopScreen()
 
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(110, 50, 0);
+		modelStack.Translate(70, 50, 0);
 		modelStack.Scale(7, 7, 1);
 		RenderMesh(meshList[GEO_EQUIPMENT], false);
 	}
@@ -240,28 +236,28 @@ void SP3::renderShopScreen()
 	ss.str("");
 	ss.precision(5);
 	ss << "5";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, normal_G, normal_B), 2, 47.f, 35.f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, normal_G, normal_B), 5, 73.f, 77.5f);
 
 	ss.str("");
 	ss.precision(5);
 	ss << "15";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, mine_G, mine_B), 2, 47.f, 28.5f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, mine_G, mine_B), 5, 73.f, 62.5f);
 
 	ss.str("");
 	ss.precision(5);
 	ss << "50";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, nuke_G, nuke_B), 2, 47.f, 21.5f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, nuke_G, nuke_B), 5, 73.f, 47.5f);
 
 	ss.str("");
 	ss.precision(5);
 	ss << "Press 'N' to start";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549f, 0), 1.5f, 28.f, 14.5f);
-
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549f, 0), 3.5f, 20.f, 20.5f);
+	
 	ss.str("");
 	ss.precision(5);
 	ss << "the next day";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549f, 0), 1.5f, 32.f, 11.5f);
-
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549f, 0), 3.5f, 30.f, 17.5f);
+	
 }
 
 void SP3::AlienMovement(double dt)
@@ -721,7 +717,7 @@ void SP3::m_goListInteractions(double dt)
 						if (alienManager[i]->loseHealthCooldown > 1.f)
 							alienManager[i]->loseHealthCooldown = 0.f;
 					}
-
+					
 					if (alienManager[i]->getAlienHealth() <= 0)
 					{
 						alienManager[i]->active = false;
@@ -732,34 +728,15 @@ void SP3::m_goListInteractions(double dt)
 
 			if (go->type == GameObject::GO_HOUSE)
 			{
-				for (unsigned int i = 0; i < alienManager.size(); ++i) //bombfire-alien
+				for (unsigned int i = 0; i < alienManager.size(); ++i) //house-alien
 				{
 					if (go->pos == alienManager[i]->pos)
 					{
-
-						/*if (alienManager[i]->loseHealthCooldown == 0.f)
-						{
-						alienManager[i]->subtractAlienHealth(10);
-						alienManager[i]->loseHealthCooldown += dt;
-						}
-						else
-						{
-						alienManager[i]->loseHealthCooldown += dt;
-
-						if (alienManager[i]->loseHealthCooldown > 1.f)
-						alienManager[i]->loseHealthCooldown = 0.f;
-						}
-
-						if (alienManager[i]->getAlienHealth() <= 0)
-						{
-						alienManager.erase(alienManager.begin() + i);
-						}*/
-
 						if (go->loseHealthCooldown == 0.f)
 						{
-							go->houseHealth -= alienManager[i]->getAlienDamage();
+						go->houseHealth -= alienManager[i]->getAlienDamage();
 							go->loseHealthCooldown += dt;
-						}
+}
 						else
 						{
 							go->loseHealthCooldown += dt;
@@ -771,14 +748,14 @@ void SP3::m_goListInteractions(double dt)
 
 							if (go->houseHealth <= 0.f)
 							{
-								gameState = LOSE_STATE;
-							}
+							gameState = LOSE_STATE;
 						}
 					}
 				}
 			}
 		}
 	}
+}
 }
 
 void SP3::spawnAliens(double dt)
@@ -799,25 +776,25 @@ void SP3::spawnAliens(double dt)
 		}
 	}
 
-	/*if (alienType >= 0 && alienType <= 34) //Grub - 35%
+	/*if (alienType >= 0 && alienType <= 34) //Grub - 35% 
 	{
-	alienManager.push_back(new alienGrub("Grub", 10, 1.f, 3, 2, alienBase::spawnPosition[RandIntMinMax(0, 2)].x, alienBase::spawnPosition[RandIntMinMax(0, 2)].y));
+		alienManager.push_back(new alienGrub("Grub", 10, 1.f, 3, 2, alienBase::spawnPosition[RandIntMinMax(0, 2)].x, alienBase::spawnPosition[RandIntMinMax(0, 2)].y));
 	}
 	else if (alienType >= 35 && alienType <= 59) //Ghoul - 25%
 	{
-	alienManager.push_back(new alienGhoul("Ghoul", 40, 2.f, 5, 5, alienBase::spawnPosition[RandIntMinMax(0, 2)].x, alienBase::spawnPosition[RandIntMinMax(0, 2)].y));
+		alienManager.push_back(new alienGhoul("Ghoul", 40, 2.f, 5, 5, alienBase::spawnPosition[RandIntMinMax(0, 2)].x, alienBase::spawnPosition[RandIntMinMax(0, 2)].y));
 	}
 	else if (alienType >= 60 && alienType <= 84) //Raptor - 25%
 	{
-	alienManager.push_back(new alienRaptor("Raptor", 20, 4.f, 4, 5, alienBase::spawnPosition[RandIntMinMax(0, 2)].x, alienBase::spawnPosition[RandIntMinMax(0, 2)].y));
+		alienManager.push_back(new alienRaptor("Raptor", 20, 4.f, 4, 5, alienBase::spawnPosition[RandIntMinMax(0, 2)].x, alienBase::spawnPosition[RandIntMinMax(0, 2)].y));
 	}
 	else if (alienType >= 85 && alienType <= 94) //Goliath - 10%
 	{
-	alienManager.push_back(new alienGoliath("Goliath", 50, 1.f, 15, 10, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
+		alienManager.push_back(new alienGoliath("Goliath", 50, 1.f, 15, 10, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
 	}
 	else if (alienType >= 95 && alienType <= 99) //Leviathan - 5%
 	{
-	alienManager.push_back(new alienLeviathan("Leviathan", 100, .6f, 25, 30, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
+		alienManager.push_back(new alienLeviathan("Leviathan", 100, .6f, 25, 30, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
 	}*/
 }
 
@@ -862,18 +839,18 @@ void SP3::Update(double dt)
 
 			if (Application::IsKeyPressed('Q') && !KeyBounce['Q']) //Inventory switching
 			{
-				if (playerInfo->currentBomb != 0)
-				{
-					playerInfo->currentBomb--;
-				}
+					if (playerInfo->currentBomb != 0)
+					{
+						playerInfo->currentBomb--;
+					}
 			}
 
 			if (Application::IsKeyPressed('E') && !KeyBounce['E']) //Inventory switching
 			{
-				if (playerInfo->currentBomb < sizeof(playerInfo->playerInventory))
-				{
-					playerInfo->currentBomb++;
-				}
+					if (playerInfo->currentBomb < sizeof(playerInfo->playerInventory))
+					{
+						playerInfo->currentBomb++;
+					}
 			}
 
 			if (Application::IsKeyPressed('Z') && !KeyBounce['Z'])
@@ -956,11 +933,11 @@ void SP3::Update(double dt)
 
 
 			if (Application::IsKeyPressed('K') && !KeyBounce['K']) //Wave end
-				gameState = WAVE_END_STATE;
+					gameState = WAVE_END_STATE;  
 
 			if (Application::IsKeyPressed('L') && !KeyBounce['L']) //Lose
-				gameState = LOSE_STATE;
-		}
+					gameState = LOSE_STATE;
+			}
 		else
 		{
 			if (Application::IsKeyPressed('W') && !KeyBounce['W'])
@@ -982,62 +959,62 @@ void SP3::Update(double dt)
 			}
 
 			if (Application::IsKeyPressed(VK_RETURN) && !KeyBounce[VK_RETURN])
-			{
-				switch (pauseSelection)
 				{
-				case CONTINUE:
-				{
-					isPaused = false;
-					break;
-				}
-				case SETTINGS:
-				{
-					std::ifstream settingsFile("Image//settings.txt");
-
-					if (!settingsFile.is_open())
+					switch (pauseSelection)
 					{
-						std::cout << "Missing File.\n";
+					case CONTINUE:
+					{
+						isPaused = false;
+						break;
 					}
-					else
+					case SETTINGS:
 					{
-						settingsFile.close();
+						std::ifstream settingsFile("Image//settings.txt");
 
-						if (hasSound == true)  //Mute sound
+						if (!settingsFile.is_open())
 						{
-							hasSound = false;
-							settingsFile.open("Image//settings.txt", std::fstream::out | std::fstream::trunc);
+							std::cout << "Missing File.\n";
+						}
+						else
+						{
 							settingsFile.close();
 
-							std::ofstream settingsFile("Image//settings.txt");
-							settingsFile << "Off\n";
-						}
-						else  //Unmute Sound
-						{
-							hasSound = true;
+							if (hasSound == true)  //Mute sound
+							{
+								hasSound = false;
+								settingsFile.open("Image//settings.txt", std::fstream::out | std::fstream::trunc);
+								settingsFile.close();
 
-							settingsFile.open("Image//settings.txt", std::fstream::out | std::fstream::trunc);
-							settingsFile.close();
+								std::ofstream settingsFile("Image//settings.txt");
+								settingsFile << "Off\n";
+							}
+							else  //Unmute Sound
+							{
+								hasSound = true;
 
-							std::ofstream settingsFile("Image//settings.txt");
-							settingsFile << "On\n";
+								settingsFile.open("Image//settings.txt", std::fstream::out | std::fstream::trunc);
+								settingsFile.close();
+
+								std::ofstream settingsFile("Image//settings.txt");
+								settingsFile << "On\n";
+							}
 						}
+						break;
 					}
-					break;
-				}
-				case EXIT_MAINMENU:
-				{
-					SceneManager::instance()->SwitchScene(SceneManager::SCENE_STARTMENU);
-					break;
-				}
-				case EXIT_GAME:
-				{
-					SceneManager::instance()->Quit(true);
-					break;
-				}
+					case EXIT_MAINMENU:
+					{
+						SceneManager::instance()->SwitchScene(SceneManager::SCENE_STARTMENU);
+						break;
+					}
+					case EXIT_GAME:
+					{
+						SceneManager::instance()->Quit(true);
+						break;
+					}
 
-				default:
-					break;
-				}
+					default:
+						break;
+					}
 			}
 		}
 	}
@@ -1072,50 +1049,50 @@ void SP3::Update(double dt)
 			}
 
 			if (Application::IsKeyPressed(VK_RETURN) && !KeyBounce[VK_RETURN])
-			{
-				switch (shopselection)
 				{
-				case NORMALBOMB:
-				{
-					if (playerInfo->getEquipmentCurrency() >= 5)
+					switch (shopselection)
 					{
-						playerInfo->subtractCurrency(5);
-						playerInfo->playerInventory[0]->addBombAmount(1);
-					}
-					break;
-				}
-				case MINEBOMB:
-				{
-					if (playerInfo->getEquipmentCurrency() >= 15)
+					case NORMALBOMB:
 					{
-						playerInfo->subtractCurrency(15);
-						playerInfo->playerInventory[1]->addBombAmount(1);
-
-						if (playerInfo->playerInventory[1]->getDiscoveredState() == false)
+						if (playerInfo->getEquipmentCurrency() >= 5)
 						{
-							playerInfo->playerInventory[1]->setDiscoveredState(true);
+							playerInfo->subtractCurrency(5);
+							playerInfo->playerInventory[0]->addBombAmount(1);
 						}
+						break;
 					}
-					break;
-				}
-				case NUKEBOMB:
-				{
-					if (playerInfo->getEquipmentCurrency() >= 50)
+					case MINEBOMB:
 					{
-						playerInfo->subtractCurrency(50);
-						playerInfo->playerInventory[2]->addBombAmount(1);
-
-						if (playerInfo->playerInventory[2]->getDiscoveredState() == false)
+						if (playerInfo->getEquipmentCurrency() >= 15)
 						{
-							playerInfo->playerInventory[2]->setDiscoveredState(true);
-						}
-					}
-					break;
-				}
+							playerInfo->subtractCurrency(15);
+							playerInfo->playerInventory[1]->addBombAmount(1);
 
-				default:
-					break;
-				}
+							if (playerInfo->playerInventory[1]->getDiscoveredState() == false)
+							{
+								playerInfo->playerInventory[1]->setDiscoveredState(true);
+							}
+						}
+						break;
+					}
+					case NUKEBOMB:
+					{
+						if (playerInfo->getEquipmentCurrency() >= 50)
+						{
+							playerInfo->subtractCurrency(50);
+							playerInfo->playerInventory[2]->addBombAmount(1);
+
+							if (playerInfo->playerInventory[2]->getDiscoveredState() == false)
+							{
+								playerInfo->playerInventory[2]->setDiscoveredState(true);
+							}
+						}
+						break;
+					}
+
+					default:
+						break;
+					}
 			}
 		}
 
@@ -1140,54 +1117,102 @@ void SP3::Update(double dt)
 			}
 
 			if (Application::IsKeyPressed(VK_RETURN) && !KeyBounce[VK_RETURN])
+				{
+					switch (pauseSelection)
+					{
+					case CONTINUE:
+					{
+						isPaused = false;
+						break;
+					}
+					case SETTINGS:
+					{
+						std::ifstream settingsFile("Image//settings.txt");
+
+						if (!settingsFile.is_open())
+						{
+							std::cout << "Missing File.\n";
+						}
+						else
+						{
+							settingsFile.close();
+
+							if (hasSound == true)  //Mute sound
+							{
+								hasSound = false;
+								settingsFile.open("Image//settings.txt", std::fstream::out | std::fstream::trunc);
+								settingsFile.close();
+
+								std::ofstream settingsFile("Image//settings.txt");
+								settingsFile << "Off\n";
+							}
+							else  //Unmute Sound
+							{
+								hasSound = true;
+
+								settingsFile.open("Image//settings.txt", std::fstream::out | std::fstream::trunc);
+								settingsFile.close();
+
+								std::ofstream settingsFile("Image//settings.txt");
+								settingsFile << "On\n";
+							}
+						}
+						break;
+					}
+					case EXIT_MAINMENU:
+					{
+						SceneManager::instance()->SwitchScene(SceneManager::SCENE_STARTMENU);
+						break;
+					}
+					case EXIT_GAME:
+					{
+						SceneManager::instance()->Quit(true);
+						break;
+					}
+
+					default:
+						break;
+					}
+			}
+		}
+	} 
+	else if (gameState == LOSE_STATE)
+		{
+		if (Application::IsKeyPressed('W') && !KeyBounce['W'])
 			{
-				switch (pauseSelection)
+				if (loseSelectionIterator != 0)
 				{
-				case CONTINUE:
+					--loseSelectionIterator;
+					loseSelection = static_cast<LoseSelection>(loseSelectionIterator);
+					loseBombPosition += 25;
+				}
+		}
+
+		if (Application::IsKeyPressed('S') && !KeyBounce['S'])
+			{
+				if (loseSelectionIterator + 1 != TOTAL_LOSE)
 				{
-					isPaused = false;
+					++loseSelectionIterator;
+					loseSelection = static_cast<LoseSelection>(loseSelectionIterator);
+					loseBombPosition -= 25;
+				}
+		}
+
+		if (Application::IsKeyPressed(VK_RETURN) && !KeyBounce[VK_RETURN])
+			{
+				switch (loseSelection)
+				{
+				case RESTART:
+				{
+					SceneManager::instance()->SwitchScene(SceneManager::SCENE_MAINGAME);
 					break;
 				}
-				case SETTINGS:
-				{
-					std::ifstream settingsFile("Image//settings.txt");
-
-					if (!settingsFile.is_open())
-					{
-						std::cout << "Missing File.\n";
-					}
-					else
-					{
-						settingsFile.close();
-
-						if (hasSound == true)  //Mute sound
-						{
-							hasSound = false;
-							settingsFile.open("Image//settings.txt", std::fstream::out | std::fstream::trunc);
-							settingsFile.close();
-
-							std::ofstream settingsFile("Image//settings.txt");
-							settingsFile << "Off\n";
-						}
-						else  //Unmute Sound
-						{
-							hasSound = true;
-
-							settingsFile.open("Image//settings.txt", std::fstream::out | std::fstream::trunc);
-							settingsFile.close();
-
-							std::ofstream settingsFile("Image//settings.txt");
-							settingsFile << "On\n";
-						}
-					}
-					break;
-				}
-				case EXIT_MAINMENU:
+				case LOSE_EXIT_MAINMENU:
 				{
 					SceneManager::instance()->SwitchScene(SceneManager::SCENE_STARTMENU);
 					break;
 				}
-				case EXIT_GAME:
+				case LOSE_EXIT_GAME:
 				{
 					SceneManager::instance()->Quit(true);
 					break;
@@ -1196,54 +1221,6 @@ void SP3::Update(double dt)
 				default:
 					break;
 				}
-			}
-		}
-	}
-	else if (gameState == LOSE_STATE)
-	{
-		if (Application::IsKeyPressed('W') && !KeyBounce['W'])
-		{
-			if (loseSelectionIterator != 0)
-			{
-				--loseSelectionIterator;
-				loseSelection = static_cast<LoseSelection>(loseSelectionIterator);
-				loseBombPosition += 25;
-			}
-		}
-
-		if (Application::IsKeyPressed('S') && !KeyBounce['S'])
-		{
-			if (loseSelectionIterator + 1 != TOTAL_LOSE)
-			{
-				++loseSelectionIterator;
-				loseSelection = static_cast<LoseSelection>(loseSelectionIterator);
-				loseBombPosition -= 25;
-			}
-		}
-
-		if (Application::IsKeyPressed(VK_RETURN) && !KeyBounce[VK_RETURN])
-		{
-			switch (loseSelection)
-			{
-			case RESTART:
-			{
-				SceneManager::instance()->SwitchScene(SceneManager::SCENE_MAINGAME);
-				break;
-			}
-			case LOSE_EXIT_MAINMENU:
-			{
-				SceneManager::instance()->SwitchScene(SceneManager::SCENE_STARTMENU);
-				break;
-			}
-			case LOSE_EXIT_GAME:
-			{
-				SceneManager::instance()->Quit(true);
-				break;
-			}
-
-			default:
-				break;
-			}
 		}
 	}
 
@@ -1351,8 +1328,8 @@ void SP3::RenderGO(GameObject *go)
 	default:
 		break;
 	}
-
-
+	
+	
 }
 
 void SP3::renderAliens(alienBase *alien)
@@ -1414,11 +1391,11 @@ void SP3::renderBombs(BombBase *bomb, int currentBombIndex)
 	case GameObject::GO_NORMALBOMB:
 	{
 		modelStack.PushMatrix(); //normal bomb
-		{
-			modelStack.Translate(bomb->pos.x, bomb->pos.y, 0);
-			RenderMesh(meshList[GEO_NORMALBOMB], false);
-		}
-		modelStack.PopMatrix(); ///normal bomb
+	{
+		modelStack.Translate(bomb->pos.x, bomb->pos.y, 0);
+		RenderMesh(meshList[GEO_NORMALBOMB], false);
+	}
+	modelStack.PopMatrix(); ///normal bomb
 		break;
 	}
 	case GameObject::GO_MINEBOMB:
@@ -1441,15 +1418,23 @@ void SP3::renderUI()
 {
 	modelStack.PushMatrix(); //UI background
 	{
-		modelStack.Translate(100, 100, 0);
-		modelStack.Scale(200, 20, 1);
-		//RenderMesh(meshList[GEO_QUAD], false);
+		modelStack.Translate(145, 50, 0);
+		modelStack.Scale(90, 100 , 1);
+		RenderMesh(meshList[GEO_QUAD], false);
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix(); //Player icon for health
+	{
+		modelStack.Translate(120, 75, 0);
+		modelStack.Scale(10, 10, 1);
+		RenderMesh(meshList[GEO_PLAYER], false);
 	}
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix(); //Health Bar (Red)
 	{
-		modelStack.Translate(25, 95, 0);
+		modelStack.Translate(145, 75, 0);
 		modelStack.Scale(100 / 3, 5, 1);
 		RenderMesh(meshList[GEO_HEALTH_BAR_RED], false);
 	}
@@ -1457,7 +1442,7 @@ void SP3::renderUI()
 
 	modelStack.PushMatrix(); //Health Bar (Green)
 	{
-		modelStack.Translate(25, 95, 0);
+		modelStack.Translate(145, 75, 0);
 		modelStack.Scale(playerInfo->getPlayerHealth() / 3, 5, 1);
 		RenderMesh(meshList[GEO_HEALTH_BAR_GREEN], false);
 	}
@@ -1467,41 +1452,49 @@ void SP3::renderUI()
 	{
 		if (playerInfo->currentBomb == 0)
 		{
-			modelStack.Translate(59, 95, 0);
+			modelStack.Translate(145, 50, 0);
 		}
 		else if (playerInfo->currentBomb == 1)
 		{
-			modelStack.Translate(89, 95, 0);
+			modelStack.Translate(145, 35, 0);
 		}
 		else
 		{
-			modelStack.Translate(119, 95, 0);
+			modelStack.Translate(145, 20, 0);
 		}
-		modelStack.Scale(25, 7, 1);
+		modelStack.Scale(29, 10, 1);
 		RenderMesh(meshList[GEO_BOMBSELECTOR], true);
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix(); //Equipment
+	{
+		modelStack.Translate(135, 65, 0);
+		modelStack.Scale(10, 10, 1);
+		RenderMesh(meshList[GEO_EQUIPMENT], true);
 	}
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix(); //Normal Bomb
 	{
-		modelStack.Translate(50, 95, 0);
-		modelStack.Scale(7, 7, 1);
+		modelStack.Translate(135, 50, 0);
+		modelStack.Scale(10, 10, 1);
 		RenderMesh(meshList[GEO_NORMALBOMB], true);
 	}
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix(); //Mine Bomb
 	{
-		modelStack.Translate(80, 95, 0);
-		modelStack.Scale(7, 7, 1);
+		modelStack.Translate(135, 35, 0);
+		modelStack.Scale(10, 10, 1);
 		RenderMesh(meshList[GEO_MINEBOMB], true);
 	}
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix(); //Nuke Bomb
 	{
-		modelStack.Translate(110, 95, 0);
-		modelStack.Scale(7, 7, 1);
+		modelStack.Translate(135, 20, 0);
+		modelStack.Scale(10, 10, 1);
 		RenderMesh(meshList[GEO_NUKEBOMB], true);
 	}
 	modelStack.PopMatrix();
@@ -1510,7 +1503,7 @@ void SP3::renderUI()
 	{
 		modelStack.PushMatrix(); //Nuke Bomb Timer Symbol
 		{
-			modelStack.Translate(130, 5, 0);
+			modelStack.Translate(140, 5, 0);
 			modelStack.Scale(7, 7, 1);
 			RenderMesh(meshList[GEO_NUKEBOMB], true);
 		}
@@ -1522,7 +1515,7 @@ void SP3::renderUI()
 		ss.str("");
 		ss.precision(2);
 		ss << countdown;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 0), 3, 60.5f, 1.1f);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 0), 5, 145.f, 2.5f);
 	}
 }
 
@@ -1530,7 +1523,7 @@ void SP3::RenderPauseUI()
 {
 	modelStack.PushMatrix(); //Pause Screen Background
 	{
-		modelStack.Translate(100, 50, 0);
+		modelStack.Translate(50, 50, 0);
 		modelStack.Scale(70, 80, 1);
 		RenderMesh(meshList[GEO_QUAD], false);
 	}
@@ -1541,13 +1534,13 @@ void SP3::RenderPauseUI()
 	ss.str("");
 	ss.precision(5);
 	ss << "Paused";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 3, 33.f, 35.6f);
-
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 8, 27.f, 80.f);
+	
 	float continue_G = 1.f, continueB = 1.f, settings_G = 1.f, settings_B = 1.f, mainMenu_G = 1.f, mainMenu_B = 1.f, exit_G = 1.f, exit_B = 1.f;
 
 	if (pauseSelection == CONTINUE)
 	{
-		continue_G = 0.549f;
+		continue_G = 0.549f; 
 		continueB = 0.f;
 	}
 	else if (pauseSelection == SETTINGS)
@@ -1570,7 +1563,7 @@ void SP3::RenderPauseUI()
 	ss.str("");
 	ss.precision(5);
 	ss << "Continue";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, continue_G, continueB), 1.5f, 35.f, 30.6f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, continue_G, continueB), 4.f, 35.f, 60.6f);
 
 	ss.str("");
 	ss.precision(5);
@@ -1582,32 +1575,32 @@ void SP3::RenderPauseUI()
 	{
 		ss << "Sound: " << "Off";
 	}
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, settings_G, settings_B), 1.5f, 35.f, 25.6f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, settings_G, settings_B), 4.f, 32.f, 45.6f);
 
 	ss.str("");
 	ss.precision(5);
 	ss << "Exit to Main Menu";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, mainMenu_G, mainMenu_B), 1.5f, 29.f, 20.6f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, mainMenu_G, mainMenu_B), 4.f, 17.f, 30.6f);
 
 	ss.str("");
 	ss.precision(5);
 	ss << "Exit Game";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, exit_G, exit_B), 1.5f, 35.f, 15.6f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, exit_G, exit_B), 4.f, 32.f, 15.6f);
 }
 
 void SP3::RenderLoseUI()
 {
 	modelStack.PushMatrix();  //Start Menu Background
 	{
-		modelStack.Translate(100, 45, 0);
-		modelStack.Scale(100, 90, 0);
+		modelStack.Translate(50, 50, 0);
+		modelStack.Scale(100, 110, 0);
 		RenderMesh(meshList[GEO_STARTMENU_BACKGROUND], false);
 	}
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();  //Restart Button
 	{
-		modelStack.Translate(100, 75, 1);
+		modelStack.Translate(50, 75, 1);
 		modelStack.Scale(43, 32, 0);
 		RenderMesh(meshList[GEO_RESTART], false);
 	}
@@ -1615,7 +1608,7 @@ void SP3::RenderLoseUI()
 
 	modelStack.PushMatrix();  //Exit to Main Menu Button
 	{
-		modelStack.Translate(100, 50, 1);
+		modelStack.Translate(50, 50, 1);
 		modelStack.Scale(43, 32, 0);
 		RenderMesh(meshList[GEO_EXIT_MAINMENU], false);
 	}
@@ -1623,7 +1616,7 @@ void SP3::RenderLoseUI()
 
 	modelStack.PushMatrix();  //Exit Game Button
 	{
-		modelStack.Translate(100, 25, 1);
+		modelStack.Translate(50, 25, 1);
 		modelStack.Scale(43, 32, 0);
 		RenderMesh(meshList[GEO_STARTMENU_EXIT], false);
 	}
@@ -1631,7 +1624,7 @@ void SP3::RenderLoseUI()
 
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(126, 68 + loseBombPosition, 1);
+		modelStack.Translate(76, 68 + loseBombPosition, 1);
 		modelStack.Scale(10, 10, 0);
 		RenderMesh(meshList[GEO_NORMALBOMB], false);
 	}
@@ -1639,7 +1632,7 @@ void SP3::RenderLoseUI()
 
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(75, 68 + loseBombPosition, 1);
+		modelStack.Translate(25, 68 + loseBombPosition, 1);
 		modelStack.Scale(10, 10, 0);
 		modelStack.Rotate(180, 0, 1, 0);
 		RenderMesh(meshList[GEO_NORMALBOMB], false);
@@ -1694,7 +1687,7 @@ void SP3::Render()
 					//else RenderMesh(meshList[floor], false);
 					modelStack.Translate(1, 0, 0);
 					//if (playerInfo->pos.x == x && playerInfo->pos.y == y)
-					//RenderMesh(meshList[GEO_PLAYER], false);
+						//RenderMesh(meshList[GEO_PLAYER], false);
 				}
 				modelStack.Translate(-mapSize, 1, 0);
 			}
@@ -1707,7 +1700,7 @@ void SP3::Render()
 			for (int currentAlien = 0; currentAlien < alienManager.size(); ++currentAlien)
 			{
 				if (alienManager[currentAlien]->active)
-					renderAliens(alienManager[currentAlien]);
+				renderAliens(alienManager[currentAlien]);
 			}
 		}
 
@@ -1719,7 +1712,7 @@ void SP3::Render()
 				renderBombs(playerInfo->bombManager[currentBomb], currentBomb);
 			}
 		}
-
+	
 		for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 		{
 			GameObject *go = (GameObject *)*it;
@@ -1750,35 +1743,38 @@ void SP3::Render()
 		RenderPauseUI();
 	}
 
-
-
 	std::ostringstream ss;
 	//On screen text
 	ss.str("");
 	ss.precision(5);
 	ss << "x" << playerInfo->playerInventory[0]->getBombAmount();
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2, 25.f, 41.6f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 5, 142.f, 47.5f);
 
 	ss.str("");
 	ss.precision(5);
 	ss << "x" << playerInfo->playerInventory[1]->getBombAmount();
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2, 38.f, 41.6f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 5, 142.f, 32.5f);
+
+	ss.str("");
+	ss.precision(5);
+	ss << "x" << playerInfo->playerInventory[2]->getBombAmount();
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 5, 142.f, 17.5f);
 
 	ss.str("");
 	ss.precision(5);
 	ss << playerInfo->getPlayerHealth() << "/" << playerInfo->getMaxPlayerHealth();
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2, 4.5f, 41.6f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 5, 129.f, 72.5f);
 
 	ss.str("");
 	ss.precision(5);
-	ss << "EP:" << playerInfo->getEquipmentCurrency();
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
+	ss << playerInfo->getEquipmentCurrency();
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 5, 145.f, 63.f);
 
 	ss.str("");
 	ss.precision(5);
-	ss << "Player - X: " << playerInfo->pos.x << " Y:" << playerInfo->pos.y;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
-
+	ss << "Player - X: " << playerInfo->pos.x << " Y:" <<playerInfo->pos.y;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 5, 0, 0);
+	
 	glEnable(GL_DEPTH_TEST);
 	SceneManager::instance()->State(SceneManager::SCENE_MAINGAME);
 }
