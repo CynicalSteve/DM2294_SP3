@@ -7,7 +7,7 @@ maxBombTimer(0.f), invulnerabilityCooldown(0.f), maxInvulnerableTime(10.f), invu
 {
 	active = true;
 
-	for (unsigned int i = 0; i < 5; ++i)
+	for (unsigned int i = 0; i < 3; ++i)
 	{
 		playerInventory[i] = new Inventory(); 
 	}

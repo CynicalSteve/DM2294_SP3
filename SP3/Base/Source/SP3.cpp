@@ -68,13 +68,13 @@ void SP3::Init()
 
 	playerInfo->playerInventory[0]->inventoryBombType = Inventory::INVENTORY_NORMALBOMB;
 	playerInfo->playerInventory[0]->setDiscoveredState(true);
-	playerInfo->playerInventory[0]->setBombAmount(20);
+	playerInfo->playerInventory[0]->setBombAmount(10);
 
 	playerInfo->playerInventory[1]->inventoryBombType = Inventory::INVENTORY_MINEBOMB;
-	playerInfo->playerInventory[1]->setBombAmount(20);
+	playerInfo->playerInventory[1]->setBombAmount(0);
 
 	playerInfo->playerInventory[2]->inventoryBombType = Inventory::INVENTORY_NUKEBOMB;
-	playerInfo->playerInventory[2]->setBombAmount(5);
+	playerInfo->playerInventory[2]->setBombAmount(0);
 
 	playerInfo->setPlayerCurrency(50);
 
@@ -872,8 +872,6 @@ void SP3::Update(double dt)
 
 			playerInfo->move(4, theMap);
 
-			if (Application::IsKeyPressed('G') && !KeyBounce['G']) //Lower player health
-				playerInfo->subtractHealth(10);
 
 			if (Application::IsKeyPressed('Q') && !KeyBounce['Q']) //Inventory switching
 			{
@@ -885,25 +883,17 @@ void SP3::Update(double dt)
 
 			if (Application::IsKeyPressed('E') && !KeyBounce['E']) //Inventory switching
 			{
-					if (playerInfo->currentBomb < sizeof(playerInfo->playerInventory))
+					if (playerInfo->currentBomb < 2)
 					{
 						playerInfo->currentBomb++;
 					}
 			}
 
-			if (Application::IsKeyPressed('Z') && !KeyBounce['Z'])
+			if (Application::IsKeyPressed('O') && !KeyBounce['O']) //Cheat Key
 			{
-				alienManager.push_back(new alienGrub("Grub", 10, 1.f, 3, 2, 9, 1));
-			}
-
-			if (Application::IsKeyPressed('X') && !KeyBounce['X'])
-			{
-				alienManager.push_back(new alienGhoul("Ghoul", 40, 2.f, 5, 5, 9, 1));
-			}
-
-			if (Application::IsKeyPressed('C') && !KeyBounce['C'])
-			{
-				alienManager.push_back(new alienRaptor("Raptor", 20, 4.f, 4, 5, 9, 1));
+				playerInfo->setPlayerHealth(playerInfo->getMaxPlayerHealth());
+				playerInfo->setPlayerCurrency(9999);
+				houseHealth->houseHealth = 250.f;
 			}
 
 			//Mouse Section
@@ -972,9 +962,6 @@ void SP3::Update(double dt)
 
 			if (Application::IsKeyPressed('K') && !KeyBounce['K']) //Wave end
 					gameState = WAVE_END_STATE;  
-
-			if (Application::IsKeyPressed('L') && !KeyBounce['L']) //Lose
-					gameState = LOSE_STATE;
 			}
 		else
 		{
@@ -1636,14 +1623,16 @@ void SP3::renderUI()
 		{
 			modelStack.Translate(145, 50, 0);
 		}
-		else if (playerInfo->currentBomb == 1 && playerInfo->playerInventory[1]->getDiscoveredState() == true)
+		else if (playerInfo->currentBomb == 1)
 		{
 			modelStack.Translate(145, 35, 0);
 		}
-		else if (playerInfo->currentBomb == 2 && playerInfo->playerInventory[2]->getDiscoveredState() == true)
+		else if (playerInfo->currentBomb == 2)
 		{
 			modelStack.Translate(145, 20, 0);
 		}
+		
+
 		modelStack.Scale(29, 10, 1);
 		RenderMesh(meshList[GEO_BOMBSELECTOR], true);
 	}
