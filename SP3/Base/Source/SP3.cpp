@@ -36,16 +36,15 @@ void SP3::Init()
 	while (theMap[0][mapSize] > 0 && theMap[0][mapSize] < 10)
 		++mapSize;
 	alienBase::createSpawnPosition(theMap, mapSize);
-	//alienBase::spawnPosition[0] = GameObject::coord();
 
-	for (short y = mapSize - 1; y > -1; --y)
+	/*for (short y = mapSize - 1; y > -1; --y)
 	{
-		for (short x = 0; x < mapSize; ++x)
-			std::cout << theMap[x][y] << " ";
-		std::cout << "\n";
+	for (short x = 0; x < mapSize; ++x)
+	std::cout << theMap[x][y] << " ";
+	std::cout << "\n";
 	}
 	for (short i = 0; i < alienBase::spawnPosition.size(); ++i)
-		std::cout << alienBase::spawnPosition[i].x << " " << alienBase::spawnPosition[i].y << "\n";
+	std::cout << alienBase::spawnPosition[i].x << " " << alienBase::spawnPosition[i].y << "\n";*/
 
 	pauseSelection = CONTINUE;
 	pauseSelectionIterator = 0;
@@ -57,10 +56,6 @@ void SP3::Init()
 	loseSelectionIterator = 0;
 
 	loseBombPosition = 0.f;
-
-	spawnAlienTimer = 0.f;
-	spawnAlienAmount = 0;
-	alienSpawned = 0;
 
 	gameState = WAVE_STATE;
 
@@ -261,19 +256,22 @@ void SP3::renderShopScreen()
 	ss.precision(5);
 	ss << "Press 'N' to start";
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549f, 0), 1.5f, 28.f, 14.5f);
-	
+
 	ss.str("");
 	ss.precision(5);
 	ss << "the next day";
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549f, 0), 1.5f, 32.f, 11.5f);
-	
+
 }
 
 void SP3::AlienMovement(double dt)
 {
+	int totalHealth = 0;
 	for (std::vector<alienBase *>::iterator it = alienManager.begin(); it != alienManager.end(); ++it)
 	{
 		alienBase *go = (alienBase *)*it;
+
+		totalHealth += go->getAlienHealth();
 
 		if (!go->active)
 			continue;
@@ -288,7 +286,7 @@ void SP3::AlienMovement(double dt)
 		if (go->alienType == alienBase::TYPE1_GRUB) //chases player
 			distance.set(go->pos.x - playerInfo->pos.x, go->pos.y - playerInfo->pos.y);
 		else if (go->alienType == alienBase::TYPE2_GHOUL) //random movement
-			distance.set(go->pos.x - RandIntMinMax(0, 19), go->pos.y - RandIntMinMax(0, 19));
+			distance.set(go->pos.x - RandIntMinMax(0, mapSize - 1), go->pos.y - RandIntMinMax(0, mapSize - 1));
 		else if (go->alienType == alienBase::TYPE3_RAPTOR) //goes to objective
 			distance.set(go->pos.x - 5, go->pos.y - 5);
 
@@ -342,6 +340,8 @@ void SP3::AlienMovement(double dt)
 				go->animationPos.z = dt * go->getAlienSpeed();
 		}
 	}
+	if (!totalHealth)
+		gameState = WAVE_END_STATE;
 }
 
 void SP3::PlayerChecks(double dt)
@@ -351,7 +351,7 @@ void SP3::PlayerChecks(double dt)
 	{
 		playerInfo->setPlayerHealth(0);
 
-		//gameState = LOSE_STATE; //Player loses game when health is 0
+		gameState = LOSE_STATE; //Player loses game when health is 0
 	}
 
 	if (playerInfo->getEquipmentCurrency() < 0) //Reset currency to 0 if current player currency is under 0
@@ -721,7 +721,7 @@ void SP3::m_goListInteractions(double dt)
 						if (alienManager[i]->loseHealthCooldown > 1.f)
 							alienManager[i]->loseHealthCooldown = 0.f;
 					}
-					
+
 					if (alienManager[i]->getAlienHealth() <= 0)
 					{
 						alienManager[i]->active = false;
@@ -739,27 +739,27 @@ void SP3::m_goListInteractions(double dt)
 
 						/*if (alienManager[i]->loseHealthCooldown == 0.f)
 						{
-							alienManager[i]->subtractAlienHealth(10);
-							alienManager[i]->loseHealthCooldown += dt;
-		}
+						alienManager[i]->subtractAlienHealth(10);
+						alienManager[i]->loseHealthCooldown += dt;
+						}
 						else
 						{
-							alienManager[i]->loseHealthCooldown += dt;
+						alienManager[i]->loseHealthCooldown += dt;
 
-							if (alienManager[i]->loseHealthCooldown > 1.f)
-								alienManager[i]->loseHealthCooldown = 0.f;
-	}
+						if (alienManager[i]->loseHealthCooldown > 1.f)
+						alienManager[i]->loseHealthCooldown = 0.f;
+						}
 
 						if (alienManager[i]->getAlienHealth() <= 0)
 						{
-							alienManager.erase(alienManager.begin() + i);
+						alienManager.erase(alienManager.begin() + i);
 						}*/
 
 						if (go->loseHealthCooldown == 0.f)
 						{
-						go->houseHealth -= alienManager[i]->getAlienDamage();
-						go->loseHealthCooldown+= dt;
-}
+							go->houseHealth -= alienManager[i]->getAlienDamage();
+							go->loseHealthCooldown += dt;
+						}
 						else
 						{
 							go->loseHealthCooldown += dt;
@@ -769,10 +769,10 @@ void SP3::m_goListInteractions(double dt)
 								go->loseHealthCooldown = 0.f;
 							}
 
-							/*if (go->houseHealth <= 0.f)
+							if (go->houseHealth <= 0.f)
 							{
-							gameState = LOSE_STATE;
-							}*/
+								gameState = LOSE_STATE;
+							}
 						}
 					}
 				}
@@ -783,10 +783,12 @@ void SP3::m_goListInteractions(double dt)
 
 void SP3::spawnAliens(double dt)
 {
-	short whichAlien = RandIntMinMax(0, alienManager.size());
+	short whichAlien = RandIntMinMax(0, alienManager.size() * 60);
+	if (whichAlien >= alienManager.size())
+		return;
 	GameObject::coord spawn = alienBase::spawnPosition[RandIntMinMax(0, 2)];
 
-	for (short i = 0; i  < alienManager.size(); ++i)
+	for (short i = 0; i < alienManager.size(); ++i)
 	{
 		if (!alienManager[(whichAlien + i) % alienManager.size()]->active && alienManager[(whichAlien + i) % alienManager.size()]->getAlienHealth() > 0)
 		{
@@ -797,25 +799,25 @@ void SP3::spawnAliens(double dt)
 		}
 	}
 
-	/*if (alienType >= 0 && alienType <= 34) //Grub - 35% 
+	/*if (alienType >= 0 && alienType <= 34) //Grub - 35%
 	{
-		alienManager.push_back(new alienGrub("Grub", 10, 1.f, 3, 2, alienBase::spawnPosition[RandIntMinMax(0, 2)].x, alienBase::spawnPosition[RandIntMinMax(0, 2)].y));
+	alienManager.push_back(new alienGrub("Grub", 10, 1.f, 3, 2, alienBase::spawnPosition[RandIntMinMax(0, 2)].x, alienBase::spawnPosition[RandIntMinMax(0, 2)].y));
 	}
 	else if (alienType >= 35 && alienType <= 59) //Ghoul - 25%
 	{
-		alienManager.push_back(new alienGhoul("Ghoul", 40, 2.f, 5, 5, alienBase::spawnPosition[RandIntMinMax(0, 2)].x, alienBase::spawnPosition[RandIntMinMax(0, 2)].y));
+	alienManager.push_back(new alienGhoul("Ghoul", 40, 2.f, 5, 5, alienBase::spawnPosition[RandIntMinMax(0, 2)].x, alienBase::spawnPosition[RandIntMinMax(0, 2)].y));
 	}
 	else if (alienType >= 60 && alienType <= 84) //Raptor - 25%
 	{
-		alienManager.push_back(new alienRaptor("Raptor", 20, 4.f, 4, 5, alienBase::spawnPosition[RandIntMinMax(0, 2)].x, alienBase::spawnPosition[RandIntMinMax(0, 2)].y));
+	alienManager.push_back(new alienRaptor("Raptor", 20, 4.f, 4, 5, alienBase::spawnPosition[RandIntMinMax(0, 2)].x, alienBase::spawnPosition[RandIntMinMax(0, 2)].y));
 	}
 	else if (alienType >= 85 && alienType <= 94) //Goliath - 10%
 	{
-		alienManager.push_back(new alienGoliath("Goliath", 50, 1.f, 15, 10, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
+	alienManager.push_back(new alienGoliath("Goliath", 50, 1.f, 15, 10, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
 	}
 	else if (alienType >= 95 && alienType <= 99) //Leviathan - 5%
 	{
-		alienManager.push_back(new alienLeviathan("Leviathan", 100, .6f, 25, 30, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
+	alienManager.push_back(new alienLeviathan("Leviathan", 100, .6f, 25, 30, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].x, alienBase::spawnPosition[Math::RandIntMinMax(0, 2)].y));
 	}*/
 }
 
@@ -858,28 +860,21 @@ void SP3::Update(double dt)
 			if (Application::IsKeyPressed('G') && !KeyBounce['G']) //Lower player health
 				playerInfo->subtractHealth(10);
 
-			if (Application::IsKeyPressed('Q')) //Inventory switching
+			if (Application::IsKeyPressed('Q') && !KeyBounce['Q']) //Inventory switching
 			{
-				if (!KeyBounce['Q'])
-					if (playerInfo->currentBomb != 0)
-					{
-						playerInfo->currentBomb--;
-					}
-				KeyBounce['Q'] = true;
+				if (playerInfo->currentBomb != 0)
+				{
+					playerInfo->currentBomb--;
+				}
 			}
-			else KeyBounce['Q'] = false;
 
-			if (Application::IsKeyPressed('E')) //Inventory switching
+			if (Application::IsKeyPressed('E') && !KeyBounce['E']) //Inventory switching
 			{
-				if (!KeyBounce['E'])
-					if (playerInfo->currentBomb < sizeof(playerInfo->playerInventory))
-					{
-						playerInfo->currentBomb++;
-					}
-				KeyBounce['E'] = true;
+				if (playerInfo->currentBomb < sizeof(playerInfo->playerInventory))
+				{
+					playerInfo->currentBomb++;
+				}
 			}
-			else KeyBounce['E'] = false;
-
 
 			if (Application::IsKeyPressed('Z') && !KeyBounce['Z'])
 			{
@@ -893,7 +888,7 @@ void SP3::Update(double dt)
 
 			if (Application::IsKeyPressed('C') && !KeyBounce['C'])
 			{
-				alienManager.push_back(new alienRaptor("Raptor", 20, 4.f, 4 , 5, 9, 1));
+				alienManager.push_back(new alienRaptor("Raptor", 20, 4.f, 4, 5, 9, 1));
 			}
 
 			//Mouse Section
@@ -948,26 +943,8 @@ void SP3::Update(double dt)
 			BombFireCreation(dt);
 
 			//Spawn ALiens
-			if (alienSpawned <= maxAliens)
-			{
-				if (spawnAlienAmount <= 5)
-				{
 			spawnAliens(dt);
 
-					++spawnAlienAmount;
-					++alienSpawned;
-				}
-				else
-				{
-					spawnAlienTimer += dt;
-
-					if (spawnAlienTimer > 5.f)
-					{
-						spawnAlienAmount = 0;
-						spawnAlienTimer = 0.f;
-					}
-				}
-			}
 			//Alien Movement
 			AlienMovement(dt);
 
@@ -978,21 +955,11 @@ void SP3::Update(double dt)
 			PlayerChecks(dt);
 
 
-			if (Application::IsKeyPressed('K')) //Wave end
-			{
-				if (!KeyBounce['K'])
-					gameState = WAVE_END_STATE;  
-				KeyBounce['K'] = true;
-			}
-			else KeyBounce['K'] = false;
+			if (Application::IsKeyPressed('K') && !KeyBounce['K']) //Wave end
+				gameState = WAVE_END_STATE;
 
-			if (Application::IsKeyPressed('L')) //Lose
-			{
-				if (!KeyBounce['L'])
-					gameState = LOSE_STATE;
-				KeyBounce['L'] = true;
-			}
-			else KeyBounce['L'] = false;
+			if (Application::IsKeyPressed('L') && !KeyBounce['L']) //Lose
+				gameState = LOSE_STATE;
 		}
 		else
 		{
@@ -1003,9 +970,7 @@ void SP3::Update(double dt)
 					--pauseSelectionIterator;
 					pauseSelection = static_cast<PauseSelection>(pauseSelectionIterator);
 				}
-				KeyBounce['W'] = true;
 			}
-			else KeyBounce['W'] = false;
 
 			if (Application::IsKeyPressed('S') && !KeyBounce['S'])
 			{
@@ -1014,76 +979,65 @@ void SP3::Update(double dt)
 					++pauseSelectionIterator;
 					pauseSelection = static_cast<PauseSelection>(pauseSelectionIterator);
 				}
-				KeyBounce['S'] = true;
 			}
-			else KeyBounce['S'] = false;
 
-			if (Application::IsKeyPressed(VK_RETURN))
+			if (Application::IsKeyPressed(VK_RETURN) && !KeyBounce[VK_RETURN])
 			{
-				if (!KeyBounce[VK_RETURN])
+				switch (pauseSelection)
 				{
-					switch (pauseSelection)
-					{
-					case CONTINUE:
-					{
-						isPaused = false;
-						break;
-					}
-					case SETTINGS:
-					{
-						std::ifstream settingsFile("Image//settings.txt");
+				case CONTINUE:
+				{
+					isPaused = false;
+					break;
+				}
+				case SETTINGS:
+				{
+					std::ifstream settingsFile("Image//settings.txt");
 
-						if (!settingsFile.is_open())
+					if (!settingsFile.is_open())
+					{
+						std::cout << "Missing File.\n";
+					}
+					else
+					{
+						settingsFile.close();
+
+						if (hasSound == true)  //Mute sound
 						{
-							std::cout << "Missing File.\n";
-						}
-						else
-						{
+							hasSound = false;
+							settingsFile.open("Image//settings.txt", std::fstream::out | std::fstream::trunc);
 							settingsFile.close();
 
-							if (hasSound == true)  //Mute sound
-							{
-								hasSound = false;
-								settingsFile.open("Image//settings.txt", std::fstream::out | std::fstream::trunc);
-								settingsFile.close();
-
-								std::ofstream settingsFile("Image//settings.txt");
-								settingsFile << "Off\n";
-							}
-							else  //Unmute Sound
-							{
-								hasSound = true;
-
-								settingsFile.open("Image//settings.txt", std::fstream::out | std::fstream::trunc);
-								settingsFile.close();
-
-								std::ofstream settingsFile("Image//settings.txt");
-								settingsFile << "On\n";
-							}
+							std::ofstream settingsFile("Image//settings.txt");
+							settingsFile << "Off\n";
 						}
-						break;
-					}
-					case EXIT_MAINMENU:
-					{
-						SceneManager::instance()->SwitchScene(SceneManager::SCENE_STARTMENU);
-						break;
-					}
-					case EXIT_GAME:
-					{
-						SceneManager::instance()->Quit(true);
-						break;
-					}
+						else  //Unmute Sound
+						{
+							hasSound = true;
 
-					default:
-						break;
+							settingsFile.open("Image//settings.txt", std::fstream::out | std::fstream::trunc);
+							settingsFile.close();
+
+							std::ofstream settingsFile("Image//settings.txt");
+							settingsFile << "On\n";
+						}
 					}
+					break;
+				}
+				case EXIT_MAINMENU:
+				{
+					SceneManager::instance()->SwitchScene(SceneManager::SCENE_STARTMENU);
+					break;
+				}
+				case EXIT_GAME:
+				{
+					SceneManager::instance()->Quit(true);
+					break;
 				}
 
-				KeyBounce[VK_RETURN] = true;
-			}
-			else
-			{
-				KeyBounce[VK_RETURN] = false;
+				default:
+					break;
+				}
 			}
 		}
 	}
@@ -1099,9 +1053,7 @@ void SP3::Update(double dt)
 					--shopSelectionIterator;
 					shopselection = static_cast<ShopSelection>(shopSelectionIterator);
 				}
-				KeyBounce['W'] = true;
 			}
-			else KeyBounce['W'] = false;
 
 			if (Application::IsKeyPressed('S') && !KeyBounce['S'])
 			{
@@ -1110,75 +1062,60 @@ void SP3::Update(double dt)
 					++shopSelectionIterator;
 					shopselection = static_cast<ShopSelection>(shopSelectionIterator);
 				}
-				KeyBounce['S'] = true;
 			}
-			else KeyBounce['S'] = false;
 
 			if (Application::IsKeyPressed('N') && !KeyBounce['N'])
 			{
 				++dayNumber;
-				maxAliens *= 1.5f;
 
 				gameState = WAVE_STATE;
-
-				KeyBounce['N'] = true;
 			}
-			else KeyBounce['N'] = false;
 
-			if (Application::IsKeyPressed(VK_RETURN))
+			if (Application::IsKeyPressed(VK_RETURN) && !KeyBounce[VK_RETURN])
 			{
-				if (!KeyBounce[VK_RETURN])
+				switch (shopselection)
 				{
-					switch (shopselection)
+				case NORMALBOMB:
+				{
+					if (playerInfo->getEquipmentCurrency() >= 5)
 					{
-					case NORMALBOMB:
-					{
-						if (playerInfo->getEquipmentCurrency() >= 5)
-						{
-							playerInfo->subtractCurrency(5);
-							playerInfo->playerInventory[0]->addBombAmount(1);
-						}
-						break;
+						playerInfo->subtractCurrency(5);
+						playerInfo->playerInventory[0]->addBombAmount(1);
 					}
-					case MINEBOMB:
+					break;
+				}
+				case MINEBOMB:
+				{
+					if (playerInfo->getEquipmentCurrency() >= 15)
 					{
-						if (playerInfo->getEquipmentCurrency() >= 15)
-						{
-							playerInfo->subtractCurrency(15);
-							playerInfo->playerInventory[1]->addBombAmount(1);
+						playerInfo->subtractCurrency(15);
+						playerInfo->playerInventory[1]->addBombAmount(1);
 
-							if (playerInfo->playerInventory[1]->getDiscoveredState() == false)
-							{
-								playerInfo->playerInventory[1]->setDiscoveredState(true);
-							}
-						}
-						break;
-					}
-					case NUKEBOMB:
-					{
-						if (playerInfo->getEquipmentCurrency() >= 50)
+						if (playerInfo->playerInventory[1]->getDiscoveredState() == false)
 						{
-							playerInfo->subtractCurrency(50);
-							playerInfo->playerInventory[2]->addBombAmount(1);
-
-							if (playerInfo->playerInventory[2]->getDiscoveredState() == false)
-							{
-								playerInfo->playerInventory[2]->setDiscoveredState(true);
-							}
+							playerInfo->playerInventory[1]->setDiscoveredState(true);
 						}
-						break;
 					}
+					break;
+				}
+				case NUKEBOMB:
+				{
+					if (playerInfo->getEquipmentCurrency() >= 50)
+					{
+						playerInfo->subtractCurrency(50);
+						playerInfo->playerInventory[2]->addBombAmount(1);
 
-					default:
-						break;
+						if (playerInfo->playerInventory[2]->getDiscoveredState() == false)
+						{
+							playerInfo->playerInventory[2]->setDiscoveredState(true);
+						}
 					}
+					break;
 				}
 
-				KeyBounce[VK_RETURN] = true;
-			}
-			else
-			{
-				KeyBounce[VK_RETURN] = false;
+				default:
+					break;
+				}
 			}
 		}
 
@@ -1191,9 +1128,7 @@ void SP3::Update(double dt)
 					--pauseSelectionIterator;
 					pauseSelection = static_cast<PauseSelection>(pauseSelectionIterator);
 				}
-				KeyBounce['W'] = true;
 			}
-			else KeyBounce['W'] = false;
 
 			if (Application::IsKeyPressed('S') && !KeyBounce['S'])
 			{
@@ -1202,128 +1137,57 @@ void SP3::Update(double dt)
 					++pauseSelectionIterator;
 					pauseSelection = static_cast<PauseSelection>(pauseSelectionIterator);
 				}
-				KeyBounce['S'] = true;
 			}
-			else KeyBounce['S'] = false;
 
-			if (Application::IsKeyPressed(VK_RETURN))
+			if (Application::IsKeyPressed(VK_RETURN) && !KeyBounce[VK_RETURN])
 			{
-				if (!KeyBounce[VK_RETURN])
+				switch (pauseSelection)
 				{
-					switch (pauseSelection)
-					{
-					case CONTINUE:
-					{
-						isPaused = false;
-						break;
-					}
-					case SETTINGS:
-					{
-						std::ifstream settingsFile("Image//settings.txt");
-
-						if (!settingsFile.is_open())
-						{
-							std::cout << "Missing File.\n";
-						}
-						else
-						{
-							settingsFile.close();
-
-							if (hasSound == true)  //Mute sound
-							{
-								hasSound = false;
-								settingsFile.open("Image//settings.txt", std::fstream::out | std::fstream::trunc);
-								settingsFile.close();
-
-								std::ofstream settingsFile("Image//settings.txt");
-								settingsFile << "Off\n";
-							}
-							else  //Unmute Sound
-							{
-								hasSound = true;
-
-								settingsFile.open("Image//settings.txt", std::fstream::out | std::fstream::trunc);
-								settingsFile.close();
-
-								std::ofstream settingsFile("Image//settings.txt");
-								settingsFile << "On\n";
-							}
-						}
-						break;
-					}
-					case EXIT_MAINMENU:
-					{
-						SceneManager::instance()->SwitchScene(SceneManager::SCENE_STARTMENU);
-						break;
-					}
-					case EXIT_GAME:
-					{
-						SceneManager::instance()->Quit(true);
-						break;
-					}
-
-					default:
-						break;
-					}
-				}
-
-				KeyBounce[VK_RETURN] = true;
-			}
-			else
-			{
-				KeyBounce[VK_RETURN] = false;
-			}
-		}
-	} 
-	else if(gameState == LOSE_STATE)
-	{
-		if (Application::IsKeyPressed('W'))
-		{
-			if (!KeyBounce['W'])
-			{
-				if (loseSelectionIterator != 0)
+				case CONTINUE:
 				{
-					--loseSelectionIterator;
-					loseSelection = static_cast<LoseSelection>(loseSelectionIterator);
-					loseBombPosition += 25;
-				}
-			}
-			KeyBounce['W'] = true;
-		}
-		else KeyBounce['W'] = false;
-
-		if (Application::IsKeyPressed('S'))
-		{
-			if (!KeyBounce['S'])
-			{
-				if (loseSelectionIterator + 1 != TOTAL_LOSE)
-				{
-					++loseSelectionIterator;
-					loseSelection = static_cast<LoseSelection>(loseSelectionIterator);
-					loseBombPosition -= 25;
-				}
-			}
-			KeyBounce['S'] = true;
-		}
-		else KeyBounce['S'] = false;
-
-		if (Application::IsKeyPressed(VK_RETURN))
-		{
-			if (!KeyBounce[VK_RETURN])
-			{
-				switch (loseSelection)
-				{
-				case RESTART:
-				{
-					SceneManager::instance()->SwitchScene(SceneManager::SCENE_MAINGAME);
+					isPaused = false;
 					break;
 				}
-				case LOSE_EXIT_MAINMENU:
+				case SETTINGS:
+				{
+					std::ifstream settingsFile("Image//settings.txt");
+
+					if (!settingsFile.is_open())
+					{
+						std::cout << "Missing File.\n";
+					}
+					else
+					{
+						settingsFile.close();
+
+						if (hasSound == true)  //Mute sound
+						{
+							hasSound = false;
+							settingsFile.open("Image//settings.txt", std::fstream::out | std::fstream::trunc);
+							settingsFile.close();
+
+							std::ofstream settingsFile("Image//settings.txt");
+							settingsFile << "Off\n";
+						}
+						else  //Unmute Sound
+						{
+							hasSound = true;
+
+							settingsFile.open("Image//settings.txt", std::fstream::out | std::fstream::trunc);
+							settingsFile.close();
+
+							std::ofstream settingsFile("Image//settings.txt");
+							settingsFile << "On\n";
+						}
+					}
+					break;
+				}
+				case EXIT_MAINMENU:
 				{
 					SceneManager::instance()->SwitchScene(SceneManager::SCENE_STARTMENU);
 					break;
 				}
-				case LOSE_EXIT_GAME:
+				case EXIT_GAME:
 				{
 					SceneManager::instance()->Quit(true);
 					break;
@@ -1333,12 +1197,53 @@ void SP3::Update(double dt)
 					break;
 				}
 			}
-
-			KeyBounce[VK_RETURN] = true;
 		}
-		else
+	}
+	else if (gameState == LOSE_STATE)
+	{
+		if (Application::IsKeyPressed('W') && !KeyBounce['W'])
 		{
-			KeyBounce[VK_RETURN] = false;
+			if (loseSelectionIterator != 0)
+			{
+				--loseSelectionIterator;
+				loseSelection = static_cast<LoseSelection>(loseSelectionIterator);
+				loseBombPosition += 25;
+			}
+		}
+
+		if (Application::IsKeyPressed('S') && !KeyBounce['S'])
+		{
+			if (loseSelectionIterator + 1 != TOTAL_LOSE)
+			{
+				++loseSelectionIterator;
+				loseSelection = static_cast<LoseSelection>(loseSelectionIterator);
+				loseBombPosition -= 25;
+			}
+		}
+
+		if (Application::IsKeyPressed(VK_RETURN) && !KeyBounce[VK_RETURN])
+		{
+			switch (loseSelection)
+			{
+			case RESTART:
+			{
+				SceneManager::instance()->SwitchScene(SceneManager::SCENE_MAINGAME);
+				break;
+			}
+			case LOSE_EXIT_MAINMENU:
+			{
+				SceneManager::instance()->SwitchScene(SceneManager::SCENE_STARTMENU);
+				break;
+			}
+			case LOSE_EXIT_GAME:
+			{
+				SceneManager::instance()->Quit(true);
+				break;
+			}
+
+			default:
+				break;
+			}
 		}
 	}
 
@@ -1353,7 +1258,6 @@ void SP3::Update(double dt)
 			isPaused = false;
 		}
 	}
-	else KeyBounce['P'] = true;
 
 	for (short i = 0; i < 256; ++i)
 	{
@@ -1447,8 +1351,8 @@ void SP3::RenderGO(GameObject *go)
 	default:
 		break;
 	}
-	
-	
+
+
 }
 
 void SP3::renderAliens(alienBase *alien)
@@ -1510,11 +1414,11 @@ void SP3::renderBombs(BombBase *bomb, int currentBombIndex)
 	case GameObject::GO_NORMALBOMB:
 	{
 		modelStack.PushMatrix(); //normal bomb
-	{
-		modelStack.Translate(bomb->pos.x, bomb->pos.y, 0);
-		RenderMesh(meshList[GEO_NORMALBOMB], false);
-	}
-	modelStack.PopMatrix(); ///normal bomb
+		{
+			modelStack.Translate(bomb->pos.x, bomb->pos.y, 0);
+			RenderMesh(meshList[GEO_NORMALBOMB], false);
+		}
+		modelStack.PopMatrix(); ///normal bomb
 		break;
 	}
 	case GameObject::GO_MINEBOMB:
@@ -1638,12 +1542,12 @@ void SP3::RenderPauseUI()
 	ss.precision(5);
 	ss << "Paused";
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 3, 33.f, 35.6f);
-	
+
 	float continue_G = 1.f, continueB = 1.f, settings_G = 1.f, settings_B = 1.f, mainMenu_G = 1.f, mainMenu_B = 1.f, exit_G = 1.f, exit_B = 1.f;
 
 	if (pauseSelection == CONTINUE)
 	{
-		continue_G = 0.549f; 
+		continue_G = 0.549f;
 		continueB = 0.f;
 	}
 	else if (pauseSelection == SETTINGS)
@@ -1790,7 +1694,7 @@ void SP3::Render()
 					//else RenderMesh(meshList[floor], false);
 					modelStack.Translate(1, 0, 0);
 					//if (playerInfo->pos.x == x && playerInfo->pos.y == y)
-						//RenderMesh(meshList[GEO_PLAYER], false);
+					//RenderMesh(meshList[GEO_PLAYER], false);
 				}
 				modelStack.Translate(-mapSize, 1, 0);
 			}
@@ -1803,7 +1707,7 @@ void SP3::Render()
 			for (int currentAlien = 0; currentAlien < alienManager.size(); ++currentAlien)
 			{
 				if (alienManager[currentAlien]->active)
-				renderAliens(alienManager[currentAlien]);
+					renderAliens(alienManager[currentAlien]);
 			}
 		}
 
@@ -1815,7 +1719,7 @@ void SP3::Render()
 				renderBombs(playerInfo->bombManager[currentBomb], currentBomb);
 			}
 		}
-	
+
 		for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 		{
 			GameObject *go = (GameObject *)*it;
@@ -1846,7 +1750,7 @@ void SP3::Render()
 		RenderPauseUI();
 	}
 
-	
+
 
 	std::ostringstream ss;
 	//On screen text
@@ -1872,9 +1776,9 @@ void SP3::Render()
 
 	ss.str("");
 	ss.precision(5);
-	ss << "Player - X: " << playerInfo->pos.x << " Y:" <<playerInfo->pos.y;
+	ss << "Player - X: " << playerInfo->pos.x << " Y:" << playerInfo->pos.y;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
-	
+
 	glEnable(GL_DEPTH_TEST);
 	SceneManager::instance()->State(SceneManager::SCENE_MAINGAME);
 }
