@@ -38,14 +38,14 @@ void SP3::Init()
 		++mapSize;
 	alienBase::createSpawnPosition(theMap, mapSize);
 
-	/*for (short y = mapSize - 1; y > -1; --y)
+	for (short y = mapSize - 1; y > -1; --y)
 	{
 		for (short x = 0; x < mapSize; ++x)
 			std::cout << theMap[x][y] << " ";
 		std::cout << "\n";
 	}
 	for (short i = 0; i < alienBase::spawnPosition.size(); ++i)
-	std::cout << alienBase::spawnPosition[i].x << " " << alienBase::spawnPosition[i].y << "\n";*/
+	std::cout << alienBase::spawnPosition[i].x << " " << alienBase::spawnPosition[i].y << "\n";
 
 	pauseSelection = CONTINUE;
 	pauseSelectionIterator = 0;
@@ -1898,4 +1898,6 @@ void SP3::Exit()
 	for (short x = 0; x < 11; ++x)
 		delete theMap[x];
 	delete theMap;
+
+	alienBase::spawnPosition.clear();
 }
