@@ -41,13 +41,15 @@ void SP3::Init()
 
 	playerInfo->playerInventory[0]->inventoryBombType = Inventory::INVENTORY_NORMALBOMB;
 	playerInfo->playerInventory[0]->setDiscoveredState(true);
-	playerInfo->playerInventory[0]->setBombAmount(100);
+	playerInfo->playerInventory[0]->setBombAmount(10);
 
 	playerInfo->playerInventory[1]->inventoryBombType = Inventory::INVENTORY_MINEBOMB;
-	playerInfo->playerInventory[1]->setBombAmount(100);
+	playerInfo->playerInventory[1]->setBombAmount(0);
 
 	playerInfo->playerInventory[2]->inventoryBombType = Inventory::INVENTORY_NUKEBOMB;
-	playerInfo->playerInventory[2]->setBombAmount(100);
+	playerInfo->playerInventory[2]->setBombAmount(0);
+
+	playerInfo->setPlayerCurrency(20);
 
 	theMap = parse(".//map.csv");
 	mapSize = 0;
@@ -957,10 +959,6 @@ void SP3::Update(double dt)
 
 			//Check m_golist against other list for interactions
 			m_goListInteractions(dt);
-
-
-			if (Application::IsKeyPressed('K') && !KeyBounce['K']) //Wave end
-					gameState = WAVE_END_STATE;  
 			}
 		else
 		{

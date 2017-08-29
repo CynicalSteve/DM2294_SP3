@@ -301,16 +301,14 @@ void StartMenu::Render()
 			modelStack.PopMatrix();
 		}
 
-		std::ostringstream ss;
+		/*std::ostringstream ss;
 		ss.str("");
-		ss.precision(2);
 		ss << "[Q] Toggle On/Off";
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549, 0), 2.f, 25.f, 7.1f);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549, 0), 10.f, 0.f, 0.1f);
 
 		ss.str("");
-		ss.precision(2);
 		ss << "[Enter] Accept & Apply";
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549f, 0), 2.f, 20.f, 5.1f);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.549f, 0), 10.f, 0.f, 0.1f);*/
 	}
 	else if (currentSelectionScreen == INSTRUCTIONS_SCREEN)
 	{
