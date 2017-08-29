@@ -57,7 +57,6 @@ void SP3::Init()
 
 	loseBombPosition = 0.f;
 	dayNumber = 1;
-	maxAliens = 5;
 
 	gameState = WAVE_STATE;
 
