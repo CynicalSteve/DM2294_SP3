@@ -5,6 +5,7 @@
 #include <sstream>
 #include <fstream>
 
+
 using Math::RandIntMinMax;
 
 std::vector<GameObject::coord> alienBase::spawnPosition;
@@ -105,6 +106,10 @@ void SP3::Init()
 	GameObject *lootcrateGO3 = FetchGO();
 	lootcrateGO3->type = GameObject::GO_LOOTCRATE;
 	lootcrateGO3->pos.set(7, 2);
+
+	houseHealth = FetchGO();
+	houseHealth->type = GameObject::GO_HOUSE;
+	//houseHealth->pos.set(, 2);
 }
 
 GameObject* SP3::FetchGO()
@@ -193,6 +198,14 @@ void SP3::renderShopScreen()
 	}
 	modelStack.PopMatrix();
 
+	modelStack.PushMatrix(); //House repair
+	{
+		modelStack.Translate(40, 35, 0);
+		modelStack.Scale(10, 10, 1);
+		RenderMesh(meshList[GEO_REPAIR], false);
+	}
+	modelStack.PopMatrix();
+
 	modelStack.PushMatrix();
 	{
 		modelStack.Translate(70, 80, 0);
@@ -216,8 +229,17 @@ void SP3::renderShopScreen()
 		RenderMesh(meshList[GEO_EQUIPMENT], false);
 	}
 	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	{
+		modelStack.Translate(70, 35, 0);
+		modelStack.Scale(7, 7, 1);
+		RenderMesh(meshList[GEO_EQUIPMENT], false);
+	}
 	modelStack.PopMatrix();
-	float normal_G = 1.f, normal_B = 1.f, mine_G = 1.f, mine_B = 1.f, nuke_G = 1.f, nuke_B = 1.f;
+
+	modelStack.PopMatrix();
+	float normal_G = 1.f, normal_B = 1.f, mine_G = 1.f, mine_B = 1.f, nuke_G = 1.f, nuke_B = 1.f, repair_G = 1.f, repair_B = 1.f;
 
 	if (shopselection == NORMALBOMB)
 	{
@@ -233,6 +255,11 @@ void SP3::renderShopScreen()
 	{
 		nuke_G = 0.549f;
 		nuke_B = 0.f;
+	}
+	else if (shopselection == REPAIR)
+	{
+		repair_G = 0.549f;
+		repair_B = 0.f;
 	}
 
 	std::ostringstream ss;
@@ -252,6 +279,11 @@ void SP3::renderShopScreen()
 	ss.precision(5);
 	ss << "50";
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, nuke_G, nuke_B), 5, 73.f, 47.5f);
+
+	ss.str("");
+	ss.precision(5);
+	ss << "30";
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, repair_G, repair_B), 5, 73.f, 32.5f);
 
 	ss.str("");
 	ss.precision(5);
@@ -281,12 +313,12 @@ void SP3::AlienMovement(double dt)
 
 		GameObject::coord distance;
 
-		if (go->alienType == alienBase::TYPE1_GRUB) //chases player
+		if (go->alienType == alienBase::TYPE1_GRUB || go->alienType == alienBase::TYPE4_GOLIATH) //chases player
 			distance.set(go->pos.x - playerInfo->pos.x, go->pos.y - playerInfo->pos.y);
 		else if (go->alienType == alienBase::TYPE2_GHOUL) //random movement
 			distance.set(go->pos.x - RandIntMinMax(0, 19), go->pos.y - RandIntMinMax(0, 19));
-		else if (go->alienType == alienBase::TYPE3_RAPTOR) //goes to objective
-			distance.set(go->pos.x - 5, go->pos.y - 5);
+		else if (go->alienType == alienBase::TYPE3_RAPTOR || go->alienType == alienBase::TYPE5_LEVIATHAN) //goes to objective
+			distance.set(go->pos.x - houseHealth->pos.x, go->pos.y - houseHealth->pos.y);
 
 		if (distance.x == 0 && distance.y == 0);
 		else if (distance.x >= abs(distance.y))
@@ -358,6 +390,17 @@ void SP3::PlayerChecks(double dt)
 	if (playerInfo->getPlayerHealth() > playerInfo->getMaxPlayerHealth()) //Health cap
 	{
 		playerInfo->setPlayerHealth(playerInfo->getMaxPlayerHealth());
+	}
+
+	if (houseHealth->houseHealth > 250) //House Health cap
+	{
+		houseHealth->houseHealth = 250;
+	}
+	if (houseHealth->houseHealth <= 0) //Reset health to 0 if house health is under 0
+	{
+		houseHealth->houseHealth = 0;
+
+		//gameState = LOSE_STATE; //Player loses game when house health is 0
 	}
 
 	if (playerInfo->getSpeedBoostState() == true) //Speed Boost
@@ -734,16 +777,16 @@ void SP3::m_goListInteractions(double dt)
 					{
 						if (go->loseHealthCooldown == 0.f)
 						{
-						go->houseHealth -= alienManager[i]->getAlienDamage();
-						go->loseHealthCooldown+= dt;
+							houseHealth->houseHealth -= alienManager[i]->getAlienDamage();
+							houseHealth->loseHealthCooldown+= dt;
 }
 						else
 						{
-							go->loseHealthCooldown += dt;
+							houseHealth->loseHealthCooldown += dt;
 
-							if (go->loseHealthCooldown > 1.f)
+							if (houseHealth->loseHealthCooldown > 1.f)
 							{
-								go->loseHealthCooldown = 0.f;
+								houseHealth->loseHealthCooldown = 0.f;
 							}
 
 							/*if (go->houseHealth <= 0.f)
@@ -1096,6 +1139,11 @@ void SP3::Update(double dt)
 				++dayNumber;
 				maxAliens *= 1.5f;
 
+				alienSpawned = 0;
+				spawnAlienAmount = 0;
+				spawnAlienTimer = 0.f;
+				playerInfo->setPlayerHealth(playerInfo->getMaxPlayerHealth());
+
 				gameState = WAVE_STATE;
 
 				KeyBounce['N'] = true;
@@ -1142,6 +1190,16 @@ void SP3::Update(double dt)
 							{
 								playerInfo->playerInventory[2]->setDiscoveredState(true);
 							}
+						}
+						break;
+					}
+					case REPAIR:
+					{
+						if (playerInfo->getEquipmentCurrency() >= 30)
+						{
+							playerInfo->subtractCurrency(30);
+
+							houseHealth->houseHealth += 30;
 						}
 						break;
 					}
@@ -1528,6 +1586,30 @@ void SP3::renderUI()
 	}
 	modelStack.PopMatrix();
 
+	modelStack.PushMatrix(); //House Health Icon
+	{
+		modelStack.Translate(110, 90, 0);
+		modelStack.Scale(15, 15, 1);
+		RenderMesh(meshList[GEO_HOUSE], false);
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix(); //House Health Bar (Red)
+	{
+		modelStack.Translate(145, 90, 0);
+		modelStack.Scale(250 / 5, 5, 1);
+		RenderMesh(meshList[GEO_HEALTH_BAR_RED], false);
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix(); //House Health Bar (Green)
+	{
+		modelStack.Translate(145, 90, 0);
+		modelStack.Scale(houseHealth->houseHealth / 5, 5, 1);
+		RenderMesh(meshList[GEO_HEALTH_BAR_GREEN], false);
+	}
+	modelStack.PopMatrix();
+
 	modelStack.PushMatrix(); //Health Bar (Red)
 	{
 		modelStack.Translate(145, 75, 0);
@@ -1860,7 +1942,12 @@ void SP3::Render()
 	ss.precision(5);
 	ss << playerInfo->getPlayerHealth() << "/" << playerInfo->getMaxPlayerHealth();
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 5, 129.f, 72.5f);
-
+	
+	ss.str("");
+	ss.precision(5);
+	ss << houseHealth->houseHealth << "/" << 250;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 5, 129.f, 87.5f);
+	
 	ss.str("");
 	ss.precision(5);
 	ss << playerInfo->getEquipmentCurrency();
@@ -1904,4 +1991,6 @@ void SP3::Exit()
 	for (short x = 0; x < 11; ++x)
 		delete theMap[x];
 	delete theMap;
+
+	delete houseHealth;
 }

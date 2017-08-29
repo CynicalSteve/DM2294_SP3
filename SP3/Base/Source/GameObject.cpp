@@ -7,8 +7,7 @@ GameObject::GameObject()
 	fireBurnTime(0.f),
 	fireScaler(0.f),
 	loseHealthCooldown(0.f),
-	houseHealth(250.f),
-	houseLoseHealthCooldown(0.f)
+	houseHealth(250.f)
 { 
 }
 
