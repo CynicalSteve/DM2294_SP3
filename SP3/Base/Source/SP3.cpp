@@ -1898,4 +1898,6 @@ void SP3::Exit()
 	for (short x = 0; x < 11; ++x)
 		delete theMap[x];
 	delete theMap;
+
+	alienBase::spawnPosition.clear();
 }
